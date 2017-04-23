@@ -38,7 +38,7 @@ class PropertyConnector(object):
     XML_URL_FILTER = None
     DETAIL_FILTER = None
 
-    def __init__(self, last_mod=None):
+    def __init__(self, force_update=False):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.handlers = []
         self.logger.addHandler(logging.StreamHandler())
@@ -50,22 +50,22 @@ class PropertyConnector(object):
         self.prop_xml = None
         self.links = None
 
-        self.initialise(last_mod=last_mod)
+        self.initialise(force_update=force_update)
 
-    def initialise(self, last_mod=None):
+    def initialise(self, force_update=False):
         self.retrieve_existing_records()
 
         try:
             self.logger.info("Getting base sitemap.xml")
             self.get_base_sitemap_xml()
             self.logger.info("Parsing URLs in base sitemap.xml")
-            self.get_base_sitemap_urls(last_mod=last_mod)
+            self.get_base_sitemap_urls()
         except requests.RequestException:
             self.logger.warning("Failed. Estimating the XML links instead. Some of these will fail by design.")
             self.prop_xml = self.estimate_base_sitemap_urls()
 
         self.logger.info("Retrieving XML data.")
-        self.get_sitemap_xmls()
+        self.get_sitemap_xmls(force_update=force_update)
         self.logger.info("Parsing detailed links in XML data")
         self.get_detailed_links()
 
@@ -83,7 +83,7 @@ class PropertyConnector(object):
             sitemap = self.sitemap_xml
         if sitemap is None:
             raise AttributeError("Sitemap XML has not been set. Run get_base_sitemap_xml().")
-        self.prop_xml = get_xml_urls_from_sitemap(sitemap, last_mod=last_mod, filt=self.XML_URL_FILTER)
+        self.prop_xml = get_xml_urls_from_sitemap(sitemap, filt=self.XML_URL_FILTER)
 
     def estimate_base_sitemap_urls(self):
         """
@@ -91,17 +91,47 @@ class PropertyConnector(object):
         """
         raise NotImplementedError
 
-    def get_sitemap_xmls(self):
+    def get_sitemap_xmls(self, force_update=False):
         if self.prop_xml is None:
             raise AttributeError(
                 "Sub-XML URLs are not defined. Run get_base_sitemap_urls() or estimate_base_sitemap_urls().")
 
         for url, attrs in self.prop_xml.items():
+            if url in self.existing_records:
+                b_exist = True
+                obj = self.existing_records[url]
+                print attrs
+                if not force_update and self.existing_records[url].last_modified >= attrs['lastmod']:
+                    self.logger.info("XML sitemap at %s is unchanged.", url)
+                    # use stored data
+                    attrs['content'] = self.existing_records[url].content
+                    attrs['status_code'] = self.existing_records[url].status_code
+                    continue
+                obj.last_modified = attrs['lastmod']
+            else:
+                b_exist = False
+                obj = models.PropertyForSaleSitemap(
+                    url=url,
+                    last_modified=attrs['lastmod'],
+                )
+
+            self.logger.info("Getting XML sitemap at %s.", url)
             ret = requests.get(url)
             attrs['content'] = ret.content
             attrs['status_code'] = ret.status_code
             if ret.status_code != 200:
                 self.logger.warning("Failed to get XML file: %s", url)
+                # make an update anyway if the entry doesn't exist
+                if not b_exist:
+                    obj.status_code = ret.status_code
+                    obj.content = ret.content
+                    obj.accessed = datetime.datetime.now()
+                    obj.save()
+            else:
+                obj.status_code = ret.status_code
+                obj.content = ret.content
+                obj.accessed = datetime.datetime.now()
+                obj.save()
 
     def get_detailed_links(self):
         if self.prop_xml is None:
@@ -111,6 +141,9 @@ class PropertyConnector(object):
         for url, attrs in self.prop_xml.iteritems():
             if attrs['status_code'] == 200:
                 self.links.extend(urls_from_xml_string(attrs['content'], filt=self.DETAIL_FILTER))
+
+    def get_one(self, url, existing=None):
+        pass
 
 
 class PropertySales(PropertyConnector):
@@ -122,12 +155,12 @@ class PropertySales(PropertyConnector):
         Required if the base sitemap.xml is not accessible
         """
         urls = ['http://www.rightmove.co.uk/sitemap_propertydetails%d.xml' % i for i in range(1, 27)]
-        lm = {'lastmod': '1900-01-01'}
+        lm = {'lastmod': datetime.date(1900, 1, 1)}
         return dict([(t, dict(lm)) for t in urls])
 
     def retrieve_existing_records(self):
-        # only look up good
+        # only look up good results
         recs = models.PropertyForSaleSitemap.objects.filter(status_code=200)
         self.existing_records = dict([
-            (t.url, t.last_modified) for t in recs
+            (t.url, t) for t in recs
         ])
