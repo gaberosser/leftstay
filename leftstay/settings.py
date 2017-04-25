@@ -9,6 +9,11 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
+try:
+    from _local import *
+except ImportError:
+    print "No local settings _local.py found, using template values"
+    from _local_template import *
 
 import os
 
@@ -77,11 +82,11 @@ WSGI_APPLICATION = 'leftstay.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'leftstay',
+        'NAME': DB_NAME,
         'HOST': '127.0.0.1',
-        'USER': 'gabriel',
-        'PORT': '5433',
-        'PASSWORD': 'pass',
+        'USER': DB_USER,
+        'PORT': DB_PORT,
+        'PASSWORD': DB_PASS,
     }
 }
 

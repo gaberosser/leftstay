@@ -3,17 +3,26 @@ import logging
 import re
 from xml.etree import ElementTree
 import datetime
+from django.utils import timezone
 import models
+import consts
+from leftstay.settings import TRANSACTION_CHUNK_SIZE
+from leftstay.utils import chunk
+
+
+URL_REGEX = re.compile(r'.*co\.uk\/([a-z-]*)\/.*$')
 
 
 def urls_from_xml_string(s, filt=None):
-    links = []
     et = ElementTree.fromstring(s)
-    for t in et:
-        if filt is not None:
-            if filt not in t[0].text:
-                continue
-        links.append(t[0].text)
+    g = et.iterfind('*%s' % et[0][0].tag)
+    if filt is None:
+        links = [t.text for t in g]
+    else:
+        links = []
+        for t in g:
+            if filt in t.text:
+                links.append(t.text)
     return links
 
 
@@ -24,7 +33,7 @@ def get_xml_urls_from_sitemap(parent_xml, last_mod=None, filt=None):
         if filt is not None:
             if not re.search(filt, this_url):
                 continue
-        lm = datetime.datetime.strptime(e[1].text, '%Y-%m-%d').date
+        lm = datetime.datetime.strptime(e[1].text, '%Y-%m-%d').date()
         if last_mod is not None:
             if lm <= last_mod:
                 # skip this entry since it hasn't changed
@@ -33,7 +42,12 @@ def get_xml_urls_from_sitemap(parent_xml, last_mod=None, filt=None):
     return prop_xml
 
 
-class PropertyConnector(object):
+def url_type(url):
+    s = re.sub(URL_REGEX, '\g<1>', url)
+    return consts.PROPERTY_TYPE_MAP.get(s)
+
+
+class SitemapXmlGetter(object):
 
     XML_URL_FILTER = None
     DETAIL_FILTER = None
@@ -66,8 +80,6 @@ class PropertyConnector(object):
 
         self.logger.info("Retrieving XML data.")
         self.get_sitemap_xmls(force_update=force_update)
-        self.logger.info("Parsing detailed links in XML data")
-        self.get_detailed_links()
 
     def retrieve_existing_records(self):
         raise NotImplementedError
@@ -100,8 +112,7 @@ class PropertyConnector(object):
             if url in self.existing_records:
                 b_exist = True
                 obj = self.existing_records[url]
-                print attrs
-                if not force_update and self.existing_records[url].last_modified >= attrs['lastmod']:
+                if not force_update and obj.last_modified >= attrs['lastmod']:
                     self.logger.info("XML sitemap at %s is unchanged.", url)
                     # use stored data
                     attrs['content'] = self.existing_records[url].content
@@ -110,7 +121,7 @@ class PropertyConnector(object):
                 obj.last_modified = attrs['lastmod']
             else:
                 b_exist = False
-                obj = models.PropertyForSaleSitemap(
+                obj = models.PropertySitemap(
                     url=url,
                     last_modified=attrs['lastmod'],
                 )
@@ -125,15 +136,17 @@ class PropertyConnector(object):
                 if not b_exist:
                     obj.status_code = ret.status_code
                     obj.content = ret.content
-                    obj.accessed = datetime.datetime.now()
+                    obj.accessed = timezone.now()
                     obj.save()
             else:
                 obj.status_code = ret.status_code
                 obj.content = ret.content
-                obj.accessed = datetime.datetime.now()
+                obj.accessed = timezone.now()
+                # set flag to ensure URLs are created/updated
+                obj.urls_created = False
                 obj.save()
 
-    def get_detailed_links(self):
+    def update_property_urls(self):
         if self.prop_xml is None:
             raise AttributeError(
                 "Sub-XML URLs are not defined. Run get_base_sitemap_urls() or estimate_base_sitemap_urls().")
@@ -142,25 +155,62 @@ class PropertyConnector(object):
             if attrs['status_code'] == 200:
                 self.links.extend(urls_from_xml_string(attrs['content'], filt=self.DETAIL_FILTER))
 
-    def get_one(self, url, existing=None):
-        pass
 
-
-class PropertySales(PropertyConnector):
+class PropertyXmlGetter(SitemapXmlGetter):
     XML_URL_FILTER = 'propertydetails'
-    DETAIL_FILTER = '/property-for-sale/'
+    DETAIL_FILTER = None
 
     def estimate_base_sitemap_urls(self):
         """
         Required if the base sitemap.xml is not accessible
         """
         urls = ['http://www.rightmove.co.uk/sitemap_propertydetails%d.xml' % i for i in range(1, 27)]
-        lm = {'lastmod': datetime.date(1900, 1, 1)}
+        lm = {'lastmod': datetime.date.today()}
         return dict([(t, dict(lm)) for t in urls])
 
     def retrieve_existing_records(self):
         # only look up good results
-        recs = models.PropertyForSaleSitemap.objects.filter(status_code=200)
+        recs = models.PropertySitemap.objects.filter(status_code=200)
         self.existing_records = dict([
             (t.url, t) for t in recs
         ])
+
+
+
+def url_generator(logger=None):
+    all_urls = set(models.PropertyUrl.objects.values_list('url', flat=True))
+    xml_to_update = models.PropertySitemap.objects.filter(urls_created=False, status_code=200)
+
+    for x in xml_to_update:
+        try:
+            arr = urls_from_xml_string(x.content)
+        except Exception:
+            if logger is not None:
+                logger.exception("Failed to parse URLs from XML %s", x.url)
+        else:
+            for t in arr:
+                if t in all_urls:
+                    continue
+                else:
+                    the_type = url_type(t)
+                    obj = models.PropertyUrl(
+                        url=t,
+                        property_type=the_type,
+                        created=timezone.now(),
+
+                    )
+                    yield obj
+
+
+def update_property_urls(verbose=True):
+    logger = logging.getLogger("update_property_urls")
+    if verbose:
+        logger.setLevel(logging.DEBUG)
+
+    g = url_generator(logger)
+    # create in blocks
+    create_count = 0
+    for ch in chunk(g, TRANSACTION_CHUNK_SIZE):
+        create_count += len(ch)
+        logger.info("Creating block of %d records. Total created = %d.", len(ch), create_count)
+        models.PropertyUrl.objects.bulk_create(ch)
