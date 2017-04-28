@@ -59,22 +59,23 @@ class PropertyBase(models.Model):
     # url = models.URLField(null=False, blank=False)
     accessed = models.DateTimeField(help_text="Timestamp for access", auto_created=True)
     status_code = models.IntegerField()
+
+    property_type = models.IntegerField(choices=consts.PROPERTY_TYPE_CHOICES)
     full_description = models.TextField()
+
     agent_name = models.CharField(max_length=256)
     agent_address = models.CharField(max_length=256)
     agent_tel = models.CharField(max_length=20)
+
     location = models.PointField(srid=4326)
+    address_string = models.CharField(max_length=256)
+
+    qualifier = models.CharField(max_length=64)
 
 
 class PropertyForSale(PropertyBase):
-    # url = models.URLField(null=False, blank=False)
-    # accessed = models.DateTimeField(help_text="Timestamp for access", auto_created=True)
-    # status_code = models.IntegerField()
+    is_retirement = models.BooleanField(default=False)
     n_bed = models.IntegerField()
     asking_price = models.IntegerField()
     building_type = models.IntegerField(choices=consts.BUILDING_TYPE_CHOICES)
-    # full_description = models.TextField()
-    # agent_name = models.CharField(max_length=256)
-    # agent_address = models.CharField(max_length=256)
-    # agent_tel = models.CharField(max_length=20)
-    # location = models.PointField(srid=4326)
+    building_situation = models.IntegerField(choices=consts.BUILDING_SITUATION_CHOICES)

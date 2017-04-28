@@ -1,6 +1,7 @@
 import requests
 import logging
 import re
+from functools import wraps
 from xml.etree import ElementTree
 import datetime
 from django.utils import timezone
@@ -216,6 +217,19 @@ def update_property_urls(verbose=True):
         models.PropertyUrl.objects.bulk_create(ch)
 
 
+def limited_requests(fn):
+    @wraps(fn)
+    def wrapper(self, *args, **kwargs):
+        print args
+        print kwargs
+        # import ipdb; ipdb.set_trace()
+        self.check_limits()
+        resp = fn(self, *args, **kwargs)
+        self.increment_call_counts()
+        return resp
+    return wrapper
+
+
 class Requester(object):
     __metaclass__ = Singleton
     LIMIT_PER_SEC = None
@@ -250,26 +264,31 @@ class Requester(object):
         Test whether we have exceeded any limits and, if so, wait
         :return:
         """
-        if self.calls_this_second == self.LIMIT_PER_SEC:
-            # wait until the second is up
-            wait_til = self.second_time + datetime.timedelta(seconds=1)
-            wait_for = (wait_til - timezone.now()).total_seconds()
-            self.logger.info("Exceeded per second limit. Sleeping for %.2f seconds...", wait_for)
-            time.sleep(wait_for)
+        if self.LIMIT_PER_SEC is not None:
+            if self.calls_this_second == self.LIMIT_PER_SEC:
+                # wait until the second is up
+                wait_til = self.second_time + datetime.timedelta(seconds=1)
+                wait_for = (wait_til - timezone.now()).total_seconds()
+                self.logger.info("Exceeded per second limit. Sleeping for %.2f seconds...", wait_for)
+                time.sleep(wait_for)
 
-        if self.calls_this_hour == self.LIMIT_PER_HR:
-            # wait until the hour is up
-            wait_til = self.hour_time + datetime.timedelta(hours=1)
-            wait_for = (wait_til - timezone.now()).total_seconds()
-            self.logger.info("Exceeded per hour limit. Sleeping for %d minutes...", int(wait_for / 60.))
-            time.sleep(wait_for)
+        if self.LIMIT_PER_HR is not None:
+            if self.calls_this_hour == self.LIMIT_PER_HR:
+                # wait until the hour is up
+                wait_til = self.hour_time + datetime.timedelta(hours=1)
+                wait_for = (wait_til - timezone.now()).total_seconds()
+                self.logger.info("Exceeded per hour limit. Sleeping for %d minutes...", int(wait_for / 60.))
+                time.sleep(wait_for)
 
+    @limited_requests
     def get(self, url, params=None, **kwargs):
-        # TODO: could we decorate this (and reuse the code for more general request() call?
-        self.check_limits()
         resp = requests.get(url, params=params, **kwargs)
-        self.increment_call_counts()
         return resp
+
+    @limited_requests
+    def post(self, url, data=None, json=None, **kwargs):
+        resp = requests.post(url, data=data, json=json, **kwargs)
+
 
 
 class PropertyGetter(object):
@@ -279,20 +298,22 @@ class PropertyGetter(object):
         """
         Responsible for getting property data, parsing it, retrieving existing records and
         updating the DB entry if required.
-        :param url: The URL from which to obtain details
+        :param url: The URL (string) from which to obtain details.
         :param save: If True (default), save property details to DB if required
         :param force_create: If True, force the creation of a new entry in the DB, even if 
         nothing has changed.
         """
-        self.url = url
+        self.url = url.url
+
         self.save = save
         self.force_create = force_create
-        self.existing_recs = self.model.objects.filter(url=url)
+        self.existing_recs = self.model.objects.filter(url=url).order_by('-last_accessed')
         self.requests = Requester()
 
         self.response = None
         self.parsed = {}
         self.initialise()
+
 
     def initialise(self):
         self.logger = logging.getLogger(self.__class__.__name__)
