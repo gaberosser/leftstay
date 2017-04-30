@@ -58,7 +58,6 @@ def residential_property_for_sale(src):
     if rem is not None:
         res['status'] = 'removed'
 
-
     # agent details
 
     x = soup.find(attrs={'class': 'agent-details-agent-logo'})
@@ -138,7 +137,7 @@ def residential_property_for_sale(src):
     if kf is None:
         res.setdefault('errors', {})['key_features'] = 'not found'
     else:
-        res['key_features'] = [t.text for t in kf.find_all('li')]
+        res['key_features'] = ';'.join([t.text for t in kf.find_all('li')])
 
     tenu = soup.find('span', attrs={'id': 'tenureType'})
     if tenu is not None:
@@ -165,7 +164,7 @@ def residential_property_for_sale(src):
                     full_desc.append(t)
             t = g.next()
     if len(full_desc):
-        res['description'] = full_desc
+        res['description'] = '\n'.join(full_desc)
     else:
         res.setdefault('errors', {})['description'] = desc
 
