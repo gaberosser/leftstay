@@ -9,17 +9,19 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-try:
-    from _local import *
-except ImportError:
-    print "No local settings _local.py found, using template values"
-    from _local_template import *
 
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUT_DIR = os.path.join(BASE_DIR, 'local_outputs')
 
+
+try:
+    from _local import *
+except ImportError:
+    print "No local settings _local.py found, using template values"
+    from _local_template import *
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/

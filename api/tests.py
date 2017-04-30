@@ -9,4 +9,5 @@ property_for_sale_urls = [
     'http://www.rightmove.co.uk/property-for-sale/property-64931681.html',
     'http://www.rightmove.co.uk/property-for-sale/property-47281050.html',
     'http://www.rightmove.co.uk/property-for-sale/property-58719553.html',
+    'http://www.rightmove.co.uk/property-for-sale/property-64243970.html',  # 'removed by agent'
 ]

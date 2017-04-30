@@ -54,7 +54,7 @@ class NearestStation(models.Model):
 class PropertyBase(models.Model):
 
     url = models.ForeignKey('PropertyUrl', null=False, blank=False)
-    # TODO: requester = ...
+    requester_id = models.CharField(max_length=32)
     
     accessed = models.DateTimeField(help_text="Timestamp for access", auto_created=True)
     http_status_code = models.IntegerField()
@@ -71,6 +71,7 @@ class PropertyBase(models.Model):
     address_string = models.CharField(max_length=256)
 
     qualifier = models.CharField(max_length=64)
+    status = models.CharField(max_length=32, null=True, blank=True)
 
 
 class PropertyForSale(PropertyBase):
@@ -80,4 +81,3 @@ class PropertyForSale(PropertyBase):
     building_type = models.IntegerField(choices=consts.BUILDING_TYPE_CHOICES)
     building_situation = models.IntegerField(choices=consts.BUILDING_SITUATION_CHOICES)
     tenure_type = models.CharField(max_length=32, null=True, blank=True)
-    status = models.CharField(max_length=32, null=True, blank=True)

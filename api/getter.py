@@ -9,7 +9,7 @@ import models
 import consts
 import time
 from leftstay.settings import TRANSACTION_CHUNK_SIZE
-from leftstay.utils import chunk, Singleton
+from leftstay.utils import chunk
 
 
 URL_REGEX = re.compile(r'.*co\.uk\/([a-z-]*)\/.*$')
@@ -179,7 +179,10 @@ class PropertyXmlGetter(SitemapXmlGetter):
 
 
 def url_generator(logger=None):
-    all_urls = set(models.PropertyUrl.objects.values_list('url', flat=True))
+    """
+    Generator that returns unsaved PropertyUrl objects
+    """
+    existing_urls = set(models.PropertyUrl.objects.filter(deactivated__isnull=True).values_list('url', flat=True))
     xml_to_update = models.PropertySitemap.objects.filter(urls_created=False, status_code=200)
 
     for x in xml_to_update:
@@ -190,7 +193,7 @@ def url_generator(logger=None):
                 logger.exception("Failed to parse URLs from XML %s", x.url)
         else:
             for t in arr:
-                if t in all_urls:
+                if t in existing_urls:
                     continue
                 else:
                     the_type = url_type(t)
@@ -198,7 +201,6 @@ def url_generator(logger=None):
                         url=t,
                         property_type=the_type,
                         created=timezone.now(),
-
                     )
                     yield obj
 
@@ -208,13 +210,25 @@ def update_property_urls(verbose=True):
     if verbose:
         logger.setLevel(logging.DEBUG)
 
+    remaining = set(models.PropertyUrl.objects.filter(deactivated__isnull=True).values_list('url', flat=True))
     g = url_generator(logger)
     # create in blocks
     create_count = 0
     for ch in chunk(g, TRANSACTION_CHUNK_SIZE):
         create_count += len(ch)
+        these_urls = set([t.url for t in ch])
+        remaining = remaining.difference(these_urls)
+
         logger.info("Creating block of %d records. Total created = %d.", len(ch), create_count)
-        models.PropertyUrl.objects.bulk_create(ch)
+        try:
+            models.PropertyUrl.objects.bulk_create(ch)
+        except Exception:
+            logger.exception("Failed to create block")
+
+    # infer that the remaining URLs have been removed
+    logger.info("Deactivating %d URLs that were not found in the latest sitemaps.", len(remaining))
+    models.PropertyUrl.objects.filter(url__in=remaining).update(deactivated=timezone.now())
+
 
 
 def limited_requests(fn):
@@ -230,12 +244,32 @@ def limited_requests(fn):
     return wrapper
 
 
+class RequesterSingleton(type):
+    """
+    Declare a singleton class by setting `__metaclass__ = Singleton`
+    The effect is that `__call__` is called during instantiation, before `__init__`.
+    If an instance already exists, we return that, so only one instance ever exists.
+    """
+    _instances = {}
+
+    def __call__(cls, rid=None, *args, **kwargs):
+        # this gets called
+        if cls not in cls._instances:
+            cls._instances[cls] = super(RequesterSingleton, cls).__call__(rid=rid, *args, **kwargs)
+        elif rid is not None and rid != cls._instances[cls].rid:
+            raise ValueError("Requested ID does not match existing singleton instance (%s)." % cls._instances[cls].rid)
+        return cls._instances[cls]
+
+
 class Requester(object):
-    __metaclass__ = Singleton
+    __metaclass__ = RequesterSingleton
     LIMIT_PER_SEC = None
     LIMIT_PER_HR = None
 
-    def __init__(self):
+    def __init__(self, rid=None):
+        if rid is None:
+            rid = "LeftStay-requester-base"
+        self.rid = rid
         self._total_calls = 0
         self.calls_this_second = 0
         self.calls_this_hour = 0

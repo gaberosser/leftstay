@@ -42,6 +42,7 @@ STATION_TYPE_MAP = {
     "icon-london-overground": consts.STATION_TYPE_OVERGROUND,
 }
 
+removed_re = re.compile(r'This property has been removed by the agent', flags=re.I)
 situation_re = re.compile("(?P<t>%s)" % "|".join(BUILDING_SITUATION_MAP.keys()), flags=re.I)
 type_re = re.compile("(?P<t>%s)" % "|".join(BUILDING_TYPE_MAP.keys()), flags=re.I)
 latlng_re = re.compile(r"latitude=(?P<lat>[-0-9\.]*).*longitude=(?P<lng>[-0-9\.]*)")
@@ -51,6 +52,12 @@ def residential_property_for_sale(src):
 
     res = {'property_type': consts.PROPERTY_TYPE_FORSALE}
     soup = BeautifulSoup(src, "html.parser")
+
+    # has the property been removed?
+    rem = soup.find(text=removed_re)
+    if rem is not None:
+        res['status'] = 'removed'
+
 
     # agent details
 
@@ -231,14 +238,16 @@ def residential_property_for_sale(src):
         except ValueError:
             res.setdefault('errors', {})['asking_price'] = price
 
-    # status
+    # status and qualifier
+    # status should not be used if property has been removed
 
     stat = soup.find(attrs={'class': 'property-header-qualifier'})
     if stat is not None:
         res['qualifier'] = stat.text
 
-    ps = soup.find(attrs={'class': 'propertystatus'})
-    if ps is not None:
-        res['status'] = ps.text.strip('\n')
+    if 'status' in res:
+        ps = soup.find(attrs={'class': 'propertystatus'})
+        if ps is not None:
+            res['status'] = ps.text.strip('\n')
 
     return res
