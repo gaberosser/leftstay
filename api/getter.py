@@ -234,9 +234,6 @@ def update_property_urls(verbose=True):
 def limited_requests(fn):
     @wraps(fn)
     def wrapper(self, *args, **kwargs):
-        print args
-        print kwargs
-        # import ipdb; ipdb.set_trace()
         self.check_limits()
         resp = fn(self, *args, **kwargs)
         self.increment_call_counts()
@@ -244,7 +241,7 @@ def limited_requests(fn):
     return wrapper
 
 
-class RequesterSingleton(type):
+class Singleton(type):
     """
     Declare a singleton class by setting `__metaclass__ = Singleton`
     The effect is that `__call__` is called during instantiation, before `__init__`.
@@ -252,24 +249,24 @@ class RequesterSingleton(type):
     """
     _instances = {}
 
-    def __call__(cls, rid=None, *args, **kwargs):
+    def __call__(cls, base_id=None, *args, **kwargs):
         # this gets called
         if cls not in cls._instances:
-            cls._instances[cls] = super(RequesterSingleton, cls).__call__(rid=rid, *args, **kwargs)
-        elif rid is not None and rid != cls._instances[cls].rid:
-            raise ValueError("Requested ID does not match existing singleton instance (%s)." % cls._instances[cls].rid)
+            cls._instances[cls] = super(Singleton, cls).__call__(base_id=base_id, *args, **kwargs)
+        elif base_id is not None and base_id != cls._instances[cls].base_id:
+            raise ValueError("Requested base ID does not match existing singleton instance (%s)." % cls._instances[cls].base_id)
         return cls._instances[cls]
 
 
-class Requester(object):
-    __metaclass__ = RequesterSingleton
+class RequesterSingleton(object):
+    __metaclass__ = Singleton
     LIMIT_PER_SEC = None
     LIMIT_PER_HR = None
 
-    def __init__(self, rid=None):
-        if rid is None:
-            rid = "LeftStay-requester-base"
-        self.rid = rid
+    def __init__(self, base_id=None):
+        if base_id is None:
+            base_id = "LeftStay-requester-base"
+        self.base_id = base_id
         self._total_calls = 0
         self.calls_this_second = 0
         self.calls_this_hour = 0
@@ -323,6 +320,18 @@ class Requester(object):
     def post(self, url, data=None, json=None, **kwargs):
         resp = requests.post(url, data=data, json=json, **kwargs)
 
+
+class Requester(object):
+    def __init__(self, user_agent):
+        self.user_agent = user_agent
+        self.requester = RequesterSingleton()
+
+    def __getattr__(self, item):
+        attr = getattr(self.requester, item, None)
+        if attr is not None:
+            return attr
+        else:
+            raise AttributeError
 
 
 class PropertyGetter(object):

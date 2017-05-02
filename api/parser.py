@@ -3,7 +3,7 @@ from django.contrib.gis import geos
 import datetime
 from bs4 import BeautifulSoup, element
 import re
-import consts
+import consts, models
 
 NOT_PROPERTY = {
     'plot',
@@ -48,30 +48,47 @@ type_re = re.compile("(?P<t>%s)" % "|".join(BUILDING_TYPE_MAP.keys()), flags=re.
 latlng_re = re.compile(r"latitude=(?P<lat>[-0-9\.]*).*longitude=(?P<lng>[-0-9\.]*)")
 
 
-def residential_property_for_sale(src):
+def residential_property_for_sale(src, url_obj=None):
+    """
+    :param src: Contains the raw text source for the property.
+    :param url_obj: Optional. If supplied, this is used to set the required URL FK in the attributes. If not, this
+    attribute MUST be set elsewhere before the deferred object can be saved.
+    :returns: Dictionary with the following entries
+        `errors`: dict of errors
+        `deferred`: list of DeferredModel instances
+        `status`: string with status or None
+    """
 
-    res = {'property_type': consts.PROPERTY_TYPE_FORSALE}
+    errors = {}
+    deferred_objs = []
+    status = None
+
+    attrs = {'property_type': consts.PROPERTY_TYPE_FORSALE}
+
+    if url_obj is not None:
+        attrs['url_id'] = url_obj.id
+
     soup = BeautifulSoup(src, "html.parser")
 
     # has the property been removed?
     rem = soup.find(text=removed_re)
     if rem is not None:
-        res['status'] = 'removed'
+        status = 'removed'
 
     # agent details
 
     x = soup.find(attrs={'class': 'agent-details-agent-logo'})
     agent_addr = x.find('address')
     if agent_addr:
-        res['agent_address'] = agent_addr.text
+        attrs['agent_address'] = agent_addr.text
 
     agent_name = x.find('strong')
     if agent_name:
-        res['agent_name'] = agent_name.text
+        attrs['agent_name'] = agent_name.text
 
     agent_tel = x.find('a', attrs={'class': 'branch-telephone-number'})
     if agent_tel:
-        res['agent_tel'] = agent_tel.text.strip('\n')
+        attrs['agent_tel'] = agent_tel.text.strip('\n')
 
     # header attributes
 
@@ -80,15 +97,15 @@ def residential_property_for_sale(src):
 
     if desc is None:
         # without description, we won't have enough to go on
-        res['FAILED'] = True
-        res['failure_reason'] = 'No description found'
-        res['raw'] = src
-        return res
+        errors['FAILED'] = True
+        errors['failure_reason'] = 'No description found'
+        errors['raw'] = src
+        return {'errors': errors}
 
     desc = desc.text
 
     if re.search('retirement', desc):
-        res['is_retirement'] = True
+        attrs['is_retirement'] = True
 
     # n beds if available
 
@@ -96,7 +113,7 @@ def residential_property_for_sale(src):
     if nbeds is not None and nbeds != '':
         nbeds = nbeds.group('beds')
         try:
-            res['nbeds'] = int(nbeds)
+            attrs['n_bed'] = int(nbeds)
         except ValueError:
             pass
 
@@ -104,7 +121,7 @@ def residential_property_for_sale(src):
     prop = re.sub('[1-9]* bedroom *', '', prop)
 
     if re.search('studio', prop, flags=re.I):
-        res['nbeds'] = 1
+        attrs['n_bed'] = 1
 
     # we now seek to extract up to two elements: situation (e.g. 'detached') and type (e.g. penthouse)
     # the second is guaranteed, the first is optional
@@ -113,9 +130,9 @@ def residential_property_for_sale(src):
     if sit:
         t = sit.group('t').lower()
         if t in BUILDING_SITUATION_MAP:
-            res['building_situation'] = BUILDING_SITUATION_MAP[t]
+            attrs['building_situation'] = BUILDING_SITUATION_MAP[t]
         else:
-            res.setdefault('errors', {})['building_situation'] = t
+            errors['building_situation'] = t
         prop2 = re.sub(situation_re, "", prop).strip()
     else:
         prop2 = prop
@@ -124,24 +141,24 @@ def residential_property_for_sale(src):
     if typ:
         t = typ.group('t').lower()
         if t in BUILDING_TYPE_MAP:
-            res['building_type'] = BUILDING_TYPE_MAP[t]
-            if res['building_type'] == consts.BUILDING_TYPE_FLAT:
-                res['building_situation'] = consts.BUILDING_SITUATION_FLAT
+            attrs['building_type'] = BUILDING_TYPE_MAP[t]
+            if attrs['building_type'] == consts.BUILDING_TYPE_FLAT:
+                attrs['building_situation'] = consts.BUILDING_SITUATION_FLAT
         else:
-            res.setdefault('errors', {})['building_type'] = t
+            errors['building_type'] = t
     else:
-        res.setdefault('errors', {})['building_type'] = prop
+        errors['building_type'] = prop
 
     # description
     kf = soup.find(attrs={'class': 'key-features'})
     if kf is None:
-        res.setdefault('errors', {})['key_features'] = 'not found'
+        errors['key_features'] = 'not found'
     else:
-        res['key_features'] = ';'.join([t.text for t in kf.find_all('li')])
+        attrs['key_features'] = ';'.join([t.text for t in kf.find_all('li')])
 
     tenu = soup.find('span', attrs={'id': 'tenureType'})
     if tenu is not None:
-        res['tenure_type'] = tenu.text
+        attrs['tenure_type'] = tenu.text
 
     # this is a mess, check whether it's robust
 
@@ -164,89 +181,103 @@ def residential_property_for_sale(src):
                     full_desc.append(t)
             t = g.next()
     if len(full_desc):
-        res['description'] = '\n'.join(full_desc)
+        attrs['full_description'] = '\n'.join(full_desc)
     else:
-        res.setdefault('errors', {})['description'] = desc
+        errors['full_description'] = desc
+
 
     # location
     adds = x.find('address')
     if adds is None:
-        res.setdefault('errors', {})['address_string'] = 'not found'
+        attrs.setdefault('errors', {})['address_string'] = 'not found'
     else:
-        res['address_string'] = adds.text
+        attrs['address_string'] = adds.text
 
     map_static = soup.find(attrs={'alt': 'Get map and local information'})
     if map_static is None:
-        res.setdefault('errors', {})['location'] = 'not found'
+        errors['location'] = 'not found'
     else:
         t = map_static.get('src')
         latlng = re.search(latlng_re, t)
         if latlng is None:
-            res.setdefault('errors', {})['location'] = t
+            attrs.setdefault('errors', {})['location'] = t
         else:
             try:
                 lat = float(latlng.group('lat'))
                 lng = float(latlng.group('lng'))
-                res['location'] = geos.Point(lng, lat, srid=4326)
+                attrs['location'] = geos.Point(lng, lat, srid=4326)
             except ValueError:
-                res.setdefault('errors', {})['location'] = t
-
-    # nearest stations
-
-    sl = soup.find('ul', attrs={'class': 'stations-list'})
-    if sl is None:
-        res.setdefault('errors', {})['nearest_stations'] = 'not found'
-    else:
-        nearest_stations = []
-        for t in sl.find_all('li'):
-            try:
-                name, dist = t.text.strip('\n').split('\n')
-                dist = float(re.search(r'\((?P<d>[0-9\.]*) mi\)', dist).group('d'))
-                cl = t.i.get('class')[-1]
-                typ = STATION_TYPE_MAP[cl]
-                nearest_stations.append({
-                    'station': name,
-                    'station_type': typ,
-                    'distance_mi': dist,
-                })
-            except Exception:
-                res.setdefault('errors', {}).setdefault('nearest_stations', []).append(t)
-        if len(nearest_stations):
-            res['nearest_stations'] = nearest_stations
+                errors['location'] = t
 
     # date added
 
     dl = soup.find(attrs={'id': 'firstListedDateValue'})
     if dl is None:
-        res.setdefault('errors', {})['date_listed'] = 'not found'
+        errors['date_listed'] = 'not found'
     else:
         try:
-            res['date_listed'] = datetime.datetime.strptime(dl.text, '%d %B %Y').date()
+            attrs['date_listed'] = datetime.datetime.strptime(dl.text, '%d %B %Y').date()
         except Exception:
-            res.setdefault('errors', {})['date_listed'] = dl.text
+            errors['date_listed'] = dl.text
 
     # asking price
 
     prc = soup.find(attrs={'class': 'property-header-price'})
     if prc is None:
-        res.setdefault('errors', {})['asking_price'] = 'not found'
+        errors['asking_price'] = 'not found'
     else:
         price = re.search(u'£(?P<price>[0-9,]*)', prc.text).group('price')
         try:
-            res['asking_price'] = int(price.replace(',', ''))
+            attrs['asking_price'] = int(price.replace(',', ''))
         except ValueError:
-            res.setdefault('errors', {})['asking_price'] = price
+            errors['asking_price'] = price
 
     # status and qualifier
     # status should not be used if property has been removed
 
     stat = soup.find(attrs={'class': 'property-header-qualifier'})
     if stat is not None:
-        res['qualifier'] = stat.text
+        attrs['qualifier'] = stat.text
 
-    if 'status' in res:
-        ps = soup.find(attrs={'class': 'propertystatus'})
-        if ps is not None:
-            res['status'] = ps.text.strip('\n')
+    ps = soup.find(attrs={'class': 'propertystatus'})
+    if ps is not None:
+        attrs['status'] = ps.text.strip('\n')
 
-    return res
+    deferred_prop = models.DeferredModel(models.PropertyForSale, attrs=attrs)
+    deferred_objs.append(deferred_prop)
+
+    # nearest stations
+    deferred_nearest_stations = []
+    sl = soup.find('ul', attrs={'class': 'stations-list'})
+    if sl is None:
+        errors['nearest_stations'] = 'not found'
+    else:
+        for t in sl.find_all('li'):
+            try:
+                name, dist = t.text.strip('\n').split('\n')
+                dist = float(re.search(r'\((?P<d>[0-9\.]*) mi\)', dist).group('d'))
+                cl = t.i.get('class')[-1]
+                typ = STATION_TYPE_MAP[cl]
+                attrs = {
+                    'station': name,
+                    'station_type': typ,
+                    'distance_mi': dist,
+                }
+                def_nst = models.DeferredModel(
+                    models.NearestStation,
+                    attrs=attrs,
+                    dependencies={'property': deferred_prop}
+                )
+                deferred_nearest_stations.append(def_nst)
+            except Exception:
+                errors.setdefault('nearest_stations', []).append(t)
+
+    deferred_objs.extend(deferred_nearest_stations)
+
+    out = {
+        'errors': errors,
+        'deferred': deferred_objs,
+        'status': status,
+    }
+
+    return out

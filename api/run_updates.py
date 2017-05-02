@@ -18,24 +18,34 @@ class Minion(object):
     URL (if it exists) and only performs an update if there has been a real change.
     Each minion has an ID that it uses to make requests.
     """
-    parser = None
+
     model = None
 
-    def __init__(self, url_qset, request_id, dump_errors=True):
-        self.request_id = request_id
-        self.requester = Requester(request_id)
+    @staticmethod
+    def parser(*args, **kwargs):
+        """
+        This has to be implemented as a staticmethod, otherwise it will be called with implicit passing of `self`.
+        Since the function does not expect an instance of Minion as its first argument, it will fail (!)
+        """
+        return NotImplementedError
+
+    def __init__(self, url_qset, user_agent, dump_errors=True):
+        self.user_agent = user_agent
+        self.requester = Requester(user_agent)
         self.url_qset = url_qset
         self.logger = logging.getLogger(
-            "%s.%s" % (self.__class__.__name__, request_id)
+            "%s.%s" % (self.__class__.__name__, user_agent)
         )
         self.dump_errors = dump_errors
         if dump_errors:
-            self.outdir = os.path.join(OUT_DIR, 'minion.%s.%s' % (
-                self.request_id, timezone.now().strftime("%Y-%m-%d_%H%M%S")
+            self.outdir = os.path.join(OUT_DIR, '%s.%s.%s' % (
+                self.__class__.__name__.lower(),
+                self.user_agent,
+                timezone.now().strftime("%Y-%m-%d_%H%M%S")
             ))
             if not os.path.exists(self.outdir):
                 os.makedirs(self.outdir)
-        self.logger.info("Minion %s reporting for duty!", self.request_id)
+        self.logger.info("Minion %s reporting for duty!", self.user_agent)
         self.logger.info("You gave me a list of %d URLs. Let's get to work.", self.url_qset.count())
 
         self.up()
@@ -53,14 +63,16 @@ class Minion(object):
     def up(self):
         for obj in self.url_qset:
             try:
+                # import ipdb; ipdb.set_trace()
                 resp = self.requester.get(obj.url)
                 if resp.status_code == 200:
-                    p = self.parser(resp.content)
-                    if p['status'] == 'removed':
+                    dat = self.parser(resp.content, url_obj=obj)
+                    if dat['status'] == 'removed':
                         status = consts.URL_STATUS_REMOVED
                     else:
                         status = consts.URL_STATUS_ACTIVE
-                    updated = self.update_one(obj, p)
+
+                    updated = self.update_one(obj, dat['deferred'])
                     self.update_url(
                         obj,
                         updated=updated,
@@ -88,24 +100,15 @@ class Minion(object):
         else:
             self.logger.error("Failed to get URL %s (status code %d)", obj.url, resp.status_code)
 
-    def obj_to_dict(self, x):
+    def get_deferred(self, x):
         """
-        Convert the existing model object to a dictionary for comparison with the parsed output.
+        Convert the existing model object to one or more DeferredModel instances for comparison with the parsed output.
         Must be implemented in child classes.
         :param x: Of instance self.model
-        :return: Dictionary
+        :return: List of DeferredModel instances in the same order as they would be created by the parser.
         """
-        return x.to_dict()
-
-    def dict_to_obj(self, x):
-        """
-        Convert the parsed data in dictionary to unsaved object(s).
-        These are returned in a list, and should be created in the same order, allowing
-        foreign keys to be honoured.
-        :param x: Dictionary from parser.
-        :return: List of objects
-        """
-        return self.model.from_dict(x)
+        # base implementation returns only one instance
+        return [x.to_deferred()]
 
     def update_one(self, obj, parsed):
         """
@@ -119,30 +122,46 @@ class Minion(object):
         )
         if x.exists():
             x = x.latest('accessed')
-            existing = self.obj_to_dict(x)
-            eq = dict_equality(existing, parsed, return_diff=False)
+            existing = x.to_deferred()
+            if len(existing) != len(parsed):
+                self.logger.error(
+                    "Number of existing deferred instances (%d) does not match the number of parsed instances (%d).",
+                    len(existing),
+                    len(parsed)
+                )
+                self.logger.error("This is probably due to the implementation of the get_deferred() method")
+                raise AttributeError("Lengths of deferred lists do not match.")
+
+            eq = all([
+                dict_equality(e.attrs, p.attrs, return_diff=False) for e, p in zip(existing, parsed)
+            ])
+
             if eq:
                 # just update the accessed date
                 x.accessed = timezone.now()
                 x.save()
                 return False
             else:
-                new = self.dict_to_obj(parsed)
-                new.save()
+                for p in parsed:
+                    p.save()
                 return True
         else:
             # no existing record, no comparison needed
-            new = self.dict_to_obj(parsed)
-            new.save()
+            for p in parsed:
+                p.save()
             return True
 
 
 class ResidentialForSaleMinion(Minion):
-    parser = parser.residential_property_for_sale
+    model = models.PropertyForSale
 
-    def obj_to_dict(self, x):
-        pass
+    @staticmethod
+    def parser(*args, **kwargs):
+        return parser.residential_property_for_sale(*args, **kwargs)
 
-    def dict_to_obj(self, x):
-        pass
-
+    def get_deferred(self, x):
+        de = super(ResidentialForSaleMinion, self).get_deferred(x)
+        if x.neareststation_set.exists():
+            for ns in x.neareststation_set.all():
+                de.append(ns.to_deferred())
+        return de

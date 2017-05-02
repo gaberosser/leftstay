@@ -1,6 +1,9 @@
 from django.contrib.gis.db import models
+from django.utils import timezone
+import logging
 import consts
 
+logger = logging.getLogger(__name__)
 
 class PropertySitemap(models.Model):
     """
@@ -33,8 +36,88 @@ class PropertyUrl(models.Model):
     last_status_code = models.IntegerField(help_text="Status code obtained on previous update", null=True)
 
 
+class DeferredModel(object):
+    """
+    Deferred classes hold attributes that _will_ be made into Django model objects later.
+    Most of these attributes are held in `attributes`, however some models have dependencies on others
+    (FK relationships) and cannot be created without them. This class allows us to defer saving until all dependencies
+    have been satisfied and to ensure IDs are tracked correctly.
+    :param dependencies: Dictionary. Keys are the model field name, values are other Deferred instances.
+    """
+
+    def __init__(self, model, attrs=None, dependencies=None):
+        self.model = model
+        self.attrs = attrs or {}
+        self.dependencies = dependencies
+        self.djobj = None
+
+    @property
+    def saved(self):
+        return self.djobj is not None
+
+    @property
+    def dependencies_satisfied(self):
+        if self.dependencies is None:
+            return True
+        for d in self.dependencies.values():
+            if not d.saved:
+                return False
+        return True
+
+    def save_dependencies(self, **kwargs):
+        """
+        Attempt to save all listed dependencies
+        :param kwargs: Passed to Django model .save() method
+        """
+        if not self.dependencies_satisfied:
+            for k, d in self.dependencies.items():
+                if not d.saved:
+                    try:
+                        d.save(**kwargs)
+                    except Exception:
+                        logger.exception("Failed to save dependency %s", k)
+                        raise
+
+    def save(self, **kwargs):
+        """
+        :param kwargs: Passed to Django model .save() method
+        """
+        if self.saved:
+            return
+
+        self.save_dependencies(**kwargs)
+
+        obj = self.model(**self.attrs)
+        if self.dependencies is not None:
+            for k, d in self.dependencies.items():
+                setattr(obj, k, d.djobj)
+        obj.save(**kwargs)
+        obj.refresh_from_db()
+        self.djobj = obj
+
+
 class PropertySerializerMixin(object):
-    def to_dict(self):
+
+    def to_deferred(self):
+        # check cache in case we have already created this object
+        if hasattr(self, '_deferred'):
+            return self._deferred
+        attrs = self.get_attributes()
+        deps = self.get_dependencies()
+        self._deferred = DeferredModel(
+            self.model,
+            attrs=attrs,
+            dependencies=deps
+        )
+        return self._deferred
+
+    def get_dependencies(self):
+        """
+        Must be implemented in derived classes if required
+        """
+        return
+
+    def get_attributes(self):
         excl = set(getattr(self, 'exclusions', default=[]))
         fields = [f.name for f in self._meta.fields if f.name not in excl]
         res = dict([
@@ -43,26 +126,10 @@ class PropertySerializerMixin(object):
         return res
 
     @classmethod
-    def from_dict(cls, x):
-        x = dict(x)
-        kwargs = {}
-        excl = set(getattr(cls, 'exclusions', default=[]))
-        for f in cls._meta.fields:
-            if f in x and f.name not in excl:
-                kwargs[f.name] = x[f.name]
-        kwargs['url_id'] = x['url_id']
-        return cls(**kwargs)
-
-
-# class KeyFeature(models.Model, SerializerMixin):
-#     property_for_sale = models.ForeignKey('PropertyBase')
-#     feature = models.CharField(max_length=256)
-
-
-# class ListingHistory(models.Model, PropertySerializerMixin):
-#     property_for_sale = models.ForeignKey('PropertyBase')
-#     date = models.DateField()
-#     action = models.CharField(max_length=128)
+    def from_deferred(cls, deferred):
+        if not deferred.saved:
+            deferred.save()
+        return deferred.djobj
 
 
 class NearestStation(models.Model, PropertySerializerMixin):
@@ -72,15 +139,10 @@ class NearestStation(models.Model, PropertySerializerMixin):
     station = models.CharField(max_length=64)
     station_type = models.IntegerField(choices=consts.STATION_TYPE_CHOICES)
 
-    def to_dict(self):
-        res = super(NearestStation, self).to_dict()
-        res['property_id'] = self.property.id
-        return res
-
-    def from_dict(cls, x):
-        obj = super(NearestStation, cls).from_dict(x)
-        obj.property_id = x['property_id']
-        return obj
+    def get_dependencies(self):
+        return {
+            'property': self.property.to_deferred()
+        }
 
 
 class PropertyBase(models.Model, PropertySerializerMixin):
@@ -110,6 +172,15 @@ class PropertyBase(models.Model, PropertySerializerMixin):
     qualifier = models.CharField(max_length=64)
     status = models.CharField(max_length=32, null=True, blank=True)
 
+    def get_attributes(self):
+        attrs = super(PropertyBase, self).get_attributes()
+        attrs['url_id'] = self.url.id
+
+    def save(self, **kwargs):
+        if self.accessed is None:
+            self.accessed = timezone.now()
+        super(PropertyBase, self).save(**kwargs)
+
 
 class PropertyForSale(PropertyBase):
     exclusions = PropertyBase.exclusions
@@ -119,17 +190,3 @@ class PropertyForSale(PropertyBase):
     building_type = models.IntegerField(choices=consts.BUILDING_TYPE_CHOICES)
     building_situation = models.IntegerField(choices=consts.BUILDING_SITUATION_CHOICES)
     tenure_type = models.CharField(max_length=32, null=True, blank=True)
-
-    def to_dict(self):
-        res = super(PropertyForSale, self).to_dict()
-        # add foreign key fields: nearest stations, key features?
-        if self.neareststation_set.exists():
-            res['nearest_station'] = [t.to_dict() for t in self.neareststation_set.all()]
-        res['url_id'] = self.url.id
-        return res
-
-    def from_dict(cls, x):
-        l = super(PropertyForSale, cls).from_dict(x)
-        l.url_id = x['url_id']
-        l = [l] + [NearestStation.from_dict(t) for t in x.get('nearest_station', [])]
-        return l
