@@ -272,6 +272,11 @@ def residential_property_for_sale(src, url_obj=None):
             except Exception:
                 errors.setdefault('nearest_stations', []).append(t)
 
+    # sort by station name
+    deferred_nearest_stations = sorted(
+        deferred_nearest_stations,
+        key=lambda d: d.attrs['station']
+    )
     deferred_objs.extend(deferred_nearest_stations)
 
     out = {

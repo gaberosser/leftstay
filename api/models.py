@@ -105,7 +105,7 @@ class PropertySerializerMixin(object):
         attrs = self.get_attributes()
         deps = self.get_dependencies()
         self._deferred = DeferredModel(
-            self.model,
+            self.__class__,
             attrs=attrs,
             dependencies=deps
         )
@@ -118,7 +118,7 @@ class PropertySerializerMixin(object):
         return
 
     def get_attributes(self):
-        excl = set(getattr(self, 'exclusions', default=[]))
+        excl = set(getattr(self, 'exclusions', []))
         fields = [f.name for f in self._meta.fields if f.name not in excl]
         res = dict([
             (f, getattr(self, f)) for f in fields

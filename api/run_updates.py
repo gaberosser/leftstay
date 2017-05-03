@@ -34,7 +34,7 @@ class Minion(object):
         self.requester = Requester(user_agent)
         self.url_qset = url_qset
         self.logger = logging.getLogger(
-            "%s.%s" % (self.__class__.__name__, user_agent)
+            "api.%s.%s" % (self.__class__.__name__, user_agent)
         )
         self.dump_errors = dump_errors
         if dump_errors:
@@ -46,8 +46,6 @@ class Minion(object):
             if not os.path.exists(self.outdir):
                 os.makedirs(self.outdir)
         self.logger.info("Minion %s reporting for duty!", self.user_agent)
-        self.logger.info("You gave me a list of %d URLs. Let's get to work.", self.url_qset.count())
-
         self.up()
 
     def update_url(self, obj, updated=False, status_code=None, status=None):
@@ -61,7 +59,11 @@ class Minion(object):
         obj.save()
 
     def up(self):
-        for obj in self.url_qset:
+        n = self.url_qset.count()
+        self.logger.info("You gave me a list of %d URLs. Let's get to work.", n)
+        for i, obj in enumerate(self.url_qset):
+            if i != 0 and (i % 500) == 0:
+                self.logger.info("%d / %d", i + 1, n)
             try:
                 # import ipdb; ipdb.set_trace()
                 resp = self.requester.get(obj.url)
@@ -118,11 +120,11 @@ class Minion(object):
         :return: Boolean indicating whether an update has been performed
         """
         x = self.model.objects.filter(
-            url=obj.url
+            url=obj
         )
         if x.exists():
             x = x.latest('accessed')
-            existing = x.to_deferred()
+            existing = self.get_deferred(x)
             if len(existing) != len(parsed):
                 self.logger.error(
                     "Number of existing deferred instances (%d) does not match the number of parsed instances (%d).",
@@ -160,8 +162,13 @@ class ResidentialForSaleMinion(Minion):
         return parser.residential_property_for_sale(*args, **kwargs)
 
     def get_deferred(self, x):
+        """
+        Generates a list of deferred objects.
+        The first object corresponds to the PropertyForSale itself, then subsequent objects are deferred NearestStation
+        ordered by station name.
+        """
         de = super(ResidentialForSaleMinion, self).get_deferred(x)
         if x.neareststation_set.exists():
-            for ns in x.neareststation_set.all():
+            for ns in x.neareststation_set.order_by('station'):
                 de.append(ns.to_deferred())
         return de
