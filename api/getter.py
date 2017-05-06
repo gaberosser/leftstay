@@ -8,7 +8,7 @@ from django.utils import timezone
 import models
 import consts
 import time
-from leftstay.settings import TRANSACTION_CHUNK_SIZE
+from leftstay.settings import TRANSACTION_CHUNK_SIZE, REQUEST_FROM
 from leftstay.utils import chunk
 
 
@@ -241,6 +241,15 @@ def limited_requests(fn):
     return wrapper
 
 
+def with_headers(fn):
+    @wraps(fn)
+    def wrapper(self, *args, **kwargs):
+        if 'headers' not in kwargs:
+            kwargs['headers'] = self.headers
+        return fn(self, *args, **kwargs)
+    return wrapper
+
+
 class Singleton(type):
     """
     Declare a singleton class by setting `__metaclass__ = Singleton`
@@ -263,7 +272,7 @@ class RequesterSingleton(object):
     LIMIT_PER_SEC = None
     LIMIT_PER_HR = None
 
-    def __init__(self, base_id=None):
+    def __init__(self, base_id=None, headers=None):
         if base_id is None:
             base_id = "LeftStay-requester-base"
         self.base_id = base_id
@@ -273,6 +282,9 @@ class RequesterSingleton(object):
         self.second_time = timezone.now()
         self.hour_time = timezone.now()
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.headers = requests.utils.default_headers()
+        if headers is not None:
+            self.headers.update(headers)
 
     def increment_call_counts(self):
         now = timezone.now()
@@ -311,20 +323,28 @@ class RequesterSingleton(object):
                 self.logger.info("Exceeded per hour limit. Sleeping for %d minutes...", int(wait_for / 60.))
                 time.sleep(wait_for)
 
+    @with_headers
     @limited_requests
     def get(self, url, params=None, **kwargs):
         resp = requests.get(url, params=params, **kwargs)
         return resp
 
+    @with_headers
     @limited_requests
     def post(self, url, data=None, json=None, **kwargs):
         resp = requests.post(url, data=data, json=json, **kwargs)
+        return resp
 
 
 class Requester(object):
     def __init__(self, user_agent):
         self.user_agent = user_agent
-        self.requester = RequesterSingleton()
+        self.headers = {
+            'User-Agent': self.user_agent,
+        }
+        if REQUEST_FROM is not None:
+            self.headers['From'] = REQUEST_FROM
+        self.requester = RequesterSingleton(headers=self.headers)
 
     def __getattr__(self, item):
         attr = getattr(self.requester, item, None)

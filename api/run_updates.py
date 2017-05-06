@@ -172,3 +172,7 @@ class ResidentialForSaleMinion(Minion):
             for ns in x.neareststation_set.order_by('station'):
                 de.append(ns.to_deferred())
         return de
+
+
+def update_residential_for_sale(user_agent):
+    minion = ResidentialForSaleMinion()

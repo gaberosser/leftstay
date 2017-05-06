@@ -5,6 +5,9 @@ DB_PORT = '5433'
 
 TRANSACTION_CHUNK_SIZE = 50000
 
+# 'From' field in header if supplied (email address)
+REQUEST_FROM = None
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
