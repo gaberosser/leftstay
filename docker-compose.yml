@@ -1,0 +1,67 @@
+web:
+  restart: always
+  build: ./web
+  expose:
+    - "8000"
+  links:
+    - postgres:postgres
+    - redis:redis
+  volumes:
+    - ./web:/usr/src/app
+    - /usr/src/app/static
+  env_file: .env
+  environment:
+    DEBUG: 'true'
+  # command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
+  command: ./run_web.sh
+  container_name: dj01
+
+nginx:
+  restart: always
+  build: ./nginx/
+  ports:
+    - "80:80"
+  volumes:
+    - /www/static
+  volumes_from:
+    - web
+  links:
+    - web:web
+
+postgres:
+  restart: always
+  image: mdillon/postgis:9.6-alpine
+  ports:
+    - "5432:5432"
+  volumes:
+    - pgdata:/var/lib/postgresql/data/
+  container_name: pg01
+
+# RabbitMQ
+rabbit:
+  hostname: rabbit
+  image: rabbitmq:3.6.0
+  environment:
+    - RABBITMQ_DEFAULT_USER=admin
+    - RABBITMQ_DEFAULT_PASS=mypass
+  ports:
+    - "5672:5672"  # we forward this port because it's useful for debugging
+    - "15672:15672"  # here, we can access rabbitmq management plugin
+
+# Celery worker
+worker:
+  build: ./web
+  command: ./run_celery.sh
+  volumes:
+    - ./web:/usr/src/app
+  links:
+    - postgres:postgres
+    - rabbit:rabbit
+
+redis:
+  restart: always
+  image: redis:latest
+  ports:
+    - "6379:6379"
+  volumes:
+    - redisdata:/data

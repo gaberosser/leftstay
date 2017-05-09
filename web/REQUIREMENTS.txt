@@ -1,0 +1,10 @@
+beautifulsoup4==4.5.3
+Django==1.11
+ipython
+psycopg2==2.7.1
+requests==2.13.0
+redis==2.10.5
+django-celery==3.2.1
+gunicorn==19.7.1
+flower==0.9.1
+djangorestframework==3.6.2

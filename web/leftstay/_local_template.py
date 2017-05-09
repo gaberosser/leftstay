@@ -1,8 +1,3 @@
-DB_PASS = 'pass'
-DB_NAME = 'leftstay'
-DB_USER = 'gabriel'
-DB_PORT = '5433'
-
 TRANSACTION_CHUNK_SIZE = 50000
 
 # 'From' field in header if supplied (email address)
@@ -23,7 +18,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/var/log/leftstay/debug.log',
+            'filename': 'local_outputs/leftstay.log',
         },
         'console': {
             'class': 'logging.StreamHandler',

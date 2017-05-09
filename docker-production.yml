@@ -1,0 +1,47 @@
+web:
+  extends:
+    file: docker-common.yml
+    service: web_base
+  links:
+    - postgres:postgres
+    - redis:redis
+  environment:
+    DEBUG: 'true'
+  container_name: dj01
+  command: ./initialise-production.sh
+
+nginx:
+  extends:
+    file: docker-common.yml
+    service: nginx_base
+  volumes_from:
+    - web
+  links:
+    - web:web
+
+postgres:
+  extends:
+    file: docker-common.yml
+    service: postgres_base
+
+
+# RabbitMQ
+rabbit:
+  extends:
+    file: docker-common.yml
+    service: rabbit_base
+
+
+# Celery worker
+worker:
+  extends:
+    file: docker-common.yml
+    service: worker_base
+  links:
+    - postgres:postgres
+    - rabbit:rabbit
+
+redis:
+  extends:
+    file: docker-common.yml
+    service: redis_base
