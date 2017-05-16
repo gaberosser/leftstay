@@ -3,6 +3,8 @@ TRANSACTION_CHUNK_SIZE = 50000
 # 'From' field in header if supplied (email address)
 REQUEST_FROM = None
 
+DEFAULT_USER_AGENT = 'leftstay-agent-55'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

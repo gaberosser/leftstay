@@ -25,3 +25,12 @@ def gen_prime_shared(x):
             for j in xrange(i*i, x+1, i):
                 multiples.append(j)
     return results
+
+
+from billiard import current_process
+
+
+@celery_app.task
+def get_celery_worker_name():
+    p = current_process()
+    return p.initargs[1].split('@')[1]

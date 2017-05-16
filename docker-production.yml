@@ -3,10 +3,11 @@ web:
     file: docker-common.yml
     service: web_base
   links:
-    - postgres:postgres
-    - redis:redis
+    - postgres
+    - redis
+    - rabbit
   environment:
-    DEBUG: 'true'
+    DEBUG: 'false'
   container_name: dj01
   command: ./initialise-production.sh
 
@@ -38,10 +39,27 @@ worker:
     file: docker-common.yml
     service: worker_base
   links:
-    - postgres:postgres
-    - rabbit:rabbit
+    - postgres
+    - rabbit
+    - redis
+
+beat:
+  extends:
+    file: docker-common.yml
+    service: beat_base
+  links:
+    - postgres
+    - rabbit
+    - redis
 
 redis:
   extends:
     file: docker-common.yml
     service: redis_base
+
+flower:
+  extends:
+    file: docker-common.yml
+    service: flower_base
+  links:
+    - rabbit

@@ -35,6 +35,8 @@ class PropertyUrl(models.Model):
     last_updated = models.DateTimeField(help_text="Timestamp for previous update", null=True)
     last_status_code = models.IntegerField(help_text="Status code obtained on previous update", null=True)
 
+    consecutive_failed_attempts = models.IntegerField(default=0)
+
 
 class DeferredModel(object):
     """
@@ -188,5 +190,5 @@ class PropertyForSale(PropertyBase):
     n_bed = models.IntegerField()
     asking_price = models.IntegerField()
     building_type = models.IntegerField(choices=consts.BUILDING_TYPE_CHOICES)
-    building_situation = models.IntegerField(choices=consts.BUILDING_SITUATION_CHOICES)
+    building_situation = models.IntegerField(choices=consts.BUILDING_SITUATION_CHOICES, null=True, blank=True)
     tenure_type = models.CharField(max_length=32, null=True, blank=True)

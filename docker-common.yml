@@ -3,8 +3,6 @@ web_base:
   build: ./web
   expose:
     - "8000"
-  ports:
-    - "5555:5555"  # used by flower to monitor rabbitmq
   volumes:
     - ./web:/usr/src/app
     - /usr/src/app/static
@@ -28,16 +26,14 @@ postgres_base:
   volumes:
     - pgdata:/var/lib/postgresql/data/
   container_name: pg01
-  env_file: .pgsql_env
+  env_file: .env
   hostname: postgres
 
 # RabbitMQ
 rabbit_base:
   hostname: rabbit
   image: rabbitmq:3.6.0
-  environment:
-    - RABBITMQ_DEFAULT_USER=admin
-    - RABBITMQ_DEFAULT_PASS=mypass
+  env_file: .env
   ports:
     - "5672:5672"  # we forward this port because it's useful for debugging
     - "15672:15672"  # here, we can access rabbitmq management plugin
@@ -50,6 +46,14 @@ worker_base:
     - ./web:/usr/src/app
   env_file: .env
 
+# Celerybeat worker
+beat_base:
+  build: ./web
+  command: ./run_celerybeat.sh
+  volumes:
+    - ./web:/usr/src/app
+  env_file: .env
+
 redis_base:
   restart: always
   image: redis:latest
@@ -58,3 +62,9 @@ redis_base:
   volumes:
     - redisdata:/data
   hostname: redis
+
+flower_base:
+  build: ./celery-flower/
+  ports:
+    - "5555:5555"
+  env_file: .env

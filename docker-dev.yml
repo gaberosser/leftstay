@@ -43,7 +43,23 @@ worker:
     - rabbit
     - redis
 
+beat:
+  extends:
+    file: docker-common.yml
+    service: beat_base
+  links:
+    - postgres
+    - rabbit
+    - redis
+
 redis:
   extends:
     file: docker-common.yml
     service: redis_base
+
+flower:
+  extends:
+    file: docker-common.yml
+    service: flower_base
+  links:
+    - rabbit

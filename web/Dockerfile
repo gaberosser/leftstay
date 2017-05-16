@@ -3,7 +3,8 @@ FROM python:2.7
 RUN apt-get update && apt-get install -y \
     binutils \
     gdal-bin \
-    libproj-dev
+    libproj-dev \
+    postgresql-client
 
 ADD REQUIREMENTS.txt /usr/src/app/REQUIREMENTS.txt
 WORKDIR /usr/src/app/

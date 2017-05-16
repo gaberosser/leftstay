@@ -25,6 +25,12 @@ except ImportError:
     print "No local settings _local.py found, using template values"
     from _local_template import *
 
+
+# operational settings
+MINIMUM_ELAPSED_TIME_BEFORE_UPDATE_HR = 12
+URL_CHUNKSIZE = 200
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -46,7 +52,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
     'api',
+    'rightmove',
+    'celerystick',
     'test_celery',
 ]
 
@@ -87,9 +96,9 @@ WSGI_APPLICATION = 'leftstay.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASS'],
+        'NAME': os.environ['POSTGRES_DB'],
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': os.environ['DB_SERVICE'],
         'PORT': os.environ['DB_PORT']
     }
@@ -154,8 +163,8 @@ if RABBIT_HOSTNAME.startswith('tcp://'):
 BROKER_URL = os.environ.get('BROKER_URL', '')
 if not BROKER_URL:
     BROKER_URL = 'amqp://{user}:{password}@{hostname}/{vhost}/'.format(
-        user=os.environ.get('RABBIT_ENV_USER', 'admin'),
-        password=os.environ.get('RABBIT_ENV_RABBITMQ_PASS', 'mypass'),
+        user=os.environ.get('RABBITMQ_DEFAULT_USER', 'admin'),
+        password=os.environ.get('RABBITMQ_DEFAULT_PASS', 'mypass'),
         hostname=RABBIT_HOSTNAME,
         vhost=os.environ.get('RABBIT_ENV_VHOST', ''))
 

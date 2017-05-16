@@ -1,13 +1,16 @@
 import parser, models, consts
-from getter import Requester
+from getter import Requester, PropertyXmlGetter, update_property_urls
 import logging
 import os
 import pickle
 from urlparse import urlparse
 from posixpath import basename, dirname
 from django.utils import timezone
-from leftstay.settings import OUT_DIR
+from leftstay.settings import OUT_DIR, DEFAULT_USER_AGENT
 from leftstay.utils import dict_equality
+# Celery implementation
+from leftstay import celery_app
+
 
 class Minion(object):
     """
@@ -56,6 +59,11 @@ class Minion(object):
             obj.last_status_code = status_code
         if status is not None:
             obj.last_known_status = status
+        if status_code == 200:
+            obj.consecutive_failed_attempts = 0
+        else:
+            obj.consecutive_failed_attempts += 1
+
         obj.save()
 
     def up(self):
@@ -172,7 +180,3 @@ class ResidentialForSaleMinion(Minion):
             for ns in x.neareststation_set.order_by('station'):
                 de.append(ns.to_deferred())
         return de
-
-
-def update_residential_for_sale(user_agent):
-    minion = ResidentialForSaleMinion()
