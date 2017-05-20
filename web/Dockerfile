@@ -12,6 +12,3 @@ RUN pip install -r REQUIREMENTS.txt
 
 # create unprivileged user
 RUN adduser --disabled-password --gecos '' myuser
-
-# create the local outputs directory
-RUN mkdir /usr/src/app/local_outputs
