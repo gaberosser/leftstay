@@ -1,5 +1,7 @@
 #!/bin/sh
 
+chmod -R a+w local_outputs/
+
 # wait for PSQL server to start
 # sleep 10
 ./wait_for_postgres.sh

@@ -71,10 +71,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'leftstay.urls'
 
+# Add a global templates directory for the home page and other base html templates that can be inherited in apps
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,7 +145,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+# Add a global static files directory for version control - we don't want to use STATIC_ROOT as that is written
+# to every time we run collectstatic
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'staticfiles')
+]
+
 STATIC_URL = '/static/'
+
+# This is where collectstatic will place gathered files:
 STATIC_ROOT = 'static'
 
 
