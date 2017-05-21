@@ -44,6 +44,7 @@ worker:
     - redis
 
 beat:
+  container_name: celery_beat
   extends:
     file: docker-common.yml
     service: beat_base

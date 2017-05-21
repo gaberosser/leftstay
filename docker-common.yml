@@ -40,6 +40,7 @@ rabbit_base:
 
 # Celery worker
 worker_base:
+  restart: always
   build: ./web
   command: ./run_celery.sh
   volumes:
@@ -48,6 +49,7 @@ worker_base:
 
 # Celerybeat worker
 beat_base:
+  restart: always
   build: ./web
   command: ./run_celerybeat.sh
   volumes:
