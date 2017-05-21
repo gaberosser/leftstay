@@ -38,9 +38,9 @@ URL_CHUNKSIZE = 200
 SECRET_KEY = '_ekk06j1_z2nc4p2^_i)@sjm%-^=_12+$3zklvgl59%if*e8nc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = str(os.environ.get('DEBUG', 'false')).lower() in ('1', 'true', 't')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
