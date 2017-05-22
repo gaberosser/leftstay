@@ -19,7 +19,7 @@ def update_one_chunk_property_for_sale(user_agent, ids, **kwargs):
 
 @celery_app.task(ignore_result=True)
 def update_property_urls(user_agent=DEFAULT_USER_AGENT):
-    getter.PropertyXmlGetter(user_agent=user_agent)
+    getter.update_property_sitemaps(user_agent=user_agent)
     getter.update_property_urls()
 
 

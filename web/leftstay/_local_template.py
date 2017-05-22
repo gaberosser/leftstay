@@ -37,6 +37,11 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
+        },
+        'rightmove': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
         }
     },
 }

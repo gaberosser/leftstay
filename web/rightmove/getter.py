@@ -9,7 +9,7 @@ import consts
 from leftstay.settings import TRANSACTION_CHUNK_SIZE, DEFAULT_USER_AGENT
 from leftstay.utils import chunk
 from api.getter import Requester
-
+logger = logging.getLogger(__name__)
 
 URL_REGEX = re.compile(r'.*co\.uk\/([a-z-]*)\/.*$')
 
@@ -54,14 +54,10 @@ class SitemapXmlGetter(object):
     DETAIL_FILTER = None
 
     def __init__(self, user_agent=DEFAULT_USER_AGENT, force_update=False):
-        self.logger = logging.getLogger("api.%s" % self.__class__.__name__)
-        self.logger.handlers = []
-        self.logger.addHandler(logging.StreamHandler())
-        self.logger.setLevel(logging.DEBUG)
-
+        self.logger = logging.getLogger("rightmove.%s" % self.__class__.__name__)
         self.requester = Requester(user_agent=user_agent)
 
-        self.existing_records = None
+        self.existing_urls = None
 
         self.sitemap_xml = None
         self.prop_xml = None
@@ -70,7 +66,7 @@ class SitemapXmlGetter(object):
         self.initialise(force_update=force_update)
 
     def initialise(self, force_update=False):
-        self.retrieve_existing_records()
+        self.retrieve_existing_urls()
 
         try:
             self.logger.info("Getting base sitemap.xml")
@@ -84,7 +80,7 @@ class SitemapXmlGetter(object):
         self.logger.info("Retrieving XML data.")
         self.get_sitemap_xmls(force_update=force_update)
 
-    def retrieve_existing_records(self):
+    def retrieve_existing_urls(self):
         raise NotImplementedError
 
     def get_base_sitemap_xml(self):
@@ -106,28 +102,43 @@ class SitemapXmlGetter(object):
         """
         raise NotImplementedError
 
+    def retrieve_existing_record(self, url):
+        """
+        Get an existing record from the DB.
+        """
+        raise NotImplementedError
+
+    def update_existing(self, obj, attrs):
+        """
+        Update an existing record with (potentially) new data
+        """
+        raise NotImplementedError
+
+    def create_new(self, url, attrs):
+        """
+        Create a new record without any content
+        """
+        raise NotImplementedError
+
     def get_sitemap_xmls(self, force_update=False):
         if self.prop_xml is None:
             raise AttributeError(
                 "Sub-XML URLs are not defined. Run get_base_sitemap_urls() or estimate_base_sitemap_urls().")
 
         for url, attrs in self.prop_xml.items():
-            if url in self.existing_records:
+            if url in self.existing_urls:
                 b_exist = True
-                obj = self.existing_records[url]
+                obj = self.retrieve_existing_record(url)
                 if not force_update and obj.last_modified >= attrs['lastmod']:
                     self.logger.info("XML sitemap at %s is unchanged.", url)
                     # use stored data
-                    attrs['content'] = self.existing_records[url].content
-                    attrs['status_code'] = self.existing_records[url].status_code
+                    attrs['content'] = obj.content
+                    attrs['status_code'] = obj.status_code
                     continue
-                obj.last_modified = attrs['lastmod']
+                self.update_existing(obj, attrs)
             else:
                 b_exist = False
-                obj = models.PropertySitemap(
-                    url=url,
-                    last_modified=attrs['lastmod'],
-                )
+                obj = self.create_new(url, attrs)
 
             self.logger.info("Getting XML sitemap at %s.", url)
             ret = self.requester.get(url)
@@ -149,14 +160,14 @@ class SitemapXmlGetter(object):
                 obj.urls_created = False
                 obj.save()
 
-    def update_property_urls(self):
-        if self.prop_xml is None:
-            raise AttributeError(
-                "Sub-XML URLs are not defined. Run get_base_sitemap_urls() or estimate_base_sitemap_urls().")
-        self.links = []
-        for url, attrs in self.prop_xml.iteritems():
-            if attrs['status_code'] == 200:
-                self.links.extend(urls_from_xml_string(attrs['content'], filt=self.DETAIL_FILTER))
+    # def update_property_urls(self):
+    #     if self.prop_xml is None:
+    #         raise AttributeError(
+    #             "Sub-XML URLs are not defined. Run get_base_sitemap_urls() or estimate_base_sitemap_urls().")
+    #     self.links = []
+    #     for url, attrs in self.prop_xml.iteritems():
+    #         if attrs['status_code'] == 200:
+    #             self.links.extend(urls_from_xml_string(attrs['content'], filt=self.DETAIL_FILTER))
 
 
 class PropertyXmlGetter(SitemapXmlGetter):
@@ -171,31 +182,56 @@ class PropertyXmlGetter(SitemapXmlGetter):
         lm = {'lastmod': datetime.date.today()}
         return dict([(t, dict(lm)) for t in urls])
 
-    def retrieve_existing_records(self):
+    def retrieve_existing_urls(self):
         # only look up good results
-        recs = models.PropertySitemap.objects.filter(status_code=200)
-        self.existing_records = dict([
-            (t.url, t) for t in recs
-        ])
+        self.existing_urls = set(models.PropertySitemap.objects.filter(status_code=200).values_list('url', flat=True))
+
+    def retrieve_existing_record(self, url):
+        """
+        Get an existing record from the DB.
+        """
+        return models.PropertySitemap.objects.get(url=url)
+
+    def update_existing(self, obj, attrs):
+        """
+        Update an existing record with (potentially) new data
+        """
+        obj.last_modified = attrs['lastmod']
+
+    def create_new(self, url, attrs):
+        """
+        Create a new record
+        """
+        return models.PropertySitemap(
+            url=url,
+            last_modified=attrs['lastmod'],
+        )
 
 
-def url_generator(logger=None):
+def update_property_sitemaps(**kwargs):
+    """
+    Update the property sitemaps.
+    Suspect that calling it this way might result in nicer garbage collection?
+    """
+    PropertyXmlGetter(**kwargs)
+
+
+def url_generator(existing_urls):
     """
     Generator that returns unsaved PropertyUrl objects
+    :param existing_urls: A set of URLs that already exist. **This is modified in place** to reflect the progress
+    in an outer process. Horrid? Yes. Useful? Yes.
     """
-    existing_urls = set(models.PropertyUrl.objects.filter(deactivated__isnull=True).values_list('url', flat=True))
     xml_to_update = models.PropertySitemap.objects.filter(urls_created=False, status_code=200)
 
     for x in xml_to_update:
         try:
-            arr = urls_from_xml_string(x.content)
-        except Exception:
-            if logger is not None:
-                logger.exception("Failed to parse URLs from XML %s", x.url)
-        else:
-            for t in arr:
+            et = ElementTree.fromstring(x.content)
+            g = et.iterfind('*%s' % et[0][0].tag)
+            for el in g:
+                t = el.text
                 if t in existing_urls:
-                    continue
+                    existing_urls.remove(t)
                 else:
                     the_type = url_type(t)
                     obj = models.PropertyUrl(
@@ -204,22 +240,25 @@ def url_generator(logger=None):
                         created=timezone.now(),
                     )
                     yield obj
+        except Exception:
+            logger.exception("Failed to parse URLs from XML %s", x.url)
 
 
-def update_property_urls(verbose=True):
-    logger = logging.getLogger("api.update_property_urls")
-    if verbose:
-        logger.setLevel(logging.DEBUG)
-
+def update_property_urls():
     remaining = set(models.PropertyUrl.objects.filter(deactivated__isnull=True).values_list('url', flat=True))
-    g = url_generator(logger)
+    g = url_generator(remaining)
     # create in blocks
     create_count = 0
+
+    # for x in g:
+    #     try:
+    #         x.save()
+    #         create_count += 1
+    #     except Exception:
+    #         logger.exception()
+
     for ch in chunk(g, TRANSACTION_CHUNK_SIZE):
         create_count += len(ch)
-        these_urls = set([t.url for t in ch])
-        remaining = remaining.difference(these_urls)
-
         logger.info("Creating block of %d records. Total created = %d.", len(ch), create_count)
         try:
             models.PropertyUrl.objects.bulk_create(ch)
