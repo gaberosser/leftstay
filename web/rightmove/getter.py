@@ -226,10 +226,12 @@ def url_generator(existing_urls):
 
     for x in xml_to_update:
         try:
-            et = ElementTree.fromstring(x.content)
-            g = et.iterfind('*%s' % et[0][0].tag)
+            g = re.finditer(r"(?P<url>http.*\.html)", x.content)
+            # et = ElementTree.fromstring(x.content)
+            # g = et.iterfind('*%s' % et[0][0].tag)
             for el in g:
-                t = el.text
+                t = el.group('url')
+                # t = el.text
                 if t in existing_urls:
                     existing_urls.remove(t)
                 else:
