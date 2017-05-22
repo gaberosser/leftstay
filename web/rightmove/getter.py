@@ -222,7 +222,7 @@ def url_generator(existing_urls):
     :param existing_urls: A set of URLs that already exist. **This is modified in place** to reflect the progress
     in an outer process. Horrid? Yes. Useful? Yes.
     """
-    xml_to_update = models.PropertySitemap.objects.filter(urls_created=False, status_code=200)
+    xml_to_update = models.PropertySitemap.objects.filter(urls_created=False, status_code=200).iterator()
 
     for x in xml_to_update:
         try:
@@ -249,13 +249,6 @@ def update_property_urls():
     g = url_generator(remaining)
     # create in blocks
     create_count = 0
-
-    # for x in g:
-    #     try:
-    #         x.save()
-    #         create_count += 1
-    #     except Exception:
-    #         logger.exception()
 
     for ch in chunk(g, TRANSACTION_CHUNK_SIZE):
         create_count += len(ch)
