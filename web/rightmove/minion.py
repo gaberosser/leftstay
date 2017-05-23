@@ -37,7 +37,7 @@ class Minion(object):
         self.requester = Requester(user_agent)
         self.url_qset = url_qset
         self.logger = logging.getLogger(
-            "api.%s.%s" % (self.__class__.__name__, user_agent)
+            "rightmove.%s.%s" % (self.__class__.__name__, user_agent)
         )
         self.dump_errors = dump_errors
         if dump_errors:
@@ -70,10 +70,9 @@ class Minion(object):
         n = self.url_qset.count()
         self.logger.info("You gave me a list of %d URLs. Let's get to work.", n)
         for i, obj in enumerate(self.url_qset):
-            if i != 0 and (i % 500) == 0:
-                self.logger.info("%d / %d", i + 1, n)
+            self.logger.info("%d / %d", i + 1, n)
+            resp = None
             try:
-                # import ipdb; ipdb.set_trace()
                 resp = self.requester.get(obj.url)
                 if resp.status_code == 200:
                     dat = self.parser(resp.content, url_obj=obj)
@@ -81,6 +80,13 @@ class Minion(object):
                         status = consts.URL_STATUS_REMOVED
                     else:
                         status = consts.URL_STATUS_ACTIVE
+
+                    if len(dat['errors']):
+                        self.logger.error(
+                            "Encountered some errors with url %s",
+                            obj.url,
+                            extra={'errors': dat['errors']}
+                        )
 
                     updated = self.update_one(obj, dat['deferred'])
                     self.update_url(
@@ -99,6 +105,8 @@ class Minion(object):
                     )
             except Exception:
                 self.logger.exception("I failed on URL %s", obj.url)
+                if resp is not None:
+                    self.report_error(obj, resp)
 
     def report_error(self, obj, resp):
         if self.dump_errors:
