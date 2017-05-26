@@ -83,10 +83,16 @@ class Minion(object):
 
                     if len(dat['errors']):
                         self.logger.error(
-                            "Encountered some errors with url %s",
+                            "Encountered some errors with url %s. Errors: %s",
                             obj.url,
-                            extra={'errors': dat['errors']}
+                            repr(dat['errors'])
                         )
+                        # TODO: if we use a proper logging solution like Sentry, can log extra variables in a cleaner way:
+                        # self.logger.error(
+                        #     "Encountered some errors with url %s",
+                        #     obj.url,
+                        #     extra={'errors': dat['errors']}
+                        # )
 
                     updated = self.update_one(obj, dat['deferred'])
                     self.update_url(

@@ -8,7 +8,8 @@ import consts, models
 NOT_PROPERTY = {
     'plot',
     'land',
-    'block of apartments'
+    'block of apartments',
+    'log cabin'
 }
 
 BUILDING_TYPE_MAP = {
@@ -23,6 +24,10 @@ BUILDING_TYPE_MAP = {
     'country house': consts.BUILDING_TYPE_COUNTRYHOUSE,
     'bungalow': consts.BUILDING_TYPE_BUNGALOW,
     'penthouse': consts.BUILDING_TYPE_PENTHOUSE,
+    'chalet': consts.BUILDING_TYPE_CHALET,
+    'barn conversion': consts.BUILDING_TYPE_BARNCONVERSION,
+    'cottage': consts.BUILDING_TYPE_COTTAGE,
+    'lodge': consts.BUILDING_TYPE_LODGE,
 }
 
 
@@ -45,6 +50,7 @@ STATION_TYPE_MAP = {
 removed_re = re.compile(r'This property has been removed by the agent', flags=re.I)
 situation_re = re.compile("(?P<t>%s)" % "|".join(BUILDING_SITUATION_MAP.keys()), flags=re.I)
 type_re = re.compile("(?P<t>%s)" % "|".join(BUILDING_TYPE_MAP.keys()), flags=re.I)
+not_property_re = re.compile("(?P<t>%s)" % "|".join(NOT_PROPERTY), flags=re.I)
 latlng_re = re.compile(r"latitude=(?P<lat>[-0-9\.]*).*longitude=(?P<lng>[-0-9\.]*)")
 
 
@@ -146,6 +152,12 @@ def residential_property_for_sale(src, url_obj=None):
                 attrs['building_situation'] = consts.BUILDING_SITUATION_FLAT
         else:
             errors['building_type'] = t
+    elif re.search(not_property_re, prop2):
+        # The listing is for a type of property we are not tracking (e.g. block of apartments, land)
+        errors['FAILED'] = True
+        errors['failure_reason'] = 'Ignored property type'
+        errors['property_type'] = re.search(not_property_re, prop2).group('t')
+        return {'errors': errors}
     else:
         errors['building_type'] = prop
 
