@@ -37,6 +37,7 @@ rabbit_base:
   ports:
     - "5672:5672"  # we forward this port because it's useful for debugging
     - "15672:15672"  # here, we can access rabbitmq management plugin
+  command: rabbitmq-plugins enable rabbitmq_management
 
 # Celery worker
 worker_base:
