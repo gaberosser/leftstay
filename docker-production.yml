@@ -7,8 +7,6 @@ web:
     file: docker-common.yml
     service: web_base
   links:
-#    - postgres
-#    - redis
     - rabbit
   environment:
     DEBUG: 'false'
@@ -24,12 +22,6 @@ nginx:
   links:
     - web:web
 
-#postgres:
-#  extends:
-#    file: docker-common.yml
-#    service: postgres_base
-
-
 # RabbitMQ
 rabbit:
   extends:
@@ -43,9 +35,7 @@ worker:
     file: docker-common.yml
     service: worker_base
   links:
-#    - postgres
     - rabbit
-#    - redis
 
 beat:
   container_name: celery_beat
@@ -53,14 +43,7 @@ beat:
     file: docker-common.yml
     service: beat_base
   links:
-#    - postgres
     - rabbit
-#    - redis
-
-#redis:
-#  extends:
-#    file: docker-common.yml
-#    service: redis_base
 
 flower:
   extends:
