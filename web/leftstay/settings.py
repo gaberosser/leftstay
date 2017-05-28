@@ -159,9 +159,9 @@ STATIC_ROOT = 'static'
 
 # Redis
 
-REDIS_PORT = 6379
-REDIS_DB = 0
-REDIS_HOST = os.environ.get('REDIS_PORT_6379_TCP_ADDR', 'redis')
+# REDIS_PORT = 6379
+# REDIS_DB = 0
+# REDIS_HOST = os.environ.get('REDIS_PORT_6379_TCP_ADDR', 'redis')
 
 
 # RabbitMQ
@@ -202,11 +202,6 @@ CELERY_ALWAYS_EAGER = False
 CELERY_ACKS_LATE = True
 CELERY_TASK_PUBLISH_RETRY = True
 CELERY_DISABLE_RATE_LIMITS = False
-
-# Set redis as celery result backend
-CELERY_RESULT_BACKEND = 'redis://%s:%d/%d' % (REDIS_HOST, REDIS_PORT, REDIS_DB)
-CELERY_REDIS_MAX_CONNECTIONS = 1
-
 
 # Don't use pickle as serializer, json is much safer
 CELERY_TASK_SERIALIZER = "json"

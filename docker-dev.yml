@@ -1,10 +1,13 @@
+# SETUP FOR LOCAL DEVELOPMENT
+# All services run on a single machine in their own containers
+# Django initialised running the dev server
 web:
   extends:
     file: docker-common.yml
     service: web_base
   links:
     - postgres
-    - redis
+#    - redis
     - rabbit
   environment:
     DEBUG: 'true'
@@ -41,7 +44,7 @@ worker:
   links:
     - postgres
     - rabbit
-    - redis
+#    - redis
 
 beat:
   container_name: celery_beat
@@ -51,12 +54,12 @@ beat:
   links:
     - postgres
     - rabbit
-    - redis
+#    - redis
 
-redis:
-  extends:
-    file: docker-common.yml
-    service: redis_base
+#redis:
+#  extends:
+#    file: docker-common.yml
+#    service: redis_base
 
 flower:
   extends:

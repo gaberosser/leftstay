@@ -57,14 +57,14 @@ beat_base:
     - ./web:/usr/src/app
   env_file: .env
 
-redis_base:
-  restart: always
-  image: redis:latest
-  ports:
-    - "6379:6379"
-  volumes:
-    - redisdata:/data
-  hostname: redis
+#redis_base:
+#  restart: always
+#  image: redis:latest
+#  ports:
+#    - "6379:6379"
+#  volumes:
+#    - redisdata:/data
+#  hostname: redis
 
 flower_base:
   build: ./celery-flower/

@@ -1,10 +1,14 @@
+# SETUP FOR PRODUCTION
+# All services EXCEPT THE DATABASE run on a single machine in their own containers
+# Postgresql runs on a separate instance in its own container
+# Django initialised running gunicorn
 web:
   extends:
     file: docker-common.yml
     service: web_base
   links:
-    - postgres
-    - redis
+#    - postgres
+#    - redis
     - rabbit
   environment:
     DEBUG: 'false'
@@ -20,10 +24,10 @@ nginx:
   links:
     - web:web
 
-postgres:
-  extends:
-    file: docker-common.yml
-    service: postgres_base
+#postgres:
+#  extends:
+#    file: docker-common.yml
+#    service: postgres_base
 
 
 # RabbitMQ
@@ -39,9 +43,9 @@ worker:
     file: docker-common.yml
     service: worker_base
   links:
-    - postgres
+#    - postgres
     - rabbit
-    - redis
+#    - redis
 
 beat:
   container_name: celery_beat
@@ -49,14 +53,14 @@ beat:
     file: docker-common.yml
     service: beat_base
   links:
-    - postgres
+#    - postgres
     - rabbit
-    - redis
+#    - redis
 
-redis:
-  extends:
-    file: docker-common.yml
-    service: redis_base
+#redis:
+#  extends:
+#    file: docker-common.yml
+#    service: redis_base
 
 flower:
   extends:

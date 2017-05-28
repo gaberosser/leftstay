@@ -1,0 +1,4 @@
+postgres:
+  extends:
+    file: docker-common.yml
+    service: postgres_base
