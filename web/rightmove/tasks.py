@@ -3,6 +3,7 @@ import models
 import getter
 import minion
 import consts
+from random import shuffle
 from leftstay.settings import DEFAULT_USER_AGENT, MINIMUM_ELAPSED_TIME_BEFORE_UPDATE_HR, URL_CHUNKSIZE
 from django.utils import timezone
 
@@ -36,15 +37,19 @@ def update_all_residential_for_sale(user_agent=DEFAULT_USER_AGENT, limit=None):
         deactivated__isnull=True,
         last_accessed__isnull=True
     ).values_list('id', flat=True)
+    new_ids = list(new_ids)
+    shuffle(new_ids)
+
     existing_ids = models.PropertyUrl.objects.filter(
         property_type=consts.PROPERTY_TYPE_FORSALE,
         deactivated__isnull=True,
         last_accessed__lt=tc
     ).order_by('last_accessed').values_list('id', flat=True)
 
-    all_ids = list(new_ids) + list(existing_ids)
+    all_ids = new_ids + list(existing_ids)
     if limit is not None:
         all_ids = all_ids[:limit]
+
 
     for ch in utils.chunk(all_ids, URL_CHUNKSIZE):
         update_one_chunk_property_for_sale.delay(user_agent, ch)
