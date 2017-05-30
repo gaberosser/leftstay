@@ -98,3 +98,6 @@ URL_STATUS_CHOICES = (
     (URL_STATUS_SUSPENDED, "suspended"),
     (URL_STATUS_INACCESSIBLE, "not found"),
 )
+
+BASE_URL = "https://www.rightmove.co.uk"
+FIND_URL_RESIDENTIAL_PROPERTY_FOR_SALE = BASE_URL + "/property-for-sale/find.html"

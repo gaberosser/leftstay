@@ -6,9 +6,11 @@ import datetime
 from django.utils import timezone
 import models
 import consts
+from outcodes import OUTCODE_MAP
 from leftstay.settings import TRANSACTION_CHUNK_SIZE, DEFAULT_USER_AGENT
 from leftstay.utils import chunk
 from api.getter import Requester
+from bs4 import BeautifulSoup
 logger = logging.getLogger(__name__)
 
 URL_REGEX = re.compile(r'.*co\.uk\/([a-z-]*)\/.*$')
@@ -160,15 +162,6 @@ class SitemapXmlGetter(object):
                 obj.urls_created = False
                 obj.save()
 
-    # def update_property_urls(self):
-    #     if self.prop_xml is None:
-    #         raise AttributeError(
-    #             "Sub-XML URLs are not defined. Run get_base_sitemap_urls() or estimate_base_sitemap_urls().")
-    #     self.links = []
-    #     for url, attrs in self.prop_xml.iteritems():
-    #         if attrs['status_code'] == 200:
-    #             self.links.extend(urls_from_xml_string(attrs['content'], filt=self.DETAIL_FILTER))
-
 
 class PropertyXmlGetter(SitemapXmlGetter):
     XML_URL_FILTER = 'propertydetails'
@@ -208,6 +201,118 @@ class PropertyXmlGetter(SitemapXmlGetter):
         )
 
 
+def _links_from_search(soup, base_url):
+    results = soup.find_all('a', attrs={'class': "propertyCard-headerLink"})
+    urls = set()
+    for el in results:
+        par = el.parent.parent.parent
+        if 'is-hidden' not in par['class']:
+            urls.add(base_url + el['href'])
+    return urls
+
+
+def get_links_one_outcode(outcode_int, find_url, requester=None, per_page=48, index=None):
+    """
+    :param index: If supplied, this is the pagination parameter. This allows recursive calling.
+    """
+    outcode = "OUTCODE^%d" % outcode_int
+    base_url = "http://www.rightmove.co.uk"
+    if requester is None:
+        requester = requests
+    payload = {
+        'locationIdentifier': outcode,
+        'numberOfPropertiesPerPage': per_page,
+        'viewType': 'LIST',
+    }
+    if index is not None:
+        payload['index'] = index
+
+    resp = requester.get(find_url, params=payload)
+    if resp.status_code != 200:
+        raise AttributeError("Failed to get links for outcode %s at URL %s. Error: %s" % (
+            outcode, find_url, resp.content
+        ))
+
+    soup = BeautifulSoup(resp.content, "html.parser")
+
+    if index is None:
+        el = soup.find("span", attrs={'class': 'searchHeader-resultCount'})
+        nres = int(el.text)
+        indexes = range(per_page, nres, per_page)
+        # pagination works by supplying an index parameter giving the number of the first link shown (zero indexed)
+        # this first result is (obv) the first page. We can then call the function recursively for the remainder
+        urls = _links_from_search(soup, base_url)
+        for i in indexes:
+            try:
+                urls.update(get_links_one_outcode(
+                    outcode_int,
+                    find_url,
+                    requester=requester,
+                    per_page=per_page,
+                    index=i
+                ))
+            except Exception:
+                logger.exception("Failed to get URL results for outcode %s with index %d", outcode, i)
+    else:
+        urls = _links_from_search(soup, base_url)
+
+    return urls
+
+
+def update_links_one_outcode(outcode_int, find_url, requester=None):
+    
+    try:
+        urls = get_links_one_outcode(outcode_int, find_url=find_url, requester=requester)
+    except Exception:
+        logger.exception("Failed to get URLs for outcode %d at %s", outcode_int, find_url)
+        raise
+
+    pc_code = OUTCODE_MAP[outcode_int]
+
+    # existing
+    existing = set(models.PropertyUrl.objects.values_list('url', flat=True))
+
+    # create
+    to_create = set(urls).difference(existing)
+    for ch in chunk(to_create, TRANSACTION_CHUNK_SIZE):
+        objs = [
+            models.PropertyUrl(
+                url=u,
+                property_type=url_type(u),
+                created=timezone.now(),
+                last_seen=timezone.now(),
+                outcode=outcode_int,
+                postcode_outcode=pc_code,
+            ) for u in ch
+        ]
+        try:
+            models.PropertyUrl.objects.bulk_create(objs)
+        except Exception:
+            logger.exception("Failed to create chunk for outcode %d", outcode_int)
+
+    # update
+    to_update = existing.intersection(urls)
+    try:
+        models.PropertyUrl.objects.filter(
+            url__in=to_update
+        ).update(last_seen=timezone.now(), outcode=outcode_int, postcode_outcode=pc_code, deactivated=None)
+    except Exception:
+        logger.exception("Failed to update %d records for outcode %d", len(to_update), outcode_int)
+
+
+    # deactivate
+    to_deactivate = models.PropertyUrl.objects.exclude(
+        url__in=urls
+    ).filter(
+        outcode=outcode_int,
+        deactivated__isnull=True,
+    )
+    try:
+        to_deactivate.update(deactivated=timezone.now(), outcode=outcode_int, postcode_outcode=pc_code)
+    except Exception:
+        logger.exception("Failed to deactivate %d records for outcode %d", len(to_deactivate), outcode_int)
+
+
 def update_property_sitemaps(**kwargs):
     """
     Update the property sitemaps.
@@ -216,7 +321,7 @@ def update_property_sitemaps(**kwargs):
     PropertyXmlGetter(**kwargs)
 
 
-def url_generator(existing_urls):
+def url_generator_from_sitemap(existing_urls):
     """
     Generator that returns unsaved PropertyUrl objects
     :param existing_urls: A set of URLs that already exist. **This is modified in place** to reflect the progress
@@ -248,7 +353,7 @@ def url_generator(existing_urls):
 
 def update_property_urls():
     remaining = set(models.PropertyUrl.objects.filter(deactivated__isnull=True).values_list('url', flat=True))
-    g = url_generator(remaining)
+    g = url_generator_from_sitemap(remaining)
     # create in blocks
     create_count = 0
 

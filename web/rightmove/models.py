@@ -27,10 +27,13 @@ class PropertyUrl(models.Model):
     url = models.URLField(null=False, blank=False, unique=True)
     property_type = models.IntegerField(choices=consts.PROPERTY_TYPE_CHOICES)
     last_known_status = models.IntegerField(choices=consts.URL_STATUS_CHOICES, null=True, blank=True)
+    outcode = models.IntegerField(help_text="Rightmove integer outcode", null=True, blank=True)
+    postcode_outcode = models.CharField(help_text="First part of the postcode", max_length=4, null=True, blank=True)
 
     created = models.DateTimeField(help_text="Timestamp for creation", auto_created=True)
-    deactivated = models.DateTimeField(help_text="Timestamp for deactivation", auto_created=True, null=True)
+    deactivated = models.DateTimeField(help_text="Timestamp for deactivation", null=True)
 
+    last_seen = models.DateTimeField(help_text="Timestamp for previous discovery", auto_created=True, null=True)
     last_accessed = models.DateTimeField(help_text="Timestamp for previous access", null=True)
     last_updated = models.DateTimeField(help_text="Timestamp for previous update", null=True)
     last_status_code = models.IntegerField(help_text="Status code obtained on previous update", null=True)
