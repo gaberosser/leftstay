@@ -12,23 +12,17 @@ NOT_PROPERTY = {
     'log cabin'
 }
 
-BUILDING_TYPE_MAP = {
+BUILDING_TYPE_MAP_EXTRA = {
     'studio flat': consts.BUILDING_TYPE_STUDIO_FLAT,
     'studio apartment': consts.BUILDING_TYPE_STUDIO_FLAT,
     'flat': consts.BUILDING_TYPE_FLAT,
     'apartment': consts.BUILDING_TYPE_FLAT,
-    'maisonette': consts.BUILDING_TYPE_MAISONETTE,
-    'house': consts.BUILDING_TYPE_HOUSE,
-    'retirement property': consts.BUILDING_TYPE_RETIREMENT,
-    'town house': consts.BUILDING_TYPE_TOWNHOUSE,
-    'country house': consts.BUILDING_TYPE_COUNTRYHOUSE,
-    'bungalow': consts.BUILDING_TYPE_BUNGALOW,
-    'penthouse': consts.BUILDING_TYPE_PENTHOUSE,
-    'chalet': consts.BUILDING_TYPE_CHALET,
-    'barn conversion': consts.BUILDING_TYPE_BARNCONVERSION,
-    'cottage': consts.BUILDING_TYPE_COTTAGE,
-    'lodge': consts.BUILDING_TYPE_LODGE,
 }
+
+BUILDING_TYPE_MAP = dict([
+    (t[1].lower(), t[0]) for t in consts.BUILDING_TYPE_CHOICES
+])
+BUILDING_TYPE_MAP.update(BUILDING_TYPE_MAP_EXTRA)
 
 
 BUILDING_SITUATION_MAP = {

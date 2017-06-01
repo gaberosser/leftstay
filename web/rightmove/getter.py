@@ -260,7 +260,7 @@ def get_links_one_outcode(outcode_int, find_url, requester=None, per_page=48, in
 
 
 def update_links_one_outcode(outcode_int, find_url, requester=None):
-    
+
     try:
         urls = get_links_one_outcode(outcode_int, find_url=find_url, requester=requester)
     except Exception:
