@@ -16,6 +16,19 @@
 .noupper {
   text-transform: none !important;
 }
+.white {
+  color: #FFFFFF;
+}
+a.notransform,
+a.notransform:hover,
+a.notransform:active,
+a.notransform:visited,
+a.notransform:focus,
+a.notransform:link
+{
+  text-decoration: none !important;
+  color: inherit;
+}
 
 body {
   font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
