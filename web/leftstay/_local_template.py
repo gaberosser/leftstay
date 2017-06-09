@@ -4,6 +4,7 @@ TRANSACTION_CHUNK_SIZE = 50000
 REQUEST_FROM = None
 
 DEFAULT_USER_AGENT = 'leftstay-agent-55'
+LOGFILE_BACKUP_COUNT = 30  # ~ 1 mo  of log files
 
 LOGGING = {
     'version': 1,
@@ -13,14 +14,17 @@ LOGGING = {
             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         },
         'simple': {
-            'format': '%(levelname)s %(asctime)s %(message)s'
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
         },
     },
     'handlers': {
         'file': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': 'local_outputs/leftstay.log',
+            'backupCount': LOGFILE_BACKUP_COUNT,
+            'when': 'midnight',
+            'formatter': 'simple'
         },
         'console': {
             'class': 'logging.StreamHandler',
