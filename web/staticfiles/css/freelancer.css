@@ -13,6 +13,16 @@
     flex-wrap: wrap;
   }
 }
+.selected img {
+	opacity:0.5;
+}
+.img-zoom {
+  cursor: zoom-in;
+}
+.img-carousel-thumb {
+  width: 80px;
+  cursor: zoom-in;
+}
 .noupper {
   text-transform: none !important;
 }

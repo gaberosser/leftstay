@@ -32,6 +32,20 @@
 </head>
 
 <body id="page-top" class="index">
+
+ <div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+          <img src="" class="enlargeImageModalSource" style="width: 100%;">
+        </div>
+      </div>
+    </div>
+</div>
+        
 <div id="skipnav"><a href="#maincontent">Skip to main content</a></div>
 
     <!-- Navigation -->
@@ -348,36 +362,87 @@
                     </div>
                 </div>
             </div>
-            <div class="container">
+            <div class="container">                
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <div class="modal-body">
                             <h2>Bacterial motility</h2>
                             <hr class="star-primary">
-                        <!-- Place a panel of diagrams here-->
-                            <div class="container">
-                                <div id="slide1" class="masonry">
-                                    <div class="post-box col-lg-4 col-md-4 col-sm-4"> 
-                                        <img class="img-responsive img-thumbnail" src="static/img/portfolio/bm/.png">
-                                    </div>
-                                    <div class="post-box col-lg-4 col-md-4 col-sm-4"> 
-                                        <img class="img-responsive img-thumbnail" src="static/img/portfolio/bm/.png">
-                                    </div>
-                                    <div class="post-box col-lg-4 col-md-4 col-sm-4"> 
-                                        <img class="img-responsive img-thumbnail" src="static/img/portfolio/bm/.png">
-                                    </div>
-                                    <div class="post-box col-lg-4 col-md-4 col-sm-4"> 
-                                        <img class="img-responsive img-thumbnail" src="static/img/portfolio/bm/.png">
-                                    </div>
-                                    <div class="post-box col-lg-4 col-md-4 col-sm-4"> 
-                                        <img class="img-responsive img-thumbnail" src="static/img/portfolio/bm/.png">
-                                    </div>                                    
+                            <p>I worked on bacterial motility for my DPhil. It was my first proper introduction to research in the field of mathematical biology, so I'll always think very fondly of it. My <a href="http://discovery.ucl.ac.uk/1468657/1/thesis.pdf">thesis</a> is (somewhat vaguely) entitled <strong>"Mathematical modelling and analysis of aspects of planktonic bacterial motility".</strong></p>
+                            <p>The main focus is the fascinating means by which lone bacteria propel themselves through liquid media. Much of my work centred around a new, high-throughput microscopic tracking dataset that had recently been developed by Dr David Wilkinson. Coupled with a very effective piece of tracking software by Dr Trevor Wood, we had a fantastic new dataset to probe the trajectories traced out by freely swimming bacteria such as <i>Rhodobacter sphaeroides</i>. I also had the pleasure of working with my colleague and friend Dr Kit Yates on some of the analysis.</p>
+                            <p>I developed a novel approach to analysing the tracks obtained and applied various mathematical modelling techniques to tackle challenging problems including: "what is the effect of the microscope camera sampling rate on the observed tracks?" and "does <i>R. sphaeroides</i> reorientate lazily, by harnessing Brownian motion?".</p>
+                        
+                            <!-- thumb navigation carousel -->
+                            <div class="col-md-12 hidden-sm hidden-xs" id="slider-thumbs">
+                                
+                                    <!-- thumb navigation carousel items -->
+                                  <ul class="list-inline">
+                                  <li> <a id="carousel-selector-0" class="selected">
+                                    <img src="static/img/portfolio/bm/multiple_scales.png" class="img-responsive img-carousel-thumb">
+                                  </a></li>
+                                  <li> <a id="carousel-selector-1" class="selected">
+                                    <img src="static/img/portfolio/bm/rhody_electron_microscope.png" class="img-responsive img-carousel-thumb">
+                                  </a></li>
+                                  <li> <a id="carousel-selector-2" class="selected">
+                                    <img src="static/img/portfolio/bm/flagella_arrangement.png" class="img-responsive img-carousel-thumb">
+                                  </a></li>
+                                  <li> <a id="carousel-selector-3" class="selected">
+                                    <img src="static/img/portfolio/bm/modes_of_motion.png" class="img-responsive img-carousel-thumb">
+                                  </a></li>
+                                  <li> <a id="carousel-selector-4" class="selected">
+                                    <img src="static/img/portfolio/bm/our_tracks.png" class="img-responsive img-carousel-thumb">
+                                  </a></li>
+                                  <li> <a id="carousel-selector-5" class="selected">
+                                    <img src="static/img/portfolio/bm/angle_change_true_vs_meas.png" class="img-responsive img-carousel-thumb">
+                                  </a></li>
+                                  <li> <a id="carousel-selector-6" class="selected">
+                                    <img src="static/img/portfolio/bm/ws8n_bulk_good_tracks_hmm_speed.png" class="img-responsive img-carousel-thumb">
+                                  </a></li>
+                                    </ul>
+                                
+                            </div>
+                          
+                          
+                            <!-- main slider carousel -->
+                            <div class="row">
+                                <div class="col-md-12" id="slider">
+                                    
+                                        <div class="col-md-12" id="carousel-bounding-box">
+                                            <div id="myCarousel" class="carousel slide">
+                                                <!-- main slider carousel items -->
+                                                <div class="carousel-inner">
+                                                    <div class="active item" data-slide-number="0">
+                                                        <img src="static/img/portfolio/bm/multiple_scales.png" class="img-responsive img-centered">
+                                                    </div>
+                                                    <div class="item" data-slide-number="1">
+                                                      <img src="static/img/portfolio/bm/rhody_electron_microscope.png" class="img-responsive img-centered">
+                                                    </div>
+                                                    <div class="item" data-slide-number="2">
+                                                      <img src="static/img/portfolio/bm/flagella_arrangement.png" class="img-responsive img-centered">
+                                                    </div>
+                                                    <div class="item" data-slide-number="3">
+                                                      <img src="static/img/portfolio/bm/modes_of_motion.png" class="img-responsive img-centered">
+                                                    </div>
+                                                    <div class="item" data-slide-number="4">
+                                                      <img src="static/img/portfolio/bm/our_tracks.png" class="img-responsive img-centered">
+                                                    </div>
+                                                    <div class="item" data-slide-number="5">
+                                                      <img src="static/img/portfolio/bm/angle_change_true_vs_meas.png" class="img-responsive img-centered">
+                                                    </div>
+                                                    <div class="item" data-slide-number="6">
+                                                      <img src="static/img/portfolio/bm/ws8n_bulk_good_tracks_hmm_speed.png" class="img-responsive img-centered">
+                                                    </div>
+                                                </div>
+                                                <!-- main slider carousel nav controls --> <a class="carousel-control left" href="#myCarousel" data-slide="prev">‹</a>
+                        
+                                                <a class="carousel-control right" href="#myCarousel" data-slide="next">›</a>
+                                            </div>
+                                        </div>
+                        
                                 </div>
                             </div>
-                        
-                            <img src="static/img/portfolio/cabin.png" class="img-responsive img-centered" alt="">
-                            <p>I worked on bacterial motility for my DPhil. I still think upon it very fondly, because it was really my introduction to research in the field of mathematical biology. My <a href="http://discovery.ucl.ac.uk/1468657/1/thesis.pdf">thesis</a> is (somewhat vaguely) entitled <strong>"Mathematical modelling and analysis of aspects of bacterial motility".</strong></p>
-                            <p>The main focus is the fascinating means by which lone bacteria propel themselves through liquid media. Much of my work centred around a new, high-throughput microscopic tracking dataset that had recently been developed by Dr David Wilkinson and a very effective piece of tracking software by Dr Trevor Wood. I developed a novel approach to analysing the tracks obtained and applied various mathematical modelling techniques to tackle challenging problems including: "what is the effect of the microscope camera sampling rate on the observed tracks?" and "does <i>Rhodobacter sphaeroides</i> reorientate lazily, by harnessing Brownian motion?".</p>
+                            <!--/main slider carousel-->
+                            
                             <ul class="list-inline item-details">
                                 <li>Date:
                                     <strong>2009-2013</strong>
@@ -587,7 +652,8 @@
     </div>
 
     <!-- jQuery -->
-    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <!--<script src="static/vendor/jquery/jquery.min.js"></script>-->
+    <script src="static/js/jquery-3.2.1.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -601,6 +667,31 @@
 
     <!-- Theme JavaScript -->
     <script src="static/js/freelancer.min.js"></script>
+    
+    <script>
+        $('#myCarousel').carousel({
+                interval: false,
+                pause: true
+        });
+            
+        // handles the carousel thumbnails
+        $('[id^=carousel-selector-]').click( function(){
+          var id_selector = $(this).attr("id");
+          var id = id_selector.substr(id_selector.length -1);
+          id = parseInt(id);
+          $('#myCarousel').carousel(id);
+          $('[id^=carousel-selector-]').removeClass('selected');
+          $(this).addClass('selected');
+        });
+            
+        // when the carousel slides, auto update
+        $('#myCarousel').on('slid', function (e) {
+          var id = $('.item.active').data('slide-number');
+          id = parseInt(id);
+          $('[id^=carousel-selector-]').removeClass('selected');
+          $('[id=carousel-selector-'+id+']').addClass('selected');
+        });
+    </script>
 
 </body>
 
