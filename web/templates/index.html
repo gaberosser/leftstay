@@ -405,12 +405,11 @@
                           
                             <!-- main slider carousel -->
                             <div class="row">
-                                <div class="col-md-12" id="slider">
-                                    
+                                <div class="col-md-12" id="slider">                                    
                                         <div class="col-md-12" id="carousel-bounding-box">
                                             <div id="myCarousel" class="carousel slide">
                                                 <!-- main slider carousel items -->
-                                                <div class="carousel-inner">
+                                                <div class="carousel-inner" style="height: 500px;">
                                                     <div class="active item" data-slide-number="0">
                                                         <img src="static/img/portfolio/bm/multiple_scales.png" class="img-responsive img-centered">
                                                     </div>
@@ -433,9 +432,6 @@
                                                       <img src="static/img/portfolio/bm/ws8n_bulk_good_tracks_hmm_speed.png" class="img-responsive img-centered">
                                                     </div>
                                                 </div>
-                                                <!-- main slider carousel nav controls --> <a class="carousel-control left" href="#myCarousel" data-slide="prev">‹</a>
-                        
-                                                <a class="carousel-control right" href="#myCarousel" data-slide="next">›</a>
                                             </div>
                                         </div>
                         
@@ -669,10 +665,29 @@
     <script src="static/js/freelancer.min.js"></script>
     
     <script>
+        
         $('#myCarousel').carousel({
                 interval: false,
                 pause: true
         });
+        
+        // normalise the carousel image sizes in advance
+        var max_height = 500;
+        
+        function resizeCarouselImages() {
+                var w, h;
+                var items = $('#myCarousel .item');
+                items.each(function() {
+                        var img = this.getElementsByTagName('img')[0];
+                        w = img.naturalWidth;
+                        h = img.naturalHeight;
+                       if (h > max_height) {
+                                // resize by updating the width
+                                var new_w = max_height * w / h;
+                                $(this).width(new_w);
+                        }
+                });
+        }
             
         // handles the carousel thumbnails
         $('[id^=carousel-selector-]').click( function(){
@@ -684,13 +699,22 @@
           $(this).addClass('selected');
         });
             
-        // when the carousel slides, auto update
+        // when the carousel slides, update the thumbnails
         $('#myCarousel').on('slid', function (e) {
-          var id = $('.item.active').data('slide-number');
-          id = parseInt(id);
-          $('[id^=carousel-selector-]').removeClass('selected');
-          $('[id=carousel-selector-'+id+']').addClass('selected');
+                var id = $('.item.active').data('slide-number');
+                id = parseInt(id);
+                $('[id^=carousel-selector-]').removeClass('selected');
+                $('[id=carousel-selector-'+id+']').addClass('selected');
+                
+        }
+        );
+        
+        $(window).on('load', function() {
+                // Resizing takes place using natural height and width of hidden images
+                // That way, when the carousel loads all the images have the right dimensions
+                resizeCarouselImages();
         });
+          
     </script>
 
 </body>

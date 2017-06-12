@@ -19,6 +19,10 @@
 .img-zoom {
   cursor: zoom-in;
 }
+.carousel-inner {
+  max-height: 500px !important;
+  overflow: hidden;
+}
 .img-carousel-thumb {
   width: 80px;
   cursor: zoom-in;
