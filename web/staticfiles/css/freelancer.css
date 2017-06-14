@@ -19,6 +19,9 @@
 .img-zoom {
   cursor: zoom-in;
 }
+.carousel-row {
+  margin-top: 20px;
+}
 .carousel-inner {
   max-height: 500px !important;
   overflow: hidden;
