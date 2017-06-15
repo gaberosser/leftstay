@@ -73,22 +73,26 @@ def residential_property_for_sale(src, url_obj=None):
     # has the property been removed?
     rem = soup.find(text=removed_re)
     if rem is not None:
-        status = 'removed'
+        return {'status': 'removed'}
 
     # agent details
 
     x = soup.find(attrs={'class': 'agent-details-agent-logo'})
-    agent_addr = x.find('address')
-    if agent_addr:
-        attrs['agent_address'] = agent_addr.text
 
-    agent_name = x.find('strong')
-    if agent_name:
-        attrs['agent_name'] = agent_name.text
+    if x is None:
+        errors['agent'] = 'not_found'
+    else:
+        agent_addr = x.find('address')
+        if agent_addr:
+            attrs['agent_address'] = agent_addr.text
 
-    agent_tel = x.find('a', attrs={'class': 'branch-telephone-number'})
-    if agent_tel:
-        attrs['agent_tel'] = agent_tel.text.strip('\n')
+        agent_name = x.find('strong')
+        if agent_name:
+            attrs['agent_name'] = agent_name.text
+
+        agent_tel = x.find('a', attrs={'class': 'branch-telephone-number'})
+        if agent_tel:
+            attrs['agent_tel'] = agent_tel.text.strip('\n')
 
     # header attributes
 
@@ -193,6 +197,7 @@ def residential_property_for_sale(src, url_obj=None):
 
 
     # location
+
     adds = x.find('address')
     if adds is None:
         attrs.setdefault('errors', {})['address_string'] = 'not found'
@@ -232,11 +237,20 @@ def residential_property_for_sale(src, url_obj=None):
     if prc is None:
         errors['asking_price'] = 'not found'
     else:
-        price = re.search(u'£(?P<price>[0-9,]*)', prc.text).group('price')
-        try:
-            attrs['asking_price'] = int(price.replace(',', ''))
-        except ValueError:
-            errors['asking_price'] = price
+        if re.search(r'POA', prc.text):
+            attrs['asking_price'] = -1.
+            attrs['POA'] = True
+        else:
+            price = re.search(u'£(?P<price>[0-9,]*)', prc.text)
+            if price is None:
+                errors['asking_price'] = price
+            else:
+                price = price.group('price')
+                try:
+                    attrs['asking_price'] = int(price.replace(',', ''))
+                    attrs['POA'] = False
+                except ValueError:
+                    errors['asking_price'] = price
 
     # status and qualifier
     # status should not be used if property has been removed

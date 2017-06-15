@@ -167,9 +167,9 @@ class PropertyBase(models.Model, PropertySerializerMixin):
     key_features = models.TextField(null=True, blank=True)
     full_description = models.TextField(null=True, blank=True)
 
-    agent_name = models.CharField(max_length=256)
-    agent_address = models.CharField(max_length=256)
-    agent_tel = models.CharField(max_length=20)
+    agent_name = models.CharField(max_length=256, null=True, blank=True)
+    agent_address = models.CharField(max_length=256, null=True, blank=True)
+    agent_tel = models.CharField(max_length=20, null=True, blank=True)
 
     location = models.PointField(srid=4326)
     address_string = models.CharField(max_length=256)
@@ -190,8 +190,9 @@ class PropertyBase(models.Model, PropertySerializerMixin):
 class PropertyForSale(PropertyBase):
     exclusions = PropertyBase.exclusions
     is_retirement = models.BooleanField(default=False)
-    n_bed = models.IntegerField()
+    n_bed = models.IntegerField(null=True, blank=True)
     asking_price = models.IntegerField()
+    price_on_application = models.BooleanField(default=False)
     building_type = models.IntegerField(choices=consts.BUILDING_TYPE_CHOICES)
     building_situation = models.IntegerField(choices=consts.BUILDING_SITUATION_CHOICES, null=True, blank=True)
     tenure_type = models.CharField(max_length=32, null=True, blank=True)
