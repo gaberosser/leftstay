@@ -388,75 +388,79 @@
                             <p>I worked on bacterial motility for my DPhil. It was my first proper introduction to research in the field of mathematical biology, so I'll always think very fondly of it. My <a href="http://discovery.ucl.ac.uk/1468657/1/thesis.pdf">thesis</a> is (somewhat vaguely) entitled <strong>"Mathematical modelling and analysis of aspects of planktonic bacterial motility".</strong></p>
                             <p>The main focus is the fascinating means by which lone bacteria propel themselves through liquid media. Much of my work centred around a new, high-throughput microscopic tracking dataset that had recently been developed by Dr David Wilkinson. Coupled with a very effective piece of tracking software by Dr Trevor Wood, we had a fantastic new dataset to probe the trajectories traced out by freely swimming bacteria such as <i>Rhodobacter sphaeroides</i>. I also had the pleasure of working with my colleague and friend Dr Kit Yates on some of the analysis.</p>
                             <p>I developed a novel approach to analysing the tracks obtained and applied various mathematical modelling techniques to tackle challenging problems including: "what is the effect of the microscope camera sampling rate on the observed tracks?" and "does <i>R. sphaeroides</i> reorientate lazily, by harnessing Brownian motion?".</p>
-                        
-                            <div class="row carousel-row">
-                            <!-- thumb navigation carousel -->
-                            <div class="col-md-12 hidden-sm hidden-xs" id="slider-thumbs">
-                                
-                                    <!-- thumb navigation carousel items -->
-                                  <ul class="list-inline">
-                                  <li> <a id="carousel-selector-0" class="selected">
-                                    <img src="static/img/portfolio/bm/multiple_scales.png" class="img-responsive img-carousel-thumb">
-                                  </a></li>
-                                  <li> <a id="carousel-selector-1" class="selected">
-                                    <img src="static/img/portfolio/bm/rhody_electron_microscope.png" class="img-responsive img-carousel-thumb">
-                                  </a></li>
-                                  <li> <a id="carousel-selector-2" class="selected">
-                                    <img src="static/img/portfolio/bm/flagella_arrangement.png" class="img-responsive img-carousel-thumb">
-                                  </a></li>
-                                  <li> <a id="carousel-selector-3" class="selected">
-                                    <img src="static/img/portfolio/bm/modes_of_motion.png" class="img-responsive img-carousel-thumb">
-                                  </a></li>
-                                  <li> <a id="carousel-selector-4" class="selected">
-                                    <img src="static/img/portfolio/bm/our_tracks.png" class="img-responsive img-carousel-thumb">
-                                  </a></li>
-                                  <li> <a id="carousel-selector-5" class="selected">
-                                    <img src="static/img/portfolio/bm/angle_change_true_vs_meas.png" class="img-responsive img-carousel-thumb">
-                                  </a></li>
-                                  <li> <a id="carousel-selector-6" class="selected">
-                                    <img src="static/img/portfolio/bm/ws8n_bulk_good_tracks_hmm_speed.png" class="img-responsive img-carousel-thumb">
-                                  </a></li>
-                                    </ul>
-                                
-                            </div>
-                          
                           
                             <!-- main slider carousel -->
-                            <div class="row">
-                                <div class="col-md-12" id="slider">                                    
-                                        <div class="col-md-12" id="carousel-bounding-box">
-                                            <div id="myCarousel" class="carousel slide">
-                                                <!-- main slider carousel items -->
-                                                <div class="carousel-inner" style="height: 500px;">
-                                                    <div class="active item" data-slide-number="0">
-                                                        <img src="static/img/portfolio/bm/multiple_scales.png" class="img-responsive img-centered">
-                                                    </div>
-                                                    <div class="item" data-slide-number="1">
-                                                      <img src="static/img/portfolio/bm/rhody_electron_microscope.png" class="img-responsive img-centered">
-                                                    </div>
-                                                    <div class="item" data-slide-number="2">
-                                                      <img src="static/img/portfolio/bm/flagella_arrangement.png" class="img-responsive img-centered">
-                                                    </div>
-                                                    <div class="item" data-slide-number="3">
-                                                      <img src="static/img/portfolio/bm/modes_of_motion.png" class="img-responsive img-centered">
-                                                    </div>
-                                                    <div class="item" data-slide-number="4">
-                                                      <img src="static/img/portfolio/bm/our_tracks.png" class="img-responsive img-centered">
-                                                    </div>
-                                                    <div class="item" data-slide-number="5">
-                                                      <img src="static/img/portfolio/bm/angle_change_true_vs_meas.png" class="img-responsive img-centered">
-                                                    </div>
-                                                    <div class="item" data-slide-number="6">
-                                                      <img src="static/img/portfolio/bm/ws8n_bulk_good_tracks_hmm_speed.png" class="img-responsive img-centered">
-                                                    </div>
-                                                </div>
+                            <div class="row carousel-row">
+                                <div class="col-md-12" id="carousel-bounding-box" id="bacSlider">
+                                    <div id="bacCarousel" class="carousel slide">
+                                        <!-- carousel navigation thumbnails -->
+                                        <ul class="carousel-indicators carousel-list-inline">
+                                                <li class="list-inline-item active">
+                                                        <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#bacCarousel">
+                                                                <img src="static/img/portfolio/bm/multiple_scales.png" class="img-responsive img-carousel-thumb">
+                                                        </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                        <a id="carousel-selector-1" data-slide-to="1" data-target="#bacCarousel">
+                                                                <img src="static/img/portfolio/bm/rhody_electron_microscope.png" class="img-responsive img-carousel-thumb">
+                                                        </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                        <a id="carousel-selector-2" data-slide-to="2" data-target="#bacCarousel">
+                                                                <img src="static/img/portfolio/bm/flagella_arrangement.png" class="img-responsive img-carousel-thumb">
+                                                        </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                        <a id="carousel-selector-3" data-slide-to="3" data-target="#bacCarousel">
+                                                                <img src="static/img/portfolio/bm/modes_of_motion.png" class="img-responsive img-carousel-thumb">
+                                                        </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                        <a id="carousel-selector-4" data-slide-to="4" data-target="#bacCarousel">
+                                                                <img src="static/img/portfolio/bm/our_tracks.png" class="img-responsive img-carousel-thumb">
+                                                        </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                        <a id="carousel-selector-5" data-slide-to="5" data-target="#bacCarousel">
+                                                                <img src="static/img/portfolio/bm/angle_change_true_vs_meas.png" class="img-responsive img-carousel-thumb">
+                                                        </a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                        <a id="carousel-selector-6" data-slide-to="6" data-target="#bacCarousel">
+                                                                <img src="static/img/portfolio/bm/ws8n_bulk_good_tracks_hmm_speed.png" class="img-responsive img-carousel-thumb">
+                                                        </a>
+                                                </li>
+                                        </ul>
+                                                               
+                                        <!-- main slider carousel items -->
+                                        <div class="carousel-inner" style="height: 500px;">
+                                            <div class="active item carousel-item" data-slide-number="0">
+                                                <img src="static/img/portfolio/bm/multiple_scales.png" class="img-responsive img-centered">
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="1">
+                                              <img src="static/img/portfolio/bm/rhody_electron_microscope.png" class="img-responsive img-centered">
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="2">
+                                              <img src="static/img/portfolio/bm/flagella_arrangement.png" class="img-responsive img-centered">
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="3">
+                                              <img src="static/img/portfolio/bm/modes_of_motion.png" class="img-responsive img-centered">
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="4">
+                                              <img src="static/img/portfolio/bm/our_tracks.png" class="img-responsive img-centered">
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="5">
+                                              <img src="static/img/portfolio/bm/angle_change_true_vs_meas.png" class="img-responsive img-centered">
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="6">
+                                              <img src="static/img/portfolio/bm/ws8n_bulk_good_tracks_hmm_speed.png" class="img-responsive img-centered">
                                             </div>
                                         </div>
-                        
+                                    </div>
+                
                                 </div>
                             </div>
                             <!--/main slider carousel-->
-                            </div>
                             
                         </div>
                     </div>
@@ -495,66 +499,75 @@
                                 </li>
                             </ul>
 
-                            <p>CPC</p>
+                            <p>My first postdoc was spent at <a href="www.ucl.ac.uk">UCL</a> in the verbosely-titled <a href="http://www.cege.ucl.ac.uk">Department for Civil, Environmental and Geomatic Engineering</a>. My research focused on modelling and predicting the spatiotemporal patterning of crime. The work was funded by EPSRC under the <a href="www.ucl.ac.uk/cpc/">Crime, Policing & Citizenship (CPC)</a> project, which aimed to take an integrative approach to those three elements by combining a variety of (sometimes Big) data sources.</p>
+                            <p>The vast majority of crime prediction routines available at the time of writing are based on simple spatial geometric units, such as grid squares on a map. However, the spatial structure of an urban environment is very complex, particularly in an older city such as London, where street connectivity is far from the regular grid-like pattern of modern North American conurbations. Since criminals themselves are generally restricted to using the street network (if we include features such as alleyways and parks), any model that assumes that crimes diffuse within a 2D plane is unjustified. Furthermore, a predictive method that informs police officers to 'travel to this grid square' is open to misinterpretation (at best) and being ignored completely (more likely). Together with my friend and colleague Dr Toby Davies, I implemented a kernel-based crime prediction approach that uses the street network itself as the spatial basis. Crime risk travels along streets and predictions are made at a road segment level. We showed that this approach outperforms grid-based approaches.</p>
+                            <p>I applied the self-exciting point process (SEPP) model to model and predict crime patterns. The SEPP has origins in seismology, where it was applied to predict earthquake aftershock events. The model assumes that one event can lead to more events (self-excitation), which is a good approximation of the crime scientific theory of boosting (also known as event dependence). It models crimes as point events that arise due to a slowly-varying background risk level. Whenever a crime does occur, it can spawn more crimes within the temporal and spatial vicinity. To generate usable predictions from the SEPP, we need to parametrise it using historical crime records. This training process is error-prone; I published a paper describing one particular way in which it can fail (and how we can sometimes rescue it).</p>
+                            
                         
                             <div class="row carousel-row">
-                                <!-- thumb navigation carousel -->
-                                <div class="col-md-12 hidden-sm hidden-xs" id="slider-thumbs-cpc">                                
-                                      <!-- thumb navigation carousel items -->
-                                      <ul class="list-inline">
-                                      <li> <a id="carousel-selector-0" class="selected">
-                                        <img src="static/img/portfolio/cpc/camden_burglary_network_train.jpeg" class="img-responsive img-carousel-thumb">
-                                      </a></li>                                        
-                                      <li> <a id="carousel-selector-1" class="selected">
-                                        <img src="static/img/portfolio/cpc/burglaries_heatmap_london.jpeg" class="img-responsive img-carousel-thumb">
-                                      </a></li>
-                                      <li> <a id="carousel-selector-2" class="selected">
-                                        <img src="static/img/portfolio/cpc/burglary_in_a_dwelling.png" class="img-responsive img-carousel-thumb">
-                                      </a></li>
-                                      <li> <a id="carousel-selector-3" class="selected">
-                                        <img src="static/img/portfolio/cpc/camden_bromley_hackney_burglary_temporal_trend.png" class="img-responsive img-carousel-thumb">
-                                      </a></li>                                                                                                      
-                                      <li> <a id="carousel-selector-4" class="selected">
-                                        <img src="static/img/portfolio/cpc/heatmaps_1.png" class="img-responsive img-carousel-thumb">
-                                      </a></li>
-                                      <li> <a id="carousel-selector-5" class="selected">
-                                        <img src="static/img/portfolio/cpc/heatmaps_2.png" class="img-responsive img-carousel-thumb">
-                                      </a></li>
-                                      </ul>                                
-                                </div>
-                          
                                 <!-- main slider carousel -->
-                                <div class="row">
-                                    <div class="col-md-12" id="slider-cpc">                                    
-                                            <div class="col-md-12" id="carousel-bounding-box">
-                                                <div id="cpcCarousel" class="carousel slide">
-                                                    <!-- main slider carousel items -->
-                                                    <div class="carousel-inner" style="height: 500px;">
-                                                        <div class="active item" data-slide-number="0">
-                                                            <img src="static/img/portfolio/cpc/camden_burglary_network_train.jpeg" class="img-responsive img-centered">
-                                                        </div>
-                                                        <div class="active item" data-slide-number="1">
-                                                            <img src="static/img/portfolio/cpc/burglaries_heatmap_london.jpeg" class="img-responsive img-centered">
-                                                        </div>
-                                                        <div class="active item" data-slide-number="2">
-                                                            <img src="static/img/portfolio/cpc/burglary_in_a_dwelling.png" class="img-responsive img-centered">
-                                                        </div>
-                                                        <div class="active item" data-slide-number="3">
-                                                            <img src="static/img/portfolio/cpc/camden_bromley_hackney_burglary_temporal_trend.png" class="img-responsive img-centered">
-                                                        </div>
-                                                        <div class="active item" data-slide-number="4">
-                                                            <img src="static/img/portfolio/cpc/heatmaps_1.png" class="img-responsive img-centered">
-                                                        </div>
-                                                        <div class="active item" data-slide-number="5">
-                                                            <img src="static/img/portfolio/cpc/heatmaps_2.png" class="img-responsive img-centered">
-                                                        </div>                                                    
-                                                    </div>
+                                <div class="col-md-12" id="carousel-bounding-box" id="cpcSlider">
+                                    <div id="cpcCarousel" class="carousel slide">
+                                        <!-- carousel navigation thumbnails -->
+                                        <ul class="carousel-indicators carousel-list-inline">
+                                            <li class="list-inline-item active">
+                                                    <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#cpcCarousel">
+                                                    <img src="static/img/portfolio/cpc/camden_burglary_network_train.jpeg" class="img-responsive img-carousel-thumb">
+                                                    </a>
+                                            </li>                                        
+                                            <li class="list-inline-item">
+                                                    <a id="carousel-selector-1" data-slide-to="1" data-target="#cpcCarousel">
+                                                            <img src="static/img/portfolio/cpc/burglaries_heatmap_london.jpeg" class="img-responsive img-carousel-thumb">
+                                                    </a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                    <a id="carousel-selector-2" data-slide-to="2" data-target="#cpcCarousel">
+                                                    <img src="static/img/portfolio/cpc/burglary_in_a_dwelling.png" class="img-responsive img-carousel-thumb">
+                                                    </a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                    <a id="carousel-selector-3" data-slide-to="3" data-target="#cpcCarousel">
+                                                    <img src="static/img/portfolio/cpc/camden_bromley_hackney_burglary_temporal_trend.png" class="img-responsive img-carousel-thumb">
+                                                    </a>
+                                            </li>                                                                                                      
+                                            <li class="list-inline-item">
+                                                    <a id="carousel-selector-4" data-slide-to="4" data-target="#cpcCarousel">
+                                                    <img src="static/img/portfolio/cpc/heatmaps_1.png" class="img-responsive img-carousel-thumb">
+                                                    </a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                    <a id="carousel-selector-5" data-slide-to="5" data-target="#cpcCarousel">
+                                                    <img src="static/img/portfolio/cpc/heatmaps_2.png" class="img-responsive img-carousel-thumb">
+                                                    </a>
+                                            </li>
+                                        </ul>
+                                        <!-- main slider carousel items -->
+                                        <div class="carousel-inner">
+                                            <div class="active item carousel-item" data-slide-number="0">
+                                                <img src="static/img/portfolio/cpc/camden_burglary_network_train.jpeg" class="img-responsive img-centered">
+                                                <div class="carousel-caption">
+                                                        <h3>First slide label</h3>
+                                                        <p>Can we see it?</p>
                                                 </div>
                                             </div>
-                            
+                                            <div class="item carousel-item" data-slide-number="1">
+                                                <img src="static/img/portfolio/cpc/burglaries_heatmap_london.jpeg" class="img-responsive img-centered">
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="2">
+                                                <img src="static/img/portfolio/cpc/burglary_in_a_dwelling.png" class="img-responsive img-centered">
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="3">
+                                                <img src="static/img/portfolio/cpc/camden_bromley_hackney_burglary_temporal_trend.png" class="img-responsive img-centered">
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="4">
+                                                <img src="static/img/portfolio/cpc/heatmaps_1.png" class="img-responsive img-centered">
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="5">
+                                                <img src="static/img/portfolio/cpc/heatmaps_2.png" class="img-responsive img-centered">
+                                            </div>                                                    
+                                        </div>                                        
                                     </div>
                                 </div>
-                                
                             </div>
                             
                         </div>
@@ -770,17 +783,12 @@
     
     <script>
         
-        $('#myCarousel').carousel({
-                interval: false,
-                pause: true
-        });
-        
         // normalise the carousel image sizes in advance
         var max_height = 500;
         
-        function resizeCarouselImages() {
+        function resizeCarouselImages(id) {
                 var w, h;
-                var items = $('#myCarousel .item');
+                var items = $(id + ' .item');
                 items.each(function() {
                         var img = this.getElementsByTagName('img')[0];
                         w = img.naturalWidth;
@@ -788,35 +796,16 @@
                        if (h > max_height) {
                                 // resize by updating the width
                                 var new_w = max_height * w / h;
-                                $(this).width(new_w);
+                                $(img).width(new_w);
                         }
                 });
         }
-            
-        // handles the carousel thumbnails
-        $('[id^=carousel-selector-]').click( function(){
-          var id_selector = $(this).attr("id");
-          var id = id_selector.substr(id_selector.length -1);
-          id = parseInt(id);
-          $('#myCarousel').carousel(id);
-          $('[id^=carousel-selector-]').removeClass('selected');
-          $(this).addClass('selected');
-        });
-            
-        // when the carousel slides, update the thumbnails
-        $('#myCarousel').on('slid', function (e) {
-                var id = $('.item.active').data('slide-number');
-                id = parseInt(id);
-                $('[id^=carousel-selector-]').removeClass('selected');
-                $('[id=carousel-selector-'+id+']').addClass('selected');
-                
-        }
-        );
         
         $(window).on('load', function() {
                 // Resizing takes place using natural height and width of hidden images
                 // That way, when the carousel loads all the images have the right dimensions
-                resizeCarouselImages();
+                resizeCarouselImages('#cpcCarousel');
+                resizeCarouselImages('#bacCarousel');
         });
           
     </script>
