@@ -239,7 +239,7 @@ def residential_property_for_sale(src, url_obj=None):
     else:
         if re.search(r'POA', prc.text):
             attrs['asking_price'] = -1.
-            attrs['POA'] = True
+            attrs['price_on_application'] = True
         else:
             price = re.search(u'£(?P<price>[0-9,]*)', prc.text)
             if price is None:
@@ -248,7 +248,7 @@ def residential_property_for_sale(src, url_obj=None):
                 price = price.group('price')
                 try:
                     attrs['asking_price'] = int(price.replace(',', ''))
-                    attrs['POA'] = False
+                    attrs['price_on_application'] = False
                 except ValueError:
                     errors['asking_price'] = price
 
