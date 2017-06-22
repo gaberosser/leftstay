@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'rightmove',
     'celerystick',
     'test_celery',
+    'bibliography',
 ]
 
 MIDDLEWARE = [
