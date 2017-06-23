@@ -211,13 +211,12 @@
                 <div class="col-lg-12 text-center">
                     <h2>Publications</h2>
                     <hr class="star-primary">
-                    These will be pulled directly from the DB.
                 </div>
             </div>
             
             <div class="row">
-                <div class="col-lg-12 text-left">
-                        <p>Novel evaluation metrics for sparse spatio-temporal point process hotspot predictions-a crime case study. Adepeju, M., <b>Rosser, G.</b>, Cheng, T. (2016) <i>International Journal of Geographical Information Science</i> 30 (11), 2133-2154</p>
+                <div class="col-lg-12 text-center" id="publications-content">
+                        <i id="publications-loading-indicator" class="fa fa-spinner fa-spin" style="font-size:36px"></i>
                 </div>
             </div>
 
@@ -842,6 +841,52 @@
                 resizeCarouselImages('#cpcCarousel');
                 resizeCarouselImages('#bacCarousel');
         });
+        
+        $(document).ajaxComplete(function(event, request, settings) {
+                console.log("ajaxComplete");
+                $('#publications-loading-indicator').hide();
+        });
+        
+        function authorsList(pub) {
+                var this_text = '';
+                $.each(pub.authors, function (key, val) {
+                    if (val.bold) {
+                        this_text += '<b>' + val.last_name + ', ' + val.first_name[0] + '.</b> ';
+                    } else {
+                        this_text += val.last_name + ', ' + val.first_name[0] + '. ';
+                    }
+                });
+                return this_text;
+        }
+            
+        
+        function preparePublications(data) {
+            var obj = JSON.parse(data);
+            $.each(obj, function (key, val) {
+                $('#publications-content').append($('<p>').html(val.title + ' ' + authorsList(val)));
+            });
+        }
+        
+        function loadPublications() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                                //var obj = JSON.parse(this.responseText);
+                                //$.each(obj, function (key, val) {
+                                //        $('#publications-content').append($('<p>').text('title: ' + val.title));
+                                //});
+                                preparePublications(this.responseText);
+                                $('#publications-loading-indicator').hide();
+                                //document.getElementById("publications-content").innerHTML = this.responseText;
+                                //preparePublications(this.responseText);
+                                
+                        }
+                };
+                xhttp.open("GET", "/bibliography/publications", true);
+                xhttp.send();
+        }
+        
+        $(document).ready(function() { loadPublications(); });
           
     </script>
 

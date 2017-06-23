@@ -1,13 +1,9 @@
 from django.shortcuts import render, HttpResponse
-from django.core import serializers
-from . import models
+from rest_framework import viewsets
+
+from . import models, serializers
 
 
-def publications(request):
-    qset = models.Publication.objects.all()
-    data = serializers.serialize('json', qset)
-    return HttpResponse(data, content_type='application/json')
-
-
-def presentations(request):
-    pass
+class PublicationViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.Publication.objects.all()
+    serializer_class = serializers.PublicationSerializer

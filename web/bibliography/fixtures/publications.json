@@ -1,0 +1,872 @@
+[
+{
+  "model": "bibliography.author",
+  "pk": 1,
+  "fields": {
+    "first_name": "Gabriel",
+    "last_name": "Rosser",
+    "middle_initials": null,
+    "make_bold": true
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 2,
+  "fields": {
+    "first_name": "Monsuru",
+    "last_name": "Adepeju",
+    "middle_initials": null,
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 3,
+  "fields": {
+    "first_name": "Tao",
+    "last_name": "Cheng",
+    "middle_initials": null,
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 4,
+  "fields": {
+    "first_name": "Nicolas",
+    "last_name": "Delalez",
+    "middle_initials": "J",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 5,
+  "fields": {
+    "first_name": "George",
+    "last_name": "Wadhams",
+    "middle_initials": "H",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 6,
+  "fields": {
+    "first_name": "Quan",
+    "last_name": "Xue",
+    "middle_initials": null,
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 7,
+  "fields": {
+    "first_name": "Ian",
+    "last_name": "Dobbie",
+    "middle_initials": "M",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 8,
+  "fields": {
+    "first_name": "Richard",
+    "last_name": "Berry",
+    "middle_initials": "M",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 9,
+  "fields": {
+    "first_name": "Mark",
+    "last_name": "Leake",
+    "middle_initials": "C",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 10,
+  "fields": {
+    "first_name": "Judith",
+    "last_name": "Armitage",
+    "middle_initials": "P",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 11,
+  "fields": {
+    "first_name": "Trevor",
+    "last_name": "Wood",
+    "middle_initials": "M",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 12,
+  "fields": {
+    "first_name": "Christian",
+    "last_name": "Yates",
+    "middle_initials": "A",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 13,
+  "fields": {
+    "first_name": "David",
+    "last_name": "Wilkinson",
+    "middle_initials": "A",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 14,
+  "fields": {
+    "first_name": "Alexander",
+    "last_name": "Fletcher",
+    "middle_initials": "G",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 15,
+  "fields": {
+    "first_name": "Philip",
+    "last_name": "Maini",
+    "middle_initials": "K",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 16,
+  "fields": {
+    "first_name": "Ruth",
+    "last_name": "Baker",
+    "middle_initials": "E",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 17,
+  "fields": {
+    "first_name": "Jennifer",
+    "last_name": "de Beyer",
+    "middle_initials": "A",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 18,
+  "fields": {
+    "first_name": "Cyrille",
+    "last_name": "Lebon",
+    "middle_initials": null,
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 19,
+  "fields": {
+    "first_name": "Louis",
+    "last_name": "Gouagna",
+    "middle_initials": "C",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 20,
+  "fields": {
+    "first_name": "Jake",
+    "last_name": "Taylor-King",
+    "middle_initials": "P",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 21,
+  "fields": {
+    "first_name": "Emiel",
+    "last_name": "van Loon",
+    "middle_initials": "E",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 22,
+  "fields": {
+    "first_name": "Jon",
+    "last_name": "Chapman",
+    "middle_initials": "S",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 23,
+  "fields": {
+    "first_name": "Toby",
+    "last_name": "Davies",
+    "middle_initials": "P",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 24,
+  "fields": {
+    "first_name": "Kate",
+    "last_name": "Bowers",
+    "middle_initials": "J",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 25,
+  "fields": {
+    "first_name": "Shane",
+    "last_name": "Johnson",
+    "middle_initials": "D",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.author",
+  "pk": 26,
+  "fields": {
+    "first_name": "Mostyn",
+    "last_name": "Brown",
+    "middle_initials": "T",
+    "make_bold": false
+  }
+},
+{
+  "model": "bibliography.publication",
+  "pk": 1,
+  "fields": {
+    "title": "Predictive Crime Mapping: Arbitrary Grids or Street Networks?",
+    "year": 2016,
+    "journal": "Journal of Quantitative Criminology",
+    "volume": null,
+    "edition": null,
+    "page_start": "1",
+    "page_end": "26"
+  }
+},
+{
+  "model": "bibliography.publication",
+  "pk": 2,
+  "fields": {
+    "title": "Improving the Robustness and Accuracy of Crime Prediction with the Self-Exciting Point Process Through Isotropic Triggering",
+    "year": 2016,
+    "journal": "Applied Spatial Analysis and Policy",
+    "volume": null,
+    "edition": null,
+    "page_start": "1",
+    "page_end": "21"
+  }
+},
+{
+  "model": "bibliography.publication",
+  "pk": 3,
+  "fields": {
+    "title": "Novel evaluation metrics for sparse spatio-temporal point process hotspot predictions-a crime case study",
+    "year": 2016,
+    "journal": "International Journal of Geographical Information Science",
+    "volume": "30",
+    "edition": "11",
+    "page_start": "2133",
+    "page_end": "2154"
+  }
+},
+{
+  "model": "bibliography.publication",
+  "pk": 4,
+  "fields": {
+    "title": "From birds to bacteria: generalised velocity jump processes with resting states",
+    "year": 2015,
+    "journal": "Bulletin of mathematical biology",
+    "volume": "77",
+    "edition": "7",
+    "page_start": "1213",
+    "page_end": "1236"
+  }
+},
+{
+  "model": "bibliography.publication",
+  "pk": 5,
+  "fields": {
+    "title": "Straightforward multi-object video tracking for quantification of mosquito flight activity",
+    "year": 2014,
+    "journal": "Journal of Insect Physiology",
+    "volume": "71",
+    "edition": null,
+    "page_start": "114",
+    "page_end": "121"
+  }
+},
+{
+  "model": "bibliography.publication",
+  "pk": 6,
+  "fields": {
+    "title": "Modelling and analysis of bacterial tracks suggest an active reorientation mechanism in Rhodobacter sphaeroides",
+    "year": 2014,
+    "journal": "Journal of The Royal Society Interface",
+    "volume": "11",
+    "edition": "97",
+    "page_start": "20140320",
+    "page_end": null
+  }
+},
+{
+  "model": "bibliography.publication",
+  "pk": 7,
+  "fields": {
+    "title": "Novel methods for analysing bacterial tracks reveal persistence in Rhodobacter sphaeroides",
+    "year": 2013,
+    "journal": "PLoS Computational Biology",
+    "volume": "9",
+    "edition": "10",
+    "page_start": "e1003276",
+    "page_end": null
+  }
+},
+{
+  "model": "bibliography.publication",
+  "pk": 8,
+  "fields": {
+    "title": "The effect of sampling rate on observed statistics in a correlated random walk",
+    "year": 2013,
+    "journal": "Journal of The Royal Society Interface",
+    "volume": "10",
+    "edition": "85",
+    "page_start": "20130273",
+    "page_end": null
+  }
+},
+{
+  "model": "bibliography.publication",
+  "pk": 9,
+  "fields": {
+    "title": "Simplified multitarget tracking using the PHD filter for microscopic video data",
+    "year": 2012,
+    "journal": "IEEE Transactions on Circuits and Systems for Video Technology",
+    "volume": "22",
+    "edition": "5",
+    "page_start": "702",
+    "page_end": "713"
+  }
+},
+{
+  "model": "bibliography.publication",
+  "pk": 10,
+  "fields": {
+    "title": "Signal-dependent turnover of the bacterial flagellar switch protein FliM",
+    "year": 2010,
+    "journal": "Proceedings of the National Academy of Sciences",
+    "volume": "107",
+    "edition": "25",
+    "page_start": "11347",
+    "page_end": "11351"
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 1,
+  "fields": {
+    "publication": 1,
+    "author": 1,
+    "order": 1,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 2,
+  "fields": {
+    "publication": 1,
+    "author": 23,
+    "order": 2,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 3,
+  "fields": {
+    "publication": 1,
+    "author": 24,
+    "order": 3,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 4,
+  "fields": {
+    "publication": 1,
+    "author": 25,
+    "order": 4,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 5,
+  "fields": {
+    "publication": 1,
+    "author": 3,
+    "order": 5,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 6,
+  "fields": {
+    "publication": 2,
+    "author": 1,
+    "order": 1,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 7,
+  "fields": {
+    "publication": 2,
+    "author": 3,
+    "order": 2,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 8,
+  "fields": {
+    "publication": 3,
+    "author": 2,
+    "order": 1,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 9,
+  "fields": {
+    "publication": 3,
+    "author": 1,
+    "order": 2,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 10,
+  "fields": {
+    "publication": 3,
+    "author": 3,
+    "order": 3,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 11,
+  "fields": {
+    "publication": 4,
+    "author": 20,
+    "order": 1,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 12,
+  "fields": {
+    "publication": 4,
+    "author": 21,
+    "order": 2,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 13,
+  "fields": {
+    "publication": 4,
+    "author": 1,
+    "order": 3,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 14,
+  "fields": {
+    "publication": 4,
+    "author": 22,
+    "order": 4,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 15,
+  "fields": {
+    "publication": 5,
+    "author": 13,
+    "order": 1,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 16,
+  "fields": {
+    "publication": 5,
+    "author": 18,
+    "order": 2,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 17,
+  "fields": {
+    "publication": 5,
+    "author": 11,
+    "order": 3,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 18,
+  "fields": {
+    "publication": 5,
+    "author": 1,
+    "order": 4,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 19,
+  "fields": {
+    "publication": 5,
+    "author": 19,
+    "order": 5,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 20,
+  "fields": {
+    "publication": 6,
+    "author": 1,
+    "order": 1,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 21,
+  "fields": {
+    "publication": 6,
+    "author": 16,
+    "order": 2,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 22,
+  "fields": {
+    "publication": 6,
+    "author": 10,
+    "order": 3,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 23,
+  "fields": {
+    "publication": 6,
+    "author": 14,
+    "order": 4,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 24,
+  "fields": {
+    "publication": 7,
+    "author": 1,
+    "order": 1,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 25,
+  "fields": {
+    "publication": 7,
+    "author": 14,
+    "order": 2,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 26,
+  "fields": {
+    "publication": 7,
+    "author": 13,
+    "order": 3,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 27,
+  "fields": {
+    "publication": 7,
+    "author": 17,
+    "order": 4,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 28,
+  "fields": {
+    "publication": 7,
+    "author": 12,
+    "order": 5,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 29,
+  "fields": {
+    "publication": 7,
+    "author": 10,
+    "order": 6,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 30,
+  "fields": {
+    "publication": 7,
+    "author": 15,
+    "order": 7,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 31,
+  "fields": {
+    "publication": 7,
+    "author": 16,
+    "order": 8,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 32,
+  "fields": {
+    "publication": 8,
+    "author": 1,
+    "order": 1,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 33,
+  "fields": {
+    "publication": 8,
+    "author": 14,
+    "order": 2,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 34,
+  "fields": {
+    "publication": 8,
+    "author": 15,
+    "order": 3,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 35,
+  "fields": {
+    "publication": 8,
+    "author": 16,
+    "order": 4,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 36,
+  "fields": {
+    "publication": 9,
+    "author": 11,
+    "order": 1,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 37,
+  "fields": {
+    "publication": 9,
+    "author": 12,
+    "order": 2,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 38,
+  "fields": {
+    "publication": 9,
+    "author": 13,
+    "order": 3,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 39,
+  "fields": {
+    "publication": 9,
+    "author": 1,
+    "order": 4,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 40,
+  "fields": {
+    "publication": 10,
+    "author": 4,
+    "order": 1,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 41,
+  "fields": {
+    "publication": 10,
+    "author": 5,
+    "order": 2,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 42,
+  "fields": {
+    "publication": 10,
+    "author": 1,
+    "order": 3,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 43,
+  "fields": {
+    "publication": 10,
+    "author": 6,
+    "order": 4,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 44,
+  "fields": {
+    "publication": 10,
+    "author": 26,
+    "order": 5,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 45,
+  "fields": {
+    "publication": 10,
+    "author": 7,
+    "order": 6,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 46,
+  "fields": {
+    "publication": 10,
+    "author": 8,
+    "order": 7,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 47,
+  "fields": {
+    "publication": 10,
+    "author": 9,
+    "order": 8,
+    "joint": false
+  }
+},
+{
+  "model": "bibliography.publicationauthorship",
+  "pk": 48,
+  "fields": {
+    "publication": 10,
+    "author": 10,
+    "order": 9,
+    "joint": false
+  }
+}
+]

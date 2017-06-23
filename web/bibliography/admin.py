@@ -1,6 +1,10 @@
-from django.contrib import admin
+from django.contrib.gis import admin
+
 import models
 
+
+class PublicationAuthorshipInline(admin.TabularInline):
+    model = models.PublicationAuthorship
 
 
 class AuthorAdmin(admin.ModelAdmin):
@@ -8,11 +12,12 @@ class AuthorAdmin(admin.ModelAdmin):
 
 
 class PublicationAdmin(admin.ModelAdmin):
-    pass
+    inlines = (PublicationAuthorshipInline,)
 
 
-class PresentationAdmin(admin.ModelAdmin):
+class PresentationAdmin(admin.GeoModelAdmin):
     pass
+
 
 
 admin.site.register(models.Author, AuthorAdmin)
