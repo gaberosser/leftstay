@@ -851,9 +851,9 @@
                 var this_text = '';
                 $.each(pub.authors, function (key, val) {
                     if (val.bold) {
-                        this_text += '<b>' + val.last_name + ', ' + val.first_name[0] + '.</b> ';
+                        this_text += '<b>' + val.full_name + '</b> ';
                     } else {
-                        this_text += val.last_name + ', ' + val.first_name[0] + '. ';
+                        this_text += val.full_name;
                     }
                 });
                 return this_text;
@@ -871,15 +871,8 @@
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                         if (this.readyState == 4 && this.status == 200) {
-                                //var obj = JSON.parse(this.responseText);
-                                //$.each(obj, function (key, val) {
-                                //        $('#publications-content').append($('<p>').text('title: ' + val.title));
-                                //});
                                 preparePublications(this.responseText);
                                 $('#publications-loading-indicator').hide();
-                                //document.getElementById("publications-content").innerHTML = this.responseText;
-                                //preparePublications(this.responseText);
-                                
                         }
                 };
                 xhttp.open("GET", "/bibliography/publications", true);
