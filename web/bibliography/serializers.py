@@ -42,6 +42,7 @@ class PublicationSerializer(serializers.ModelSerializer):
             'edition',
             'page_start',
             'page_end',
+            'url'
         )
 
     def get_title(self, obj):

@@ -48,6 +48,7 @@ class Publication(models.Model):
     edition = models.CharField(max_length=8, null=True, blank=True)
     page_start = models.CharField(max_length=8, null=True, blank=True)
     page_end = models.CharField(max_length=8, null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%d)" % (shorten_journal(self.journal), self.year)

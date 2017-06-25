@@ -848,22 +848,45 @@
         });
         
         function authorsList(pub) {
-                var this_text = '';
+                var sep = ', ';
+                var auths = [];
                 $.each(pub.authors, function (key, val) {
                     if (val.bold) {
-                        this_text += '<b>' + val.full_name + '</b> ';
+                        auths.push('<b>' + val.full_name + '</b>');
                     } else {
-                        this_text += val.full_name;
+                        auths.push(val.full_name);
                     }
                 });
-                return this_text;
+                return auths.join(sep) + '.';
         }
             
         
         function preparePublications(data) {
             var obj = JSON.parse(data);
+            var el;
+            var content;
             $.each(obj, function (key, val) {
-                $('#publications-content').append($('<p>').html(val.title + ' ' + authorsList(val)));
+                if (val.url) {
+                    content = '<a href="' + val.url + '">' + val.title + '</a>';
+                } else {
+                        content = val.title;
+                }
+                content += ' ' + authorsList(val) + ' ' + val.year + '. ' + '<i>' + val.journal + '</i>';
+                if (val.volume) {
+                    content += ' ' + val.volume;
+                }
+                if (val.edition) {
+                    content += '(' + val.edition + ')';
+                }
+                if (val.page_start) {
+                    content += ' ' + val.page_start;
+                }
+                if (val.page_end) {
+                    content += '-' + val.page_end;
+                }
+                content += '.'
+                el = $('<p>').html(content);
+                $('#publications-content').append(el);
             });
         }
         
