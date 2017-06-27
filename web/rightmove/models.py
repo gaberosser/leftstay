@@ -180,6 +180,7 @@ class PropertyBase(models.Model, PropertySerializerMixin):
     def get_attributes(self):
         attrs = super(PropertyBase, self).get_attributes()
         attrs['url_id'] = self.url.id
+        return attrs
 
     def save(self, **kwargs):
         if self.accessed is None:

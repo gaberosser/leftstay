@@ -32,7 +32,7 @@ class Minion(object):
         """
         return NotImplementedError
 
-    def __init__(self, url_qset, user_agent, dump_errors=True):
+    def __init__(self, url_qset, user_agent, dump_errors=False):
         self.user_agent = user_agent
         self.requester = Requester(user_agent)
         self.url_qset = url_qset
