@@ -5,6 +5,9 @@ import consts
 
 logger = logging.getLogger(__name__)
 
+## FIXME: simplify. Remove sitemap
+
+
 class PropertySitemap(models.Model):
     """
     urls_created: If False, this is a flag specifying that we need to update the property URLs contained within.

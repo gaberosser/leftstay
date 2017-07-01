@@ -48,6 +48,19 @@ not_property_re = re.compile("(?P<t>%s)" % "|".join(NOT_PROPERTY), flags=re.I)
 latlng_re = re.compile(r"latitude=(?P<lat>[-0-9\.]*).*longitude=(?P<lng>[-0-9\.]*)")
 
 
+## TODO: parse find results - this actually contains most of the data anyway! Much faster.
+def residential_property_for_sale_from_search(src):
+    """
+    :param src: The raw repsonse from the search API.
+    """
+    import json
+    soup = BeautifulSoup(src, "html.parser")
+    el = soup.find('script', text=re.compile(r'window\.jsonModel = '))
+    dat = json.loads(re.sub(r'^.* = ', '', el.text))
+    # now look in here!
+    dat['properties']
+
+
 def residential_property_for_sale(src, url_obj=None):
     """
     :param src: Contains the raw text source for the property.
