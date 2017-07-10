@@ -5,21 +5,6 @@ import consts
 
 logger = logging.getLogger(__name__)
 
-## FIXME: simplify. Remove sitemap
-
-
-class PropertySitemap(models.Model):
-    """
-    urls_created: If False, this is a flag specifying that we need to update the property URLs contained within.
-    This field is then set to True to avoid unnecessary repetition.
-    """
-    url = models.URLField(null=False, blank=False, unique=True)
-    accessed = models.DateTimeField(help_text="Timestamp for access", auto_created=True)
-    status_code = models.IntegerField()
-    last_modified = models.DateField(help_text="Last modified date according to the sitemap XML")
-    content = models.TextField()
-    urls_created = models.BooleanField(default=False, help_text="Have URLs been created/updated for this entry?")
-
 
 class PropertyUrl(models.Model):
     """
@@ -56,7 +41,7 @@ class DeferredModel(object):
     def __init__(self, model, attrs=None, dependencies=None):
         self.model = model
         self.attrs = attrs or {}
-        self.dependencies = dependencies
+        self.dependencies = dependencies or {}
         self.djobj = None
 
     @property
@@ -65,7 +50,7 @@ class DeferredModel(object):
 
     @property
     def dependencies_satisfied(self):
-        if self.dependencies is None:
+        if self.dependencies is None or len(self.dependencies) == 0:
             return True
         for d in self.dependencies.values():
             if not d.saved:
@@ -171,6 +156,7 @@ class PropertyBase(models.Model, PropertySerializerMixin):
     full_description = models.TextField(null=True, blank=True)
 
     agent_name = models.CharField(max_length=256, null=True, blank=True)
+    agent_attribute = models.CharField(max_length=256, null=True, blank=True)
     agent_address = models.CharField(max_length=256, null=True, blank=True)
     agent_tel = models.CharField(max_length=20, null=True, blank=True)
 

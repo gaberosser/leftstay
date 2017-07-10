@@ -3,6 +3,7 @@ from django.contrib.gis import geos
 import datetime
 from bs4 import BeautifulSoup, element
 import re
+import json
 import consts, models
 
 NOT_PROPERTY = {
@@ -48,17 +49,57 @@ not_property_re = re.compile("(?P<t>%s)" % "|".join(NOT_PROPERTY), flags=re.I)
 latlng_re = re.compile(r"latitude=(?P<lat>[-0-9\.]*).*longitude=(?P<lng>[-0-9\.]*)")
 
 
-## TODO: parse find results - this actually contains most of the data anyway! Much faster.
-def residential_property_for_sale_from_search(src):
-    """
-    :param src: The raw repsonse from the search API.
-    """
-    import json
-    soup = BeautifulSoup(src, "html.parser")
+def parse_search_results(soup):
     el = soup.find('script', text=re.compile(r'window\.jsonModel = '))
-    dat = json.loads(re.sub(r'^.* = ', '', el.text))
-    # now look in here!
-    dat['properties']
+    dat = json.loads(re.sub(r'^[^ ]* = ', '', el.text))
+    return dat
+
+
+def property_array_from_search(soup):
+    el = soup.find('script', text=re.compile(r'window\.jsonModel = '))
+    dat = json.loads(re.sub(r'^[^ ]* = ', '', el.text))
+    return dat['properties']
+
+
+def residential_property_for_sale_from_search(soup):
+    """
+    :param src: The raw response from the search API.
+    :return: errors, res
+    errors: dictionary, keyed by URL
+    deferred: list of tuples, each is (url_string, deferred object)
+    """
+    res = []
+    errors = {}
+    status = {}
+
+    for attr in property_array_from_search(soup):
+        url = consts.BASE_URL + attr['propertyUrl']
+        try:
+            pt = geos.Point(
+                attr['location']['longitude'],
+                attr['location']['latitude'],
+                srid=4326
+            )
+            this = dict(
+                property_type=BUILDING_TYPE_MAP.get(attr['propertySubType']),
+                n_bed=attr['bedrooms'],
+                agent_name=attr['customer']['brandTradingName'],
+                agent_attribute=attr['customer']['branchName'],
+                address_string=attr['displayAddress'],
+                location=pt,
+                asking_price=attr['price']['amount'],
+            )
+            res.append(
+                (url, models.DeferredModel(model=models.PropertyForSale, attrs=this))
+            )
+            # to consider:
+            # attrs['displaySize']
+            # attrs['displayStatus']
+            # attrs['listingUpdate']
+        except Exception as exc:
+            errors[url] = repr(exc)
+
+    return errors, res
 
 
 def residential_property_for_sale(src, url_obj=None):

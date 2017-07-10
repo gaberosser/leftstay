@@ -7,6 +7,7 @@ from django.utils import timezone
 import models
 import consts
 from outcodes import OUTCODE_MAP
+import parser
 from leftstay.settings import TRANSACTION_CHUNK_SIZE, DEFAULT_USER_AGENT
 from leftstay.utils import chunk
 from api.getter import Requester
@@ -259,53 +260,57 @@ def get_links_one_outcode(outcode_int, find_url, requester=None, per_page=48, in
     return urls
 
 
-def outcode_search_generator(outcode_int, find_url, requester=None, per_page=48, index=None):
-    ## FIXME: does this kind of recursive generator actually work??
+def outcode_search_payload(outcode_int, index=None, per_page=48, include_sstc=True):
     """
     :param index: If supplied, this is the pagination parameter. This allows recursive calling.
     """
     outcode = "OUTCODE^%d" % outcode_int
-    if requester is None:
-        requester = requests
     payload = {
         'locationIdentifier': outcode,
         'numberOfPropertiesPerPage': per_page,
         'viewType': 'LIST',
+        'includeSSTC': 'true' if include_sstc else 'false',
     }
     if index is not None:
         payload['index'] = index
 
+    return payload
+
+
+def run_outcode_search(outcode_int, find_url, requester, payload):
     resp = requester.get(find_url, params=payload)
     if resp.status_code != 200:
-        raise AttributeError("Failed to get links for outcode %s at URL %s. Error: %s" % (
-            outcode, find_url, resp.content
+        raise AttributeError("Failed to get links for outcode %d at URL %s. Error: %s" % (
+            outcode_int, find_url, resp.content
         ))
 
     soup = BeautifulSoup(resp.content, "html.parser")
-
-    if index is None:
-        el = soup.find("span", attrs={'class': 'searchHeader-resultCount'})
-        nres = int(el.text)
-        indexes = range(per_page, nres, per_page)
-
-        yield soup
-        for i in indexes:
-            try:
-                yield outcode_search_generator(
-                    outcode_int,
-                    find_url,
-                    requester=requester,
-                    per_page=per_page,
-                    index=i
-                )
-            except Exception:
-                logger.exception("Failed to get URL results for outcode %s with index %d", outcode, i)
-    else:
-        yield soup
+    dat = parser.parse_search_results(soup)
+    nres = int(dat['pagination']['last'].strip().replace(',', ''))
+    return soup, nres
 
 
+def outcode_search_generator(outcode_int, find_url, requester=None, per_page=48):
+    """
+    :param index: If supplied, this is the pagination parameter. This allows recursive calling.
+    """
+    if requester is None:
+        requester = requests
+    payload = outcode_search_payload(outcode_int, per_page=per_page)
+    soup, nres = run_outcode_search(outcode_int, find_url, requester, payload)
 
-def update_one_outcode(outcode_int, find_url, requester=None):
+    indexes = range(per_page, nres + 1, per_page)  # add one to include final page
+    yield soup
+    for i in indexes:
+        payload = outcode_search_payload(outcode_int, per_page=per_page, index=i)
+        try:
+            soup, nres = run_outcode_search(outcode_int, find_url, requester, payload)
+            yield soup
+        except Exception:
+            logger.exception("Failed to get page of results with index %d", i)
+
+
+def update_one_outcode(outcode_int, find_url, property_type, requester=None):
     """
     TODO: rewrite this.
     Get the search data
@@ -313,7 +318,27 @@ def update_one_outcode(outcode_int, find_url, requester=None):
     Add/amend relevant Url and Property objects
     Iterate over pagination
     """
+    for i, soup in enumerate(outcode_search_generator(outcode_int, find_url, requester=requester)):
+        errors, res = parser.residential_property_for_sale_from_search(soup)
 
+        if len(errors):
+            logger.error(
+                "%d errors raised from page %d of outcode %d",
+                len(errors), i + 1, outcode_int
+            )
+            # TODO: this might be large
+            logger.error(repr(errors))
+        for url, d in res:
+            url_obj, created = models.PropertyUrl.objects.get_or_create(url=url, property_type=property_type)
+            url_obj.last_known_status
+            url_obj.outcode = outcode_int
+            pc_code = OUTCODE_MAP[outcode_int]
+            url_obj.postcode_outcode = pc_code
+            url_obj.last_seen = timezone.now()
+
+
+    # TODO: will need to copy code from Minion.update_one to update the Property object itself
+    # TODO: will need to repurpose the below code to update the URLs
 
     try:
         urls = get_links_one_outcode(outcode_int, find_url=find_url, requester=requester)
