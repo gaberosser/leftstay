@@ -1,5 +1,5 @@
 import parser, models, consts
-from getter import Requester, PropertyXmlGetter, update_property_urls
+from getter import Requester
 import logging
 import os
 import pickle

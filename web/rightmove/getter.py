@@ -9,7 +9,7 @@ import consts
 from outcodes import OUTCODE_MAP
 import parser
 from leftstay.settings import TRANSACTION_CHUNK_SIZE, DEFAULT_USER_AGENT
-from leftstay.utils import chunk
+from leftstay.utils import chunk, dict_equality
 from api.getter import Requester
 from bs4 import BeautifulSoup
 logger = logging.getLogger(__name__)
@@ -310,16 +310,24 @@ def outcode_search_generator(outcode_int, find_url, requester=None, per_page=48)
             logger.exception("Failed to get page of results with index %d", i)
 
 
-def update_one_outcode(outcode_int, find_url, property_type, requester=None):
+def update_one_outcode(outcode_int, property_type, requester=None):
     """
-    TODO: rewrite this.
-    Get the search data
-    Parse the JSON
-    Add/amend relevant Url and Property objects
-    Iterate over pagination
     """
+    find_url = consts.FIND_URLS[property_type]
+    pc_code = OUTCODE_MAP[outcode_int]
+    parse = None
+    if property_type == consts.PROPERTY_TYPE_FORSALE:
+        parse = parser.residential_property_for_sale_from_search
+    else:
+        raise NotImplementedError
+    # get all known URLs
+    url_dict = dict([
+        (x.url, x) for x in models.PropertyUrl.objects.filter(postcode_outcode=pc_code)
+            .prefetch_related('property_set')
+    ])
+
     for i, soup in enumerate(outcode_search_generator(outcode_int, find_url, requester=requester)):
-        errors, res = parser.residential_property_for_sale_from_search(soup)
+        res, errors = parse(soup)
 
         if len(errors):
             logger.error(
@@ -329,62 +337,40 @@ def update_one_outcode(outcode_int, find_url, property_type, requester=None):
             # TODO: this might be large
             logger.error(repr(errors))
         for url, d in res:
-            url_obj, created = models.PropertyUrl.objects.get_or_create(url=url, property_type=property_type)
-            url_obj.last_known_status
-            url_obj.outcode = outcode_int
-            pc_code = OUTCODE_MAP[outcode_int]
-            url_obj.postcode_outcode = pc_code
-            url_obj.last_seen = timezone.now()
+            try:
+                # we have to set the property type and model here
+                if url in url_dict:
+                    url_obj = url_dict.pop(url)
+                    if url_obj.property_set.exists():
+                        most_recent = url_obj.property_set.latest('accessed').to_deferred()
+                        eq = dict_equality(d.attrs, most_recent.attrs, return_diff=False)
+                        to_update = not eq
+                    else:
+                        to_update = True
+                else:
+                    to_update = True
+                    url_obj = models.PropertyUrl(
+                        created=timezone.now(),
+                        url=url,
+                        property_type=property_type,
+                        outcode=outcode_int,
+                        postcode_outcode=pc_code,
+                        last_seen=timezone.now(),
+                    )
+                    url_obj.save()
+                # set the URL FK link
+                if to_update:
+                    url_def = url_obj.to_deferred()
+                    d.dependencies['url'] = url_def
+                    d.save()
+                    url_obj.last_updated = timezone.now()
+                    url_obj.save()
 
+            except Exception:
+                logger.exception("Failed to update URL %s in postcode %s", url, pc_code)
 
-    # TODO: will need to copy code from Minion.update_one to update the Property object itself
-    # TODO: will need to repurpose the below code to update the URLs
-
-    try:
-        urls = get_links_one_outcode(outcode_int, find_url=find_url, requester=requester)
-    except Exception:
-        logger.exception("Failed to get URLs for outcode %d at %s", outcode_int, find_url)
-        raise
-
-    pc_code = OUTCODE_MAP[outcode_int]
-
-    # existing
-    existing = set(models.PropertyUrl.objects.values_list('url', flat=True))
-
-    # create
-    to_create = set(urls).difference(existing)
-    for ch in chunk(to_create, TRANSACTION_CHUNK_SIZE):
-        objs = [
-            models.PropertyUrl(
-                url=u,
-                property_type=url_type(u),
-                created=timezone.now(),
-                last_seen=timezone.now(),
-                outcode=outcode_int,
-                postcode_outcode=pc_code,
-            ) for u in ch
-        ]
-        try:
-            models.PropertyUrl.objects.bulk_create(objs)
-        except Exception:
-            logger.exception("Failed to create chunk for outcode %d", outcode_int)
-
-    # update
-    to_update = existing.intersection(urls)
-    try:
-        models.PropertyUrl.objects.filter(
-            url__in=to_update
-        ).update(last_seen=timezone.now(), outcode=outcode_int, postcode_outcode=pc_code, deactivated=None)
-    except Exception:
-        logger.exception("Failed to update %d records for outcode %d", len(to_update), outcode_int)
-
-
-    # deactivate
     to_deactivate = models.PropertyUrl.objects.exclude(
-        url__in=urls
-    ).filter(
-        outcode=outcode_int,
-        deactivated__isnull=True,
+        url__in=url_dict.keys()
     )
     try:
         to_deactivate.update(deactivated=timezone.now(), outcode=outcode_int, postcode_outcode=pc_code)

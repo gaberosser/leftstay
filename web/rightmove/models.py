@@ -6,27 +6,41 @@ import consts
 logger = logging.getLogger(__name__)
 
 
-class PropertyUrl(models.Model):
-    """
-    created: Datetime for URL creation
-    last_accessed: Last datetime an attempt was made to access the URL
-    last_updated:
-    """
-    url = models.URLField(null=False, blank=False, unique=True)
-    property_type = models.IntegerField(choices=consts.PROPERTY_TYPE_CHOICES)
-    last_known_status = models.IntegerField(choices=consts.URL_STATUS_CHOICES, null=True, blank=True)
-    outcode = models.IntegerField(help_text="Rightmove integer outcode", null=True, blank=True)
-    postcode_outcode = models.CharField(help_text="First part of the postcode", max_length=4, null=True, blank=True)
 
-    created = models.DateTimeField(help_text="Timestamp for creation", auto_created=True)
-    deactivated = models.DateTimeField(help_text="Timestamp for deactivation", null=True)
+class PropertySerializerMixin(object):
 
-    last_seen = models.DateTimeField(help_text="Timestamp for previous discovery", auto_created=True, null=True)
-    last_accessed = models.DateTimeField(help_text="Timestamp for previous access", null=True)
-    last_updated = models.DateTimeField(help_text="Timestamp for previous update", null=True)
-    last_status_code = models.IntegerField(help_text="Status code obtained on previous update", null=True)
+    def to_deferred(self):
+        # check cache in case we have already created this object
+        if hasattr(self, '_deferred'):
+            return self._deferred
+        attrs = self.get_attributes()
+        deps = self.get_dependencies()
+        self._deferred = DeferredModel(
+            self.__class__,
+            attrs=attrs,
+            dependencies=deps
+        )
+        return self._deferred
 
-    consecutive_failed_attempts = models.IntegerField(default=0)
+    def get_dependencies(self):
+        """
+        Must be implemented in derived classes if required
+        """
+        return
+
+    def get_attributes(self):
+        excl = set(getattr(self, 'exclusions', []))
+        fields = [f.name for f in self._meta.fields if f.name not in excl]
+        res = dict([
+            (f, getattr(self, f)) for f in fields
+        ])
+        return res
+
+    @classmethod
+    def from_deferred(cls, deferred):
+        if not deferred.saved:
+            deferred.save()
+        return deferred.djobj
 
 
 class DeferredModel(object):
@@ -89,40 +103,23 @@ class DeferredModel(object):
         self.djobj = obj
 
 
-class PropertySerializerMixin(object):
+class PropertyUrl(models.Model, PropertySerializerMixin):
+    """
+    created: Datetime for URL creation
+    last_accessed: Last datetime an attempt was made to access the URL
+    last_updated:
+    """
+    url = models.URLField(null=False, blank=False, unique=True)
+    property_type = models.IntegerField(choices=consts.PROPERTY_TYPE_CHOICES)
 
-    def to_deferred(self):
-        # check cache in case we have already created this object
-        if hasattr(self, '_deferred'):
-            return self._deferred
-        attrs = self.get_attributes()
-        deps = self.get_dependencies()
-        self._deferred = DeferredModel(
-            self.__class__,
-            attrs=attrs,
-            dependencies=deps
-        )
-        return self._deferred
+    outcode = models.IntegerField(help_text="Rightmove integer outcode", null=True, blank=True)
+    postcode_outcode = models.CharField(help_text="First part of the postcode", max_length=4, null=True, blank=True)
 
-    def get_dependencies(self):
-        """
-        Must be implemented in derived classes if required
-        """
-        return
+    created = models.DateTimeField(help_text="Timestamp for creation", auto_created=True)
+    deactivated = models.DateTimeField(help_text="Timestamp for deactivation", null=True)
 
-    def get_attributes(self):
-        excl = set(getattr(self, 'exclusions', []))
-        fields = [f.name for f in self._meta.fields if f.name not in excl]
-        res = dict([
-            (f, getattr(self, f)) for f in fields
-        ])
-        return res
-
-    @classmethod
-    def from_deferred(cls, deferred):
-        if not deferred.saved:
-            deferred.save()
-        return deferred.djobj
+    last_seen = models.DateTimeField(help_text="Timestamp for previous discovery", auto_created=True, null=True)
+    last_updated = models.DateTimeField(help_text="Timestamp for previous update", null=True)
 
 
 class NearestStation(models.Model, PropertySerializerMixin):
@@ -145,7 +142,7 @@ class PropertyBase(models.Model, PropertySerializerMixin):
         'propertybase_ptr',
     ]
 
-    url = models.ForeignKey('PropertyUrl', null=False, blank=False)
+    url = models.ForeignKey('PropertyUrl', null=False, blank=False, related_name="property_set")
     requester_id = models.CharField(max_length=32)
     
     accessed = models.DateTimeField(help_text="Timestamp for access", auto_created=True)
@@ -157,8 +154,6 @@ class PropertyBase(models.Model, PropertySerializerMixin):
 
     agent_name = models.CharField(max_length=256, null=True, blank=True)
     agent_attribute = models.CharField(max_length=256, null=True, blank=True)
-    agent_address = models.CharField(max_length=256, null=True, blank=True)
-    agent_tel = models.CharField(max_length=20, null=True, blank=True)
 
     location = models.PointField(srid=4326)
     address_string = models.CharField(max_length=256)

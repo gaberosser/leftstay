@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.gis import geos
+from django.utils import timezone
 import datetime
 from bs4 import BeautifulSoup, element
 import re
@@ -63,14 +64,15 @@ def property_array_from_search(soup):
 
 def residential_property_for_sale_from_search(soup):
     """
-    :param src: The raw response from the search API.
+    :param soup: BeautifulSoup parsed object.
     :return: errors, res
     errors: dictionary, keyed by URL
     deferred: list of tuples, each is (url_string, deferred object)
     """
+    the_model = models.PropertyForSale
+    property_type = consts.PROPERTY_TYPE_FORSALE
     res = []
     errors = {}
-    status = {}
 
     for attr in property_array_from_search(soup):
         url = consts.BASE_URL + attr['propertyUrl']
@@ -80,26 +82,74 @@ def residential_property_for_sale_from_search(soup):
                 attr['location']['latitude'],
                 srid=4326
             )
+
+            building_type = None
+            building_situation = None
+
+            prop = attr['propertyTypeFullDescription']
+            prop = re.sub(' for sale.*$', '', prop)
+            prop = re.sub('[1-9]* bedroom *', '', prop)
+
+            is_retirement = False
+            if re.search('retirement', prop):
+                is_retirement = True
+
+            if re.search('studio', prop, flags=re.I):
+                n_bed = 1
+            else:
+                n_bed = int(attr['bedrooms'])
+
+            sit = re.search(situation_re, prop)
+            if sit:
+                t = sit.group('t').lower()
+                if t in BUILDING_SITUATION_MAP:
+                    building_situation = BUILDING_SITUATION_MAP[t]
+                else:
+                    errors.setdefault(url, {})['building_situation'] = t
+                prop = re.sub(situation_re, "", prop).strip()
+
+            typ = re.search(type_re, prop)
+            if typ:
+                t = typ.group('t').lower()
+                if t in BUILDING_TYPE_MAP:
+                    building_type = BUILDING_TYPE_MAP[t]
+                    if building_type == consts.BUILDING_TYPE_FLAT:
+                        building_situation = consts.BUILDING_SITUATION_FLAT
+                else:
+                    errors.setdefault(url, {})['building_type'] = t
+            elif re.search(not_property_re, prop):
+                # The listing is for a type of property we are not tracking (e.g. block of apartments, land)
+                errors.setdefault(url, {})['FAILED'] = True
+                errors[url]['failure_reason'] = 'Ignored property type'
+                errors[url]['property_type'] = re.search(not_property_re, prop).group('t')
+                continue
+            else:
+                errors.setdefault(url, {})['building_type'] = prop
+
             this = dict(
-                property_type=BUILDING_TYPE_MAP.get(attr['propertySubType']),
-                n_bed=attr['bedrooms'],
+                property_type=property_type,
+                building_type=building_type,
+                building_situation=building_situation,
+                n_bed=n_bed,
                 agent_name=attr['customer']['brandTradingName'],
                 agent_attribute=attr['customer']['branchName'],
                 address_string=attr['displayAddress'],
                 location=pt,
                 asking_price=attr['price']['amount'],
+                is_retirement=is_retirement,
             )
+            if attr.get('displayStatus'):
+                this['status'] = attr['displayStatus']
             res.append(
-                (url, models.DeferredModel(model=models.PropertyForSale, attrs=this))
+                (url, models.DeferredModel(model=the_model, attrs=this))
             )
             # to consider:
-            # attrs['displaySize']
-            # attrs['displayStatus']
+            # this has a brief listing history
             # attrs['listingUpdate']
         except Exception as exc:
             errors[url] = repr(exc)
 
-    return errors, res
+    return res, errors
 
 
 def residential_property_for_sale(src, url_obj=None):
