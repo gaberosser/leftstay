@@ -362,6 +362,8 @@ def update_one_outcode(outcode_int, property_type, requester=None):
                         url_obj.save()
                     except IntegrityError:
                         # try to help track down why this error occurs
+                        # FIXME: I think these are OVERLAPPING entries, so the object isn't in url_dict to begin with
+                        # SOLUTION: have a second dict to keep track of those added?
                         logger.exception("Failed to save URL object because the URL is already stored."
                                          "Outcode %d, postcode %s, url %s with ID %s.",
                                          outcode_int, pc_code, url, str(url_obj.id),
