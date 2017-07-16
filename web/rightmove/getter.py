@@ -4,6 +4,7 @@ import re
 from xml.etree import ElementTree
 import datetime
 from django.utils import timezone
+from django.db import IntegrityError
 import models
 import consts
 from outcodes import OUTCODE_MAP
@@ -357,7 +358,14 @@ def update_one_outcode(outcode_int, property_type, requester=None):
                         postcode_outcode=pc_code,
                         last_seen=timezone.now(),
                     )
-                    url_obj.save()
+                    try:
+                        url_obj.save()
+                    except IntegrityError:
+                        # try to help track down why this error occurs
+                        logger.exception("Failed to save URL object because the URL is already stored."
+                                         "Outcode %d, postcode %s, url %s with ID %s.",
+                                         outcode_int, pc_code, url, str(url_obj.id),
+                                         )
                 # set the URL FK link
                 if to_update:
                     url_def = url_obj.to_deferred()

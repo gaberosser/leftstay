@@ -116,15 +116,21 @@ def residential_property_for_sale_from_search(soup):
                     if building_type == consts.BUILDING_TYPE_FLAT:
                         building_situation = consts.BUILDING_SITUATION_FLAT
                 else:
-                    errors.setdefault(url, {})['building_type'] = t
+                    errors.setdefault(url, {})['failure_reason'] = 'Unknown building type'
+                    errors[url]['building_type'] = t
+                    # set as unknown
+                    building_type = consts.BUILDING_TYPE_UNKNOWN
             elif re.search(not_property_re, prop):
                 # The listing is for a type of property we are not tracking (e.g. block of apartments, land)
                 errors.setdefault(url, {})['FAILED'] = True
-                errors[url]['failure_reason'] = 'Ignored property type'
-                errors[url]['property_type'] = re.search(not_property_re, prop).group('t')
+                errors[url]['failure_reason'] = 'Ignored building type'
+                errors[url]['building_type'] = re.search(not_property_re, prop).group('t')
                 continue
             else:
-                errors.setdefault(url, {})['building_type'] = prop
+                errors.setdefault(url, {})['FAILED'] = True
+                errors[url]['failure_reason'] = 'Cannot identify building type'
+                errors[url]['building_type'] = prop
+                continue
 
             this = dict(
                 property_type=property_type,
