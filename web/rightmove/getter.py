@@ -324,13 +324,15 @@ def update_one_outcode(outcode_int, property_type, requester=None):
         raise NotImplementedError
     # get all known URLs
     url_dict = dict([
-        (x.url, x) for x in models.PropertyUrl.objects.filter(outcode=outcode_int)
+        (x.url, x) for x in models.PropertyUrl.objects
+            .filter(outcode=outcode_int)
             .prefetch_related('property_set')
     ])
     urls_created = set()
     urls_seen = collections.Counter()
     urls_updated = set()
     urls_failed = set()
+    urls_reactivated = set()
 
     for i, soup in enumerate(outcode_search_generator(outcode_int, find_url, requester=requester)):
         res, errors = parse(soup)
@@ -343,12 +345,15 @@ def update_one_outcode(outcode_int, property_type, requester=None):
             logger.error(repr(errors))
         for url, d in res:
             urls_seen[url] += 1
+            to_update = False
+            new_entry = False
+            reactivate = False
             try:
                 # we have to set the property type and model here
-                if url in urls_created:
-                    # already seen and created - duplicate search result?
+                if urls_seen[url] > 1:
+                    # already seen - duplicate search result?
                     logger.info(
-                        "URL %s has already been added. We have now seen it %d times. Skipping.",
+                        "URL %s has been seen %d times. Skipping.",
                         url,
                         urls_seen[url]
                     )
@@ -357,14 +362,23 @@ def update_one_outcode(outcode_int, property_type, requester=None):
                     # existing URL
                     # remove from dict
                     url_obj = url_dict.pop(url)
+                    # is it still active?
+                    if url_obj.deactivated is not None:
+                        # we need to reactivate this object - why?
+                        reactivate = True
+
                     if url_obj.property_set.exists():
+                        # there is already at least one property object
+                        # we update only if it has changed
                         most_recent = url_obj.property_set.latest('accessed').to_deferred()
                         eq = dict_equality(d.attrs, most_recent.attrs, return_diff=False)
                         to_update = not eq
                     else:
+                        # no property object: update by default
                         to_update = True
                 else:
                     # create new URL
+                    new_entry = True
                     to_update = True
                     url_obj = models.PropertyUrl(
                         created=timezone.now(),
@@ -374,37 +388,31 @@ def update_one_outcode(outcode_int, property_type, requester=None):
                         postcode_outcode=pc_code,
                         last_seen=timezone.now(),
                     )
-                    try:
-                        url_obj.save()
-                        urls_created.add(url)
-                    except IntegrityError:
-                        # try to help track down why this error occurs
-                        # FIXME: I think these are OVERLAPPING entries, so the object isn't in url_dict to begin with
-                        # SOLUTION: have a second dict to keep track of those added?
-                        logger.exception("Failed to save URL object because the URL is already stored. "
-                                         "Outcode %d, postcode %s, url %s with ID %s.",
-                                         outcode_int, pc_code, url, str(url_obj.id),
-                                         )
-                        # if we were unable to save this object, we shouldn't try to update it either
-                        to_update = False
 
                 # set the URL FK link
                 if to_update:
+                    url_obj.last_updated = timezone.now()
+                    if reactivate:
+                        url_obj.deactivated = None
                     url_def = url_obj.to_deferred()
                     d.dependencies['url'] = url_def
-                    d.save()
-                    url_obj.last_updated = timezone.now()
-                    url_obj.save()
-                    urls_updated.add(url)
+                    d.save()  # this also saves the PropertyUrl (dependency)
+
+                    if reactivate:
+                        urls_reactivated.add(url)
+                    elif new_entry:
+                        urls_created.add(url)
+                    else:
+                        urls_updated.add(url)
 
             except Exception:
                 urls_failed.add(url)
                 logger.exception("Failed to update URL %s in postcode %s", url, pc_code)
 
     # deactivate all entries from this outcode that didn't appear in this search
-    # these are the remaining entries in url_dict
+    # these are the remaining entries in url_dict that aren't already deactivated
     to_deactivate = models.PropertyUrl.objects.filter(
-        url__in=url_dict.keys()
+        url__in=url_dict.keys(), deactivated__isnull=True
     )
     urls_deactivated = []
     try:
@@ -418,6 +426,8 @@ def update_one_outcode(outcode_int, property_type, requester=None):
                 "Created %d new URLs\n"
                 "Witnessed %d duplicate search entries\n"
                 "Updated %d existing URLs\n"
+                "Reactivated %d URLS\n"
                 "Failed to create or update %d URLs\n"
                 "Deactivated %d URLs.", len(urls_created), len([k for k, v in urls_seen.items() if v > 1]),
-                len(urls_updated), len(urls_failed), len(urls_deactivated))
+                len(urls_updated), len(urls_reactivated), len(urls_failed),
+                len(urls_deactivated))
