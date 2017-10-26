@@ -4,7 +4,7 @@ ipython
 psycopg2==2.7.1
 requests==2.13.0
 redis==2.10.5
-celery
+git+https://github.com/celery/celery.git#egg=celery
 django-celery-beat
 gunicorn==19.7.1
 flower==0.9.1
