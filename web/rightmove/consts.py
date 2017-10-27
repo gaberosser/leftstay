@@ -109,6 +109,5 @@ BASE_URL = "https://www.rightmove.co.uk"
 
 FIND_URLS = {
     PROPERTY_TYPE_FORSALE: BASE_URL + "/property-for-sale/find.html",
+    PROPERTY_TYPE_TORENT: BASE_URL + "/property-to-rent/find.html",
 }
-
-FIND_URL_RESIDENTIAL_PROPERTY_FOR_SALE = BASE_URL + "/property-for-sale/find.html"

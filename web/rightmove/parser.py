@@ -62,96 +62,153 @@ def property_array_from_search(soup):
     return dat['properties']
 
 
+def parse_search_result_base(attr, property_type, model=None):
+    """
+    Base function to parse essential results.
+    :param attr: As generated from property_array_from_search
+    :return: 
+    """
+    error = {}
+
+    pt = geos.Point(
+        attr['location']['longitude'],
+        attr['location']['latitude'],
+        srid=4326
+    )
+
+    featured = attr['featuredProperty']
+
+    building_type = None
+    building_situation = None
+
+    prop = attr['propertyTypeFullDescription']
+    prop = re.sub(' for sale.*$', '', prop)
+    prop = re.sub('[1-9]* bedroom *', '', prop)
+
+    is_retirement = False
+    if re.search('retirement', prop):
+        is_retirement = True
+
+    if re.search('studio', prop, flags=re.I):
+        n_bed = 1
+    else:
+        n_bed = int(attr['bedrooms'])
+
+    sit = re.search(situation_re, prop)
+    if sit:
+        t = sit.group('t').lower()
+        if t in BUILDING_SITUATION_MAP:
+            building_situation = BUILDING_SITUATION_MAP[t]
+        else:
+            error['building_situation'] = t
+        prop = re.sub(situation_re, "", prop).strip()
+
+    typ = re.search(type_re, prop)
+    if typ:
+        t = typ.group('t').lower()
+        if t in BUILDING_TYPE_MAP:
+            building_type = BUILDING_TYPE_MAP[t]
+            if building_type == consts.BUILDING_TYPE_FLAT:
+                building_situation = consts.BUILDING_SITUATION_FLAT
+        else:
+            error['failure_reason'] = 'Unknown building type'
+            error['building_type'] = t
+            # set as unknown
+            building_type = consts.BUILDING_TYPE_UNKNOWN
+    elif re.search(not_property_re, prop):
+        # The listing is for a type of property we are not tracking (e.g. block of apartments, land)
+        error['FAILED'] = True
+        error['failure_reason'] = 'Ignored building type'
+        error['building_type'] = re.search(not_property_re, prop).group('t')
+    else:
+        error['FAILED'] = True
+        error['failure_reason'] = 'Cannot identify building type'
+        error['building_type'] = prop
+
+    this = dict(
+        property_type=property_type,
+        featured=featured,
+        building_type=building_type,
+        building_situation=building_situation,
+        n_bed=n_bed,
+        agent_name=attr['customer']['brandTradingName'],
+        agent_attribute=attr['customer']['branchName'],
+        address_string=attr['displayAddress'],
+        location=pt,
+        asking_price=attr['price']['amount'],
+        is_retirement=is_retirement,
+    )
+    if attr.get('displayStatus'):
+        this['status'] = attr['displayStatus']
+
+    if model is not None:
+        obj = models.DeferredModel(model=model, attrs=this)
+    else:
+        obj = this
+
+    return obj, error
+
+
+def parse_residential_rent_result(attr):
+    this, e = parse_search_result_base(attr, property_type=consts.PROPERTY_TYPE_TORENT)
+    this['payment_frequency'] = attr['price']['frequency']
+    return models.DeferredModel(model=models.PropertyToRent, attrs=this), e
+
+
+def parse_from_soup(soup, property_type):
+    # TODO
+
+
 def residential_property_for_sale_from_search(soup):
     """
     :param soup: BeautifulSoup parsed object.
-    :return: errors, res
+    :return: res, errors
+    res: list of tuples, each is (url_string, deferred object)
     errors: dictionary, keyed by URL
-    deferred: list of tuples, each is (url_string, deferred object)
     """
-    the_model = models.PropertyForSale
-    property_type = consts.PROPERTY_TYPE_FORSALE
     res = []
     errors = {}
 
     for attr in property_array_from_search(soup):
         url = consts.BASE_URL + attr['propertyUrl']
         try:
-            pt = geos.Point(
-                attr['location']['longitude'],
-                attr['location']['latitude'],
-                srid=4326
+            obj, e = parse_search_result_base(
+                attr,
+                property_type=consts.PROPERTY_TYPE_FORSALE,
+                model=models.PropertyForSale
             )
-
-            building_type = None
-            building_situation = None
-
-            prop = attr['propertyTypeFullDescription']
-            prop = re.sub(' for sale.*$', '', prop)
-            prop = re.sub('[1-9]* bedroom *', '', prop)
-
-            is_retirement = False
-            if re.search('retirement', prop):
-                is_retirement = True
-
-            if re.search('studio', prop, flags=re.I):
-                n_bed = 1
+            if len(e):
+                errors[url] = e
             else:
-                n_bed = int(attr['bedrooms'])
+                res.append(
+                    (url, obj)
+                )
+        except Exception as exc:
+            errors[url] = repr(exc)
 
-            sit = re.search(situation_re, prop)
-            if sit:
-                t = sit.group('t').lower()
-                if t in BUILDING_SITUATION_MAP:
-                    building_situation = BUILDING_SITUATION_MAP[t]
-                else:
-                    errors.setdefault(url, {})['building_situation'] = t
-                prop = re.sub(situation_re, "", prop).strip()
+    return res, errors
 
-            typ = re.search(type_re, prop)
-            if typ:
-                t = typ.group('t').lower()
-                if t in BUILDING_TYPE_MAP:
-                    building_type = BUILDING_TYPE_MAP[t]
-                    if building_type == consts.BUILDING_TYPE_FLAT:
-                        building_situation = consts.BUILDING_SITUATION_FLAT
-                else:
-                    errors.setdefault(url, {})['failure_reason'] = 'Unknown building type'
-                    errors[url]['building_type'] = t
-                    # set as unknown
-                    building_type = consts.BUILDING_TYPE_UNKNOWN
-            elif re.search(not_property_re, prop):
-                # The listing is for a type of property we are not tracking (e.g. block of apartments, land)
-                errors.setdefault(url, {})['FAILED'] = True
-                errors[url]['failure_reason'] = 'Ignored building type'
-                errors[url]['building_type'] = re.search(not_property_re, prop).group('t')
-                continue
+
+def residential_property_to_rent_from_search(soup):
+    """
+    :param soup: BeautifulSoup parsed object.
+    :return: res, errors
+    res: list of tuples, each is (url_string, deferred object)
+    errors: dictionary, keyed by URL
+    """
+    res = []
+    errors = {}
+
+    for attr in property_array_from_search(soup):
+        url = consts.BASE_URL + attr['propertyUrl']
+        try:
+            obj, e = parse_residential_rent_result(attr)
+            if len(e):
+                errors[url] = e
             else:
-                errors.setdefault(url, {})['FAILED'] = True
-                errors[url]['failure_reason'] = 'Cannot identify building type'
-                errors[url]['building_type'] = prop
-                continue
-
-            this = dict(
-                property_type=property_type,
-                building_type=building_type,
-                building_situation=building_situation,
-                n_bed=n_bed,
-                agent_name=attr['customer']['brandTradingName'],
-                agent_attribute=attr['customer']['branchName'],
-                address_string=attr['displayAddress'],
-                location=pt,
-                asking_price=attr['price']['amount'],
-                is_retirement=is_retirement,
-            )
-            if attr.get('displayStatus'):
-                this['status'] = attr['displayStatus']
-            res.append(
-                (url, models.DeferredModel(model=the_model, attrs=this))
-            )
-            # to consider:
-            # this has a brief listing history
-            # attrs['listingUpdate']
+                res.append(
+                    (url, obj)
+                )
         except Exception as exc:
             errors[url] = repr(exc)
 

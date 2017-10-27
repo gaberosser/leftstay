@@ -320,6 +320,8 @@ def update_one_outcode(outcode_int, property_type, requester=None):
     parse = None
     if property_type == consts.PROPERTY_TYPE_FORSALE:
         parse = parser.residential_property_for_sale_from_search
+    elif property_type == consts.PROPERTY_TYPE_TORENT:
+        parse = parser.residential_property_to_rent_from_search
     else:
         raise NotImplementedError
     # get all known URLs

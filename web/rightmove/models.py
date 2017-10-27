@@ -136,6 +136,7 @@ class NearestStation(models.Model, PropertySerializerMixin):
 
 
 class PropertyBase(models.Model, PropertySerializerMixin):
+    PROPERTY_TYPE = -1  # should never see this in the DB
     exclusions = [
         'id',
         'url',
@@ -151,6 +152,7 @@ class PropertyBase(models.Model, PropertySerializerMixin):
     property_type = models.IntegerField(choices=consts.PROPERTY_TYPE_CHOICES)
     key_features = models.TextField(null=True, blank=True)
     full_description = models.TextField(null=True, blank=True)
+    featured = models.BooleanField(default=False)
 
     agent_name = models.CharField(max_length=256, null=True, blank=True)
     agent_attribute = models.CharField(max_length=256, null=True, blank=True)
@@ -169,10 +171,26 @@ class PropertyBase(models.Model, PropertySerializerMixin):
     def save(self, **kwargs):
         if self.accessed is None:
             self.accessed = timezone.now()
+        if self.property_type is not None:
+            self.property_type = self.PROPERTY_TYPE
         super(PropertyBase, self).save(**kwargs)
 
 
 class PropertyForSale(PropertyBase):
+    PROPERTY_TYPE = consts.PROPERTY_TYPE_FORSALE
+    exclusions = PropertyBase.exclusions
+    is_retirement = models.BooleanField(default=False)
+    n_bed = models.IntegerField(null=True, blank=True)
+    asking_price = models.IntegerField()
+    price_on_application = models.BooleanField(default=False)
+    building_type = models.IntegerField(choices=consts.BUILDING_TYPE_CHOICES)
+    building_situation = models.IntegerField(choices=consts.BUILDING_SITUATION_CHOICES, null=True, blank=True)
+    tenure_type = models.CharField(max_length=32, null=True, blank=True)
+
+
+class PropertyToRent(PropertyBase):
+    PROPERTY_TYPE = consts.PROPERTY_TYPE_TORENT
+    payment_frequency = models.CharField(max_length=16)
     exclusions = PropertyBase.exclusions
     is_retirement = models.BooleanField(default=False)
     n_bed = models.IntegerField(null=True, blank=True)
