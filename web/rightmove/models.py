@@ -190,12 +190,13 @@ class PropertyForSale(PropertyBase):
 
 class PropertyToRent(PropertyBase):
     PROPERTY_TYPE = consts.PROPERTY_TYPE_TORENT
-    payment_frequency = models.CharField(max_length=16)
     exclusions = PropertyBase.exclusions
     is_retirement = models.BooleanField(default=False)
     n_bed = models.IntegerField(null=True, blank=True)
     asking_price = models.IntegerField()
+    payment_frequency = models.CharField(max_length=16)
     price_on_application = models.BooleanField(default=False)
     building_type = models.IntegerField(choices=consts.BUILDING_TYPE_CHOICES)
     building_situation = models.IntegerField(choices=consts.BUILDING_SITUATION_CHOICES, null=True, blank=True)
-    tenure_type = models.CharField(max_length=32, null=True, blank=True)
+    is_house_share = models.BooleanField(default=False)
+    inclusive_bills = models.BooleanField(default=False)

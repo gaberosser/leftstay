@@ -174,23 +174,3 @@ class Minion(object):
             for p in parsed:
                 p.save()
             return True
-
-
-class ResidentialForSaleMinion(Minion):
-    model = models.PropertyForSale
-
-    @staticmethod
-    def parser(*args, **kwargs):
-        return parser.residential_property_for_sale(*args, **kwargs)
-
-    def get_deferred(self, x):
-        """
-        Generates a list of deferred objects.
-        The first object corresponds to the PropertyForSale itself, then subsequent objects are deferred NearestStation
-        ordered by station name.
-        """
-        de = super(ResidentialForSaleMinion, self).get_deferred(x)
-        if x.neareststation_set.exists():
-            for ns in x.neareststation_set.order_by('station'):
-                de.append(ns.to_deferred())
-        return de

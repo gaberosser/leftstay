@@ -317,17 +317,11 @@ def update_one_outcode(outcode_int, property_type, requester=None):
     """
     find_url = consts.FIND_URLS[property_type]
     pc_code = OUTCODE_MAP[outcode_int]
-    parse = None
-    if property_type == consts.PROPERTY_TYPE_FORSALE:
-        parse = parser.residential_property_for_sale_from_search
-    elif property_type == consts.PROPERTY_TYPE_TORENT:
-        parse = parser.residential_property_to_rent_from_search
-    else:
-        raise NotImplementedError
+
     # get all known URLs
     url_dict = dict([
         (x.url, x) for x in models.PropertyUrl.objects
-            .filter(outcode=outcode_int)
+            .filter(outcode=outcode_int, property_type=property_type)
             .prefetch_related('property_set')
     ])
     urls_created = set()
@@ -337,7 +331,7 @@ def update_one_outcode(outcode_int, property_type, requester=None):
     urls_reactivated = set()
 
     for i, soup in enumerate(outcode_search_generator(outcode_int, find_url, requester=requester)):
-        res, errors = parse(soup)
+        res, errors = parser.parse_from_soup(soup, property_type)
 
         if len(errors):
             logger.error(
