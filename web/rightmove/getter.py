@@ -329,6 +329,7 @@ def update_one_outcode(outcode_int, property_type, requester=None):
     urls_updated = set()
     urls_failed = set()
     urls_reactivated = set()
+    existing_no_change = set()
 
     for i, soup in enumerate(outcode_search_generator(outcode_int, find_url, requester=requester)):
         res, errors = parser.parse_from_soup(soup, property_type)
@@ -369,6 +370,8 @@ def update_one_outcode(outcode_int, property_type, requester=None):
                         most_recent = url_obj.property_set.latest('accessed').to_deferred()
                         eq = dict_equality(d.attrs, most_recent.attrs, return_diff=False)
                         to_update = not eq
+                        if not to_update:
+                            existing_no_change.add(url)
                     else:
                         # no property object: update by default
                         to_update = True
@@ -418,12 +421,14 @@ def update_one_outcode(outcode_int, property_type, requester=None):
     except Exception:
         logger.exception("Failed to deactivate %d records for outcode %d", len(to_deactivate), outcode_int)
 
-    logger.info("Outcode getter summary:\n"
+    logger.info("Outcode getter summary (%d, %s):\n"
+                "%d existing URLs with no changes\n"
                 "Created %d new URLs\n"
                 "Witnessed %d duplicate search entries\n"
                 "Updated %d existing URLs\n"
                 "Reactivated %d URLS\n"
                 "Failed to create or update %d URLs\n"
-                "Deactivated %d URLs.", len(urls_created), len([k for k, v in urls_seen.items() if v > 1]),
+                "Deactivated %d URLs.", outcode_int, pc_code, len(existing_no_change),
+                len(urls_created), len([k for k, v in urls_seen.items() if v > 1]),
                 len(urls_updated), len(urls_reactivated), len(urls_failed),
                 len(urls_deactivated))
