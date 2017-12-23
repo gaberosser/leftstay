@@ -24,7 +24,11 @@ class PublicationAuthorshipSerializer(serializers.ModelSerializer):
         if obj.author.middle_initials is not None:
             init += [t[0].upper() for t in obj.author.middle_initials]
         init = ''.join("%s. " % t for t in init).strip()
-        return "%s, %s" % (ln, init)
+        if len(init):
+            return "%s, %s" % (ln, init)
+        else:
+            # main use case here is 'et al.'
+            return ln
 
 
 class PublicationSerializer(serializers.ModelSerializer):
