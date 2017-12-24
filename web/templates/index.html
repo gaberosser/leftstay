@@ -120,7 +120,7 @@
                     <p>Hello!</p>
                 </div>
                 <div class="col-lg-4 col-lg-offset-2">
-                    <p>I'm a bioinformatician at Queen Mary University of London, working on the epigenetics of glioblastoma multiforme. My research interests span mathematical biology, statistical modelling and computational simulation. Along the way, I've taken a few fun detours: a degree in chemistry, a DPhil in mathematical biology, a year spent as a risk analyst and several years working on predicting spatiotemporal crime patterns at UCL.</p>
+                    <p>I'm a bioinformatician at Queen Mary University of London, working on epigenetic dysregulation in the brain tumour glioblastoma. My research interests span mathematical biology, statistical modelling and computational simulation. Along the way, I've taken a few fun detours: a degree in chemistry, a DPhil in mathematical biology, a year spent as a risk analyst and several years working on predicting spatiotemporal crime patterns at UCL.</p>
                 </div>
                 <div class="col-lg-4">
                     <p>My weapon of choice is Python, but I tolerate R and C++ when called upon. Inside and outside of work, I like messing around with new development frameworks and technology. For that reason, I decided to build this site from scratch and host it on my own VPS using Docker for deployment. I am therefore *directly responsible* for every annoying glitch.</p>
@@ -135,12 +135,8 @@
     <!-- Research Grid Section -->
     <section id="portfolio">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Research</h2>
-                    <hr class="star-primary">
-                </div>
-            </div>
+            <h2 class="text-center text-uppercase text-secondary mb-0">Research</h2>
+            <hr class="star-primary mb-5">
             
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -150,34 +146,34 @@
             
             <div class="row">
                 <div class="col-sm-6 portfolio-item">
+                    <a href="#portfolioModalNGS" class="portfolio-link" data-toggle="modal">
+                        <div class="caption">
+                            <div class="caption-content">
+                                <i class="fa fa-search-plus fa-3x"></i>
+                                <h3 class="noupper">Processing next-generation sequencing data</h3>
+                            </div>
+                        </div>
+                        <img src="static/img/portfolio/fastq.png" class="img-responsive" alt="Next generation sequencing data">
+                    </a>
+                </div>
+                <div class="col-sm-6 portfolio-item">
                     <a href="#portfolioModalGBM" class="portfolio-link" data-toggle="modal">
                         <div class="caption">
                             <div class="caption-content">
                                 <i class="fa fa-search-plus fa-3x"></i>
-                                <h3 class="noupper">Computational epigenetics in glioblastoma multiforme</h3>
+                                <h3 class="noupper">Computational epigenetics in glioblastoma</h3>
                             </div>
                         </div>
-                        <img src="static/img/portfolio/gbm_clustermap.png" class="img-responsive" alt="Computational epigenetics in glioblastoma multiforme">
+                        <img src="static/img/portfolio/gbm_clustermap.png" class="img-responsive" alt="Computational epigenetics in glioblastoma">
                     </a>
                 </div>
-                <div class="col-sm-6 portfolio-item">
-                    <a href="#portfolioModalIntegrative" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                                <h3 class="noupper">Integrative analysis of genomic data</h3>
-                            </div>
-                        </div>
-                        <img src="static/img/portfolio/dmr.png" class="img-responsive" alt="Integrative analysis of genomic data">
-                    </a>
-                </div>
-        </div>
+            </div>
             
-        <div class="row">
+            <div class="row">
                 <div class="col-lg-12 text-center">
-                        <h3 class="noupper">Previous</h3>
+                    <h3 class="noupper">Previous</h3>
                 </div>
-        </div>
+            </div>
             
             <div class="row">
                 <div class="col-sm-6 portfolio-item">
@@ -202,6 +198,8 @@
                         <img src="static/img/portfolio/cpc.jpeg" class="img-responsive" alt="Spatiotemporal crime prediction">
                     </a>
                 </div>
+            </div>
+        </div>
     </section>
     
     <!-- Publications Section -->
@@ -219,6 +217,8 @@
                         <i id="publications-loading-indicator" class="fa fa-spinner fa-spin" style="font-size:36px"></i>
                 </div>
             </div>
+        </div>
+    </section>
 
     
     <!-- Tech section -->
@@ -289,14 +289,14 @@
     </section>
 
     <!-- Footer -->
-    <footer class="text-center">
+    <footer class="footer text-center">
         <div class="footer-above">
             <div class="container">
                 <div class="row">
                     <div class="footer-col col-md-4">
                         <h3>Location</h3>
-                        <p>London
-                            <br>United Kingdom</p>
+                        <p>London</p>
+                        <p>United Kingdom</p>
                     </div>
                     <div class="footer-col col-md-4">
                         <h3>Around the Web</h3>
@@ -320,7 +320,7 @@
                     </div>
                     <div class="footer-col col-md-4">
                         <h3>The template powering this site is Freelancer</h3>
-                        <p>Freelance is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
+                        <p>Freelance is an open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
                     </div>
                 </div>
             </div>
@@ -344,19 +344,94 @@
     </div>
 
     <!-- Portfolio Modals -->
-        <div class="portfolio-modal modal fade" id="portfolioModalIntegrative" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="portfolio-modal modal fade" id="portfolioModalNGS" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
+            <a class="close-modal close-button d-none d-md-block portfolio-modal-dismiss" data-dismiss="modal" href="#">
+                <i class="fa fa-3x fa-times"></i>
+            </a>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <div class="modal-body">
-                            <h2>Integrative analysis of genomic data</h2>
+                            <h2>Processing next generation sequencing (NGS) data</h2>
+                            <hr class="star-primary">
+                                <ul class="list-inline item-details">
+                                <li>Date:
+                                    <strong>2016-present</strong>
+                                </li>
+                                <li>Location:
+                                    <strong><a href="http://www.qmul.ac.uk/blizard/">Blizard Building, Queen Mary University of London</a>
+                                    </strong>
+                                </li>
+                                <li>PI:
+                                    <strong><a href="http://www.qmul.ac.uk/blizard/staff/centre-for-genomics-and-child-health/staff/silvia-marino.html">Prof Silvia Marino</a>
+                                    </strong>
+                                </li>
+                                <li>Funding:
+                                    <strong><a href="https://www.braintumourresearch.org">Brain Tumour Research</a>
+                                    </strong>
+                                </li>
+                            </ul>
+
+                            <p>We are currently engaged in a research project that focuses on identifying the nature and mechanisms behind epigenetic dysregulation in the brain tumour glioblastoma. Next generation sequencing (NGS) and microarray techologies are key to probing the genetic and epigenetic state in healthy and diseased tissue. I am responsible for managing the wealth of data and carrying out bioinformatic analyses. We currently use the following data sources:</p>
+                            <ul class="list-inline">
+                                <li>RNA sequencing</li>
+                                <li>miRNA sequencing</li>
+                                <li>Whole genome sequencing</li>
+                                <li>ChIP sequencing</li>
+                                <li>DNA methylation microarray</li>
+                            </ul>
+                            <p>All of these modalities generate very large datasets, especially those involving sequencing. A typical RNA-Seq run for a single sample might provide 5-10Gb of data - and we typically run 8 or 16 samples at a time. No wonder my work desktop has 12Tb of storage capcity, and counting. Each method requires one or more bespoke 'pipelines' to be developed - a semi-automatic chain of multiple processing steps that takes us from the raw data (not directly helpful) to usable outputs like gene expression profiles, ChIP peak enrichments, significant mutations, etc. I construct and run these pipelines and curate the outputs. A structured approach is vital, because we often need to compare across samples, groups and experimental runs.</p>
+                            <p>Integrating multiple data sources is an important approach in studies with limited participant numbers such as ours. We do not have access to large numbers of biological replicates, therefore any single analytical procedure (e.g. differential expression analysis) is potentially prone to false positives. Combining complimentary sources of data gives greater statistical confidence in the outcomes. In addition, integrative analysis can provide detailed insight into the mechanisms underpinning the observed epigenetic alterations. For example, DNA methylation combined with RNA-Seq data can provide evidence for downregulation of a gene mediated by hypermethylation of a promoter region.</p>
+                          
+                            <!-- main slider carousel -->
+                            <div class="row carousel-row">
+                                <div class="col-md-12" id="carousel-bounding-box" id="intSlider">
+                                    <div id="ngsCarousel" class="carousel slide">
+                                        <!-- carousel navigation thumbnails -->
+                                        <ul class="carousel-indicators carousel-list-inline">
+                                            <li class="list-inline-item active">
+                                                <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#ngsCarousel">
+                                                    <img src="static/img/portfolio/fastq.png" class="img-responsive img-carousel-thumb">
+                                                </a>
+                                            </li>
+                                        </ul>
+                                                               
+                                        <!-- main slider carousel items -->
+                                        <div class="carousel-inner">
+                                            <div class="active item carousel-item" data-slide-number="0">
+                                                <img src="static/img/portfolio/fastq.png" class="img-responsive img-centered">
+                                                <figcaption class="figure-caption">
+                                                        <p><strong>Raw sequencing data.</strong></p>
+                                                        <p>And here it is - the expensive sequencing run you've been waiting for has arrived! What have your £1000s bought you? This! Millions of lines of raw reads - of comprising 75 base pairs in this case - together with an estimation of the quality of each base pair.</p>
+                                                        <p>I would routinely run a quality check on the raw data first, to make sure nothing looks like it has gone terribly wrong. There's not a huge amount we can usually do if this is the case - but it's better to know any limitations in the quality now rather than trying to guess why none of the downstream analysis has worked out weeks down the line.</p>
+                                                        <p>Aside from checking the quality, the next step depends on the NGS modality and scientific question being asked. In our case this is RNA sequencing data from a human. Since the humans have been well studied, we can use an established <i>reference genome</i> to determine where each read probably came from. From here, we can establish a gene expression profile (crudely: how many reads came from each gene), test for differences in expression between multiple experimental groups or even search for genetic mutations.</p>
+                                                </figcaption>
+                                            </div>
+                                        </div>
+                                    </div>
+                
+                                </div>
+                            </div>
+                            <!--/main slider carousel-->
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="portfolio-modal modal fade" id="portfolioModalGBM" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <a class="close-modal close-button d-none d-md-block portfolio-modal-dismiss" data-dismiss="modal" href="#">
+                <i class="fa fa-3x fa-times"></i>
+            </a>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Computational epigenetics in glioblastoma</h2>
                             <hr class="star-primary">
                                 <ul class="list-inline item-details">
                                 <li>Date:
@@ -379,7 +454,9 @@
                                 </li>
                             </ul>
 
-                            <p>We are currently engaged in a research project that focuses on identifying the nature and mechanisms behind epigenetic dysregulation in the brain tumour glioblastoma. Next generation sequencing (NGS) and microarray techologies are key to probing the genetic and epigenetic state in healthy and diseased tissue. I am responsible for managing the wealth of data and carrying out bioinformatic analyses. We currently use the following data sources:</p>
+                            <p>They may be far rarer than more common types of cancer, but brain tumours are the biggest cancer killer of children and adults under the age of 40. They are hard to treat, and treatment often results in debilitating side effects. Glioblastoma is the most aggressive type of brain tumour. Tragically, a diagnosis is accompanied with a very poor prognosis. The median life expectancy is only 12-18 months after diagnosis. While many patients are treated with surgical resection, this only slows the disease. The tumour very often reforms some time later. 2nd and 3rd surgeries are less common. There are few effective drugs.</p>
+                            <p>It is known that a small subpopulation of the cells in a glioblastoma tumour mass have the ability to reform a tumour if transferred to a new location. These are known as <b>glioma stem cells</b>, because they act in many ways like the body's healthy stem cells, regenerating structures comprising many different cell subtypes. This is believed to be the main mechanism behind relapse: failing to destroy even a few of these cells with surgery or radiation means that the tumour can simply reform after a short delay.</p>
+                            <p>We are currently engaged in a research project that focuses on identifying the nature and mechanisms behind epigenetic dysregulation in these glioma stem cells. Next generation sequencing (NGS) and microarray techologies are key to probing the genetic and epigenetic state in healthy and diseased tissue, with the aim of identifying novel pathways and druggable targets. I am responsible for managing the wealth of data and carrying out bioinformatic analyses. We currently use the following data sources:</p>
                             <ul class="list-inline">
                                 <li>RNA sequencing</li>
                                 <li>miRNA sequencing</li>
@@ -393,23 +470,36 @@
                             <!-- main slider carousel -->
                             <div class="row carousel-row">
                                 <div class="col-md-12" id="carousel-bounding-box" id="intSlider">
-                                    <div id="intCarousel" class="carousel slide">
+                                    <div id="gbmCarousel" class="carousel slide">
                                         <!-- carousel navigation thumbnails -->
                                         <ul class="carousel-indicators carousel-list-inline">
-                                                <li class="list-inline-item active">
-                                                        <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#intCarousel">
-                                                                <img src="static/img/portfolio/ia/019_zoom.png" class="img-responsive img-carousel-thumb">
-                                                        </a>
-                                                </li>
+                                            <li class="list-inline-item active">
+                                                <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#gbmCarousel">
+                                                    <img src="static/img/portfolio/gbm/019_zoom.png" class="img-responsive img-carousel-thumb">
+                                                </a>
+                                            </li>
+                                            <li class="list-inline-item active">
+                                                <a id="carousel-selector-1" class="selected" data-slide-to="1" data-target="#gbmCarousel">
+                                                    <img src="static/img/portfolio/gbm/gbm_clustermap.png" class="img-responsive img-carousel-thumb">
+                                                </a>
+                                            </li>
                                         </ul>
                                                                
                                         <!-- main slider carousel items -->
                                         <div class="carousel-inner">
                                             <div class="active item carousel-item" data-slide-number="0">
-                                                <img src="static/img/portfolio/ia/019_zoom.png" class="img-responsive img-centered">
+                                                <img src="static/img/portfolio/gbm/019_zoom.png" class="img-responsive img-centered">
                                                 <figcaption class="figure-caption">
                                                         <p><strong>Differential methylation analysis.</strong></p>
                                                         <p>Just as it is typical to ask which genes are expressed differently between two or more experimental groups using RNA-Seq data, a similar approach tests for differential methylation between groups. An important difference is that the methylation states (represented by the M values in the lower plot) of proximal CpG sites are typically correlated. We therefore test for <i>differentially methylated regions</i> of adjacent CpG sites, illustrated by the rectangles in the figure. To this end, I have created a bespoke algorithm to compare two groups (with or without biological replicates) and assess the statistical significance of any observed differences.</p>
+                                                </figcaption>
+                                            </div>
+                                            <div class="item carousel-item" data-slide-number="1">
+                                                <img src="static/img/portfolio/gbm/gbm_clustermap.png" class="img-responsive img-centered">
+                                                <figcaption class="figure-caption">
+                                                        <p><strong>Characterising samples by hierarchical clustering of gene expression profiles.</strong></p>
+                                                        <p>Using RNA sequencing data, I generate gene expression profiles for each sequenced sample, encoded in a vector containing around 30,000 abundance values, one for each gene. Hierarchical clustering is a simple but effective technique to compare multiple samples. For example, we might wish to search for evidence of subgroups amongst our samples, or compare them to some external reference data. To run this method, we must decide on the best way mathematically to define the <i>distance</i> between a pair of samples, based on their expression profiles. Here, I've used a <i>correlation distance</i> (similar to the R&#178; value). The actual value of this is shown in the heatmap: red values have high correlation, blue values have lower correlation.</p>
+                                                        <p>In this plot, the dendrograms at the top and left are (identical) representations of the clustering output. Let's focus on the top one. Put simply, samples that are connected by a shorter path - counting only the vertical lines - are more similar. The lines gradually connect all the samples from bottom to top. We can choose to 'cut' this plot at some height. Samples connected together below the cut are in the same cluster. In this example, we can see that there are two obvious clusters (imagine cutting just below the topmost dendrogram split), and that these then break down into further subclusters.</p>
                                                 </figcaption>
                                             </div>
                                         </div>
@@ -429,12 +519,9 @@
     
     <div class="portfolio-modal modal fade" id="portfolioModalBacteria" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
+            <a class="close-modal close-button d-none d-md-block portfolio-modal-dismiss" data-dismiss="modal" href="#">
+                <i class="fa fa-3x fa-times"></i>
+            </a>
             <div class="container">                
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
@@ -570,12 +657,9 @@
     
         <div class="portfolio-modal modal fade" id="portfolioModalCrimePrediction" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
+            <a class="close-modal close-button d-none d-md-block portfolio-modal-dismiss" data-dismiss="modal" href="#">
+                <i class="fa fa-3x fa-times"></i>
+            </a>
             <div class="container">                
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
