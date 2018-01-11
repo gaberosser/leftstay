@@ -1,1078 +1,429 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+  <head>
 
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Science and technology site and blog">
     <meta name="author" content="Gabriel Rosser">
 
     <title>Quaerendum | Gabriel Rosser's site</title>
 
-    <!-- Bootstrap Core CSS -->
+    <!-- Bootstrap core CSS -->
     <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Theme CSS -->
-    <link href="static/css/freelancer.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
+    <!-- Custom fonts for this template -->
     <link href="static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.static/js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!-- Plugin CSS -->
+    <link href="static/vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css">
 
-</head>
+    <!-- Custom styles for this template -->
+    <link href="static/css/freelancer.css" rel="stylesheet">
 
-<body id="page-top" class="index">
+  </head>
 
- <div class="modal fade" id="enlargeImageModal" tabindex="-1" role="dialog" aria-labelledby="enlargeImageModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        </div>
-        <div class="modal-body">
-          <img src="" class="enlargeImageModalSource" style="width: 100%;">
-        </div>
-      </div>
-    </div>
-</div>
-        
-<div id="skipnav"><a href="#maincontent">Skip to main content</a></div>
+  <body id="page-top">
 
     <!-- Navigation -->
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header page-scroll">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
-                </button>
-                <a class="navbar-brand" href="#page-top">Quaerendum | Gabe Rosser's website</a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="hidden">
-                        <a href="#page-top"></a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href=""><del>Blog</del></a>
-                    </li>                    
-                    <li class="page-scroll">
-                        <a href="#about">About me</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#portfolio">Research</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#tech">Tech</a>
-                    </li>                    
-                    <li class="page-scroll">
-                        <a href="#contact">Contact</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
+    <nav class="navbar navbar-expand-lg bg-secondary fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Quaerendum | Gabe Rosser's website</a>
+        <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About</a>
+            </li>
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Research</a>
+            </li>
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#tech">Tech</a>
+            </li>
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#blog"><del>Blog</del></a>
+            </li>
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact</a>
+            </li>
+          </ul>
         </div>
-        <!-- /.container-fluid -->
+      </div>
     </nav>
 
     <!-- Header -->
-    <header>
-        <div class="container" id="maincontent" tabindex="-1">
-            <div class="row">
-                <div class="col-lg-12">
-                    <img class="img-responsive img-circle" width="400" src="static/img/profile.png" alt="">
-                    <div class="intro-text">
-                        <h2 class="name noupper">Quaerendum</h2>
-                        <p class="skills">\kwī'ren-dəm\</p>
-                        <p class="skills">gerundive (<i>neuter</i>): which is to be questioned.</p>
-                        <hr class="star-light">
-                        <span class="skills">Bioinformatics - Computational Modelling - Software Engineering - Web Tech</span>
-                        <p><a class="white notransform" href="https://orcid.org/0000-0001-9482-573X" target="_blank" rel="noopener noreferrer"><img src="https://orcid.org/sites/default/files/images/orcid_32x32.png" style="display: inline-block; vertical-align: top;" alt="ORCID iD icon">&nbsp;https://orcid.org/0000-0001-9482-573X</a></p>
-                    </div>
-                </div>
+    <header class="masthead bg-primary text-white text-center">
+      <div class="container" id="maincontent" tabindex="-1">
+          <div class="row">
+            <div class="col-lg-12">
+              <img class="img-fluid rounded-circle" width="300" src="static/img/profile.png" alt="">
+              <div class="intro-text">
+                <h1 class="mb-0">Quaerendum</h1>
+                <h2 class="font-weight-light">\kwī'ren-dəm\</h2>
+                <h2 class="font-weight-light">gerundive (<i>neuter</i>): which is to be questioned.</h2>
+                <hr class="star-light">
+                <h2 class="font-weight-light">Bioinformatics - Computational Modelling - Software Engineering - Web Tech</h2>
+                <h2 class="font-weight-light"><a class="text-white notransform" href="https://orcid.org/0000-0001-9482-573X" target="_blank" rel="noopener noreferrer"><img src="https://orcid.org/sites/default/files/images/orcid_32x32.png" style="display: inline-block; vertical-align: top;" alt="ORCID iD icon">&nbsp;https://orcid.org/0000-0001-9482-573X</a></h2>
+              </div>
             </div>
+          </div>
         </div>
     </header>
 
     <!-- About Section -->
-    <section id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>About</h2>
-                    <hr class="star-primary">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <p>Hello!</p>
-                </div>
-                <div class="col-lg-4 col-lg-offset-2">
-                    <p>I'm a bioinformatician at Queen Mary University of London, working on epigenetic dysregulation in the brain tumour glioblastoma. My research interests span mathematical biology, statistical modelling and computational simulation. Along the way, I've taken a few fun detours: a degree in chemistry, a DPhil in mathematical biology, a year spent as a risk analyst and several years working on predicting spatiotemporal crime patterns at UCL.</p>
-                </div>
-                <div class="col-lg-4">
-                    <p>My weapon of choice is Python, but I tolerate R and C++ when called upon. Inside and outside of work, I like messing around with new development frameworks and technology. For that reason, I decided to build this site from scratch and host it on my own VPS using Docker for deployment. I am therefore *directly responsible* for every annoying glitch.</p>
-                </div>
-                <div class="col-lg-4">
-                    <p>One day, I want to do a bit of blogging...</p>
-                </div>
-            </div>
+    <section class="mb-0" id="about">
+      <div class="container">
+        <h2 class="text-center text-uppercase">About</h2>
+        <hr class="star-dark mb-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center">
+            <p class="lead">Hello!</p>
+          </div>
         </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-4">
+            <p class="lead">I'm a bioinformatician at Queen Mary University of London, working on epigenetic dysregulation in the brain tumour glioblastoma. My research interests span mathematical biology, statistical modelling and computational simulation. Along the way, I've taken a few fun detours: a degree in chemistry, a DPhil in mathematical biology, a year spent as a risk analyst and several years working on predicting spatiotemporal crime patterns at UCL.</p>
+          </div>
+          <div class="col-lg-4">
+            <p class="lead">My weapon of choice is Python, but I tolerate R and C++ when called upon. Inside and outside of work, I like messing around with new development frameworks and technology. For that reason, I decided to build this site from scratch and host it on my own VPS using Docker for deployment. I am therefore *directly responsible* for every annoying glitch.</p>
+            <p class="lead">One day, I intend to create (and maybe even populate) a blog...</p>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Research Grid Section -->
-    <section id="portfolio">
-        <div class="container">
-            <h2 class="text-center text-uppercase text-secondary mb-0">Research</h2>
-            <hr class="star-primary mb-5">
-            
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h3 class="noupper">Current</h3>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-sm-6 portfolio-item">
-                    <a href="#portfolioModalNGS" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                                <h3 class="noupper">Processing next-generation sequencing data</h3>
-                            </div>
-                        </div>
-                        <img src="static/img/portfolio/fastq.png" class="img-responsive" alt="Next generation sequencing data">
-                    </a>
-                </div>
-                <div class="col-sm-6 portfolio-item">
-                    <a href="#portfolioModalGBM" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                                <h3 class="noupper">Computational epigenetics in glioblastoma</h3>
-                            </div>
-                        </div>
-                        <img src="static/img/portfolio/gbm_clustermap.png" class="img-responsive" alt="Computational epigenetics in glioblastoma">
-                    </a>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h3 class="noupper">Previous</h3>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-sm-6 portfolio-item">
-                    <a href="#portfolioModalBacteria" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                                <h3 class="noupper">Bacterial motility</h3>
-                            </div>                            
-                        </div>
-                        <img src="static/img/portfolio/bacterial_motility.png" class="img-responsive" alt="Bacterial Motility">
-                    </a>
-                </div>
-                <div class="col-sm-6 portfolio-item">
-                    <a href="#portfolioModalCrimePrediction" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                <i class="fa fa-search-plus fa-3x"></i>
-                                <h3 class="noupper">Spatiotemporal crime prediction</h3>
-                            </div>
-                        </div>
-                        <img src="static/img/portfolio/cpc.jpeg" class="img-responsive" alt="Spatiotemporal crime prediction">
-                    </a>
-                </div>
-            </div>
+    <!-- Portfolio Grid Section -->
+    <section class="portfolio" id="portfolio">
+      <div class="container">
+        <h2 class="text-center text-uppercase text-secondary mb-0">Research</h2>
+        <hr class="star-dark mb-5">
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-6 text-center">
+            <h3>Current</h3>
+          </div>
         </div>
-    </section>
-    
-    <!-- Publications Section -->
-    <section id="publications">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Publications</h2>
-                    <hr class="star-primary">
+        <div class="row justify-content-center">
+          <div class="col-md-6 col-lg-4">
+            <a class="portfolio-item d-block mx-auto" href="#portfolioModalNGS">
+              <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white"></h3>
+                  <i class="fa fa-search-plus fa-3x"></i>
+                  <h3>Processing next-generation sequencing data</h3>
                 </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-lg-12 text-center" id="publications-content">
-                        <i id="publications-loading-indicator" class="fa fa-spinner fa-spin" style="font-size:36px"></i>
+              </div>
+              <img class="img-fluid" src="static/img/portfolio/fastq.png" alt="Next generation sequencing data">
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <a class="portfolio-item d-block mx-auto" href="#portfolioModalGBM">
+              <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+                  <i class="fa fa-search-plus fa-3x"></i>
+                  <h3>Computational epigenetics in glioblastoma</h3>
                 </div>
-            </div>
+              </div>
+              <img class="img-fluid" src="static/img/portfolio/gbm_clustermap.png" alt="Computational epigenetics in glioblastoma">
+            </a>
+          </div>
         </div>
-    </section>
-
-    
-    <!-- Tech section -->
-    <section id="tech">
-        <div class="container">
-                <div class="row">
-                        <div class="col-lg-12 text-center">
-                            <h2>Tech</h2>
-                            <hr class="star-primary">
-                        </div>                        
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-lg-6 text-center">
+            <h3>Previous</h3>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-6 col-lg-4">
+            <a class="portfolio-item d-block mx-auto" href="#portfolioModalBacteria">
+              <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+                  <i class="fa fa-search-plus fa-3x"></i>
+                  <h3>Bacterial motility</h3>
                 </div>
-        </div>                
+              </div>
+              <img class="img-fluid" src="static/img/portfolio/bacterial_motility.png" alt="Bacterial motility">
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <a class="portfolio-item d-block mx-auto" href="#portfolioModalCrimePrediction">
+              <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+                  <i class="fa fa-search-plus fa-3x"></i>
+                  <h3>Spatiotemporal crime prediction</h3>
+                </div>
+              </div>
+              <img class="img-fluid" src="static/img/portfolio/cpc.jpeg" alt="Spatiotemporal crime prediction">
+            </a>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Contact Section -->
     <section id="contact">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Contact Me</h2>
-                    <hr class="star-primary">
+      <div class="container">
+        <h2 class="text-center text-uppercase text-secondary mb-0">Contact Me</h2>
+        <hr class="star-dark mb-5">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
+            <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
+            <form name="sentMessage" id="contactForm" novalidate="novalidate">
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                  <label>Name</label>
+                  <input class="form-control" id="name" type="text" placeholder="Name" required="required" data-validation-required-message="Please enter your name.">
+                  <p class="help-block text-danger"></p>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2">
-                    <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
-                    <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
-                    <form name="sentMessage" id="contactForm" novalidate>
-                        <div class="row control-group">
-                            <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label for="name">Name</label>
-                                <input type="text" class="form-control" placeholder="Name" id="name" required data-validation-required-message="Please enter your name.">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="row control-group">
-                            <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label for="email">Email Address</label>
-                                <input type="email" class="form-control" placeholder="Email Address" id="email" required data-validation-required-message="Please enter your email address.">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="row control-group">
-                            <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label for="phone">Phone Number</label>
-                                <input type="tel" class="form-control" placeholder="Phone Number" id="phone" required data-validation-required-message="Please enter your phone number.">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="row control-group">
-                            <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label for="message">Message</label>
-                                <textarea rows="5" class="form-control" placeholder="Message" id="message" required data-validation-required-message="Please enter a message."></textarea>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <br>
-                        <div id="success"></div>
-                        <div class="row">
-                            <div class="form-group col-xs-12">
-                                <button type="submit" class="btn btn-success btn-lg">Send</button>
-                            </div>
-                        </div>
-                    </form>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                  <label>Email Address</label>
+                  <input class="form-control" id="email" type="email" placeholder="Email Address" required="required" data-validation-required-message="Please enter your email address.">
+                  <p class="help-block text-danger"></p>
                 </div>
-            </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                  <label>Phone Number</label>
+                  <input class="form-control" id="phone" type="tel" placeholder="Phone Number" required="required" data-validation-required-message="Please enter your phone number.">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                  <label>Message</label>
+                  <textarea class="form-control" id="message" rows="5" placeholder="Message" required="required" data-validation-required-message="Please enter a message."></textarea>
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <br>
+              <div id="success"></div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-xl" id="sendMessageButton">Send</button>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer text-center">
-        <div class="footer-above">
-            <div class="container">
-                <div class="row">
-                    <div class="footer-col col-md-4">
-                        <h3>Location</h3>
-                        <p>London</p>
-                        <p>United Kingdom</p>
-                    </div>
-                    <div class="footer-col col-md-4">
-                        <h3>Around the Web</h3>
-                        <ul class="list-inline">
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><span class="sr-only">Facebook</span><i class="fa fa-fw fa-facebook"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><span class="sr-only">Google Plus</span><i class="fa fa-fw fa-google-plus"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><span class="sr-only">Twitter</span><i class="fa fa-fw fa-twitter"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><span class="sr-only">Linked In</span><i class="fa fa-fw fa-linkedin"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" class="btn-social btn-outline"><span class="sr-only">Dribble</span><i class="fa fa-fw fa-dribbble"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="footer-col col-md-4">
-                        <h3>The template powering this site is Freelancer</h3>
-                        <p>Freelance is an open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
-                    </div>
-                </div>
-            </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 mb-5 mb-lg-0">
+            <h4 class="text-uppercase mb-4">Location</h4>
+            <p class="lead mb-0">2215 John Daniel Drive
+              <br>Clark, MO 65243</p>
+          </div>
+          <div class="col-md-4 mb-5 mb-lg-0">
+            <h4 class="text-uppercase mb-4">Around the Web</h4>
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item">
+                <a class="btn btn-outline-light btn-social text-center rounded-circle" href="#">
+                  <i class="fa fa-fw fa-facebook"></i>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a class="btn btn-outline-light btn-social text-center rounded-circle" href="#">
+                  <i class="fa fa-fw fa-google-plus"></i>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a class="btn btn-outline-light btn-social text-center rounded-circle" href="#">
+                  <i class="fa fa-fw fa-twitter"></i>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a class="btn btn-outline-light btn-social text-center rounded-circle" href="#">
+                  <i class="fa fa-fw fa-linkedin"></i>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a class="btn btn-outline-light btn-social text-center rounded-circle" href="#">
+                  <i class="fa fa-fw fa-dribbble"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h4 class="text-uppercase mb-4">About Freelancer</h4>
+            <p class="lead mb-0">Freelance is a free to use, open source Bootstrap theme created by
+              <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
+          </div>
         </div>
-        <div class="footer-below">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        Copyright &copy; Gabriel Rosser 2017
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </footer>
 
+    <div class="copyright py-4 text-center text-white">
+      <div class="container">
+        <small>Copyright &copy; Your Website 2017</small>
+      </div>
+    </div>
+
     <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
-    <div class="scroll-top page-scroll hidden-sm hidden-xs hidden-lg hidden-md">
-        <a class="btn btn-primary" href="#page-top">
-            <i class="fa fa-chevron-up"></i>
-        </a>
+    <div class="scroll-to-top d-lg-none position-fixed ">
+      <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+      </a>
     </div>
 
     <!-- Portfolio Modals -->
-    <div class="portfolio-modal modal fade" id="portfolioModalNGS" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <a class="close-modal close-button d-none d-md-block portfolio-modal-dismiss" data-dismiss="modal" href="#">
-                <i class="fa fa-3x fa-times"></i>
-            </a>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Processing next generation sequencing (NGS) data</h2>
-                            <hr class="star-primary">
-                                <ul class="list-inline item-details">
-                                <li>Date:
-                                    <strong>2016-present</strong>
-                                </li>
-                                <li>Location:
-                                    <strong><a href="http://www.qmul.ac.uk/blizard/">Blizard Building, Queen Mary University of London</a>
-                                    </strong>
-                                </li>
-                                <li>PI:
-                                    <strong><a href="http://www.qmul.ac.uk/blizard/staff/centre-for-genomics-and-child-health/staff/silvia-marino.html">Prof Silvia Marino</a>
-                                    </strong>
-                                </li>
-                                <li>Funding:
-                                    <strong><a href="https://www.braintumourresearch.org">Brain Tumour Research</a>
-                                    </strong>
-                                </li>
-                            </ul>
 
-                            <p>We are currently engaged in a research project that focuses on identifying the nature and mechanisms behind epigenetic dysregulation in the brain tumour glioblastoma. Next generation sequencing (NGS) and microarray techologies are key to probing the genetic and epigenetic state in healthy and diseased tissue. I am responsible for managing the wealth of data and carrying out bioinformatic analyses. We currently use the following data sources:</p>
-                            <ul class="list-inline">
-                                <li>RNA sequencing</li>
-                                <li>miRNA sequencing</li>
-                                <li>Whole genome sequencing</li>
-                                <li>ChIP sequencing</li>
-                                <li>DNA methylation microarray</li>
-                            </ul>
-                            <p>All of these modalities generate very large datasets, especially those involving sequencing. A typical RNA-Seq run for a single sample might provide 5-10Gb of data - and we typically run 8 or 16 samples at a time. No wonder my work desktop has 12Tb of storage capcity, and counting. Each method requires one or more bespoke 'pipelines' to be developed - a semi-automatic chain of multiple processing steps that takes us from the raw data (not directly helpful) to usable outputs like gene expression profiles, ChIP peak enrichments, significant mutations, etc. I construct and run these pipelines and curate the outputs. A structured approach is vital, because we often need to compare across samples, groups and experimental runs.</p>
-                            <p>Integrating multiple data sources is an important approach in studies with limited participant numbers such as ours. We do not have access to large numbers of biological replicates, therefore any single analytical procedure (e.g. differential expression analysis) is potentially prone to false positives. Combining complimentary sources of data gives greater statistical confidence in the outcomes. In addition, integrative analysis can provide detailed insight into the mechanisms underpinning the observed epigenetic alterations. For example, DNA methylation combined with RNA-Seq data can provide evidence for downregulation of a gene mediated by hypermethylation of a promoter region.</p>
-                          
-                            <!-- main slider carousel -->
-                            <div class="row carousel-row">
-                                <div class="col-md-12" id="carousel-bounding-box" id="intSlider">
-                                    <div id="ngsCarousel" class="carousel slide">
-                                        <!-- carousel navigation thumbnails -->
-                                        <ul class="carousel-indicators carousel-list-inline">
-                                            <li class="list-inline-item active">
-                                                <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#ngsCarousel">
-                                                    <img src="static/img/portfolio/fastq.png" class="img-responsive img-carousel-thumb">
-                                                </a>
-                                            </li>
-                                        </ul>
-                                                               
-                                        <!-- main slider carousel items -->
-                                        <div class="carousel-inner">
-                                            <div class="active item carousel-item" data-slide-number="0">
-                                                <img src="static/img/portfolio/fastq.png" class="img-responsive img-centered">
-                                                <figcaption class="figure-caption">
-                                                        <p><strong>Raw sequencing data.</strong></p>
-                                                        <p>And here it is - the expensive sequencing run you've been waiting for has arrived! What have your £1000s bought you? This! Millions of lines of raw reads - of comprising 75 base pairs in this case - together with an estimation of the quality of each base pair.</p>
-                                                        <p>I would routinely run a quality check on the raw data first, to make sure nothing looks like it has gone terribly wrong. There's not a huge amount we can usually do if this is the case - but it's better to know any limitations in the quality now rather than trying to guess why none of the downstream analysis has worked out weeks down the line.</p>
-                                                        <p>Aside from checking the quality, the next step depends on the NGS modality and scientific question being asked. In our case this is RNA sequencing data from a human. Since the humans have been well studied, we can use an established <i>reference genome</i> to determine where each read probably came from. From here, we can establish a gene expression profile (crudely: how many reads came from each gene), test for differences in expression between multiple experimental groups or even search for genetic mutations.</p>
-                                                </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                
-                                </div>
-                            </div>
-                            <!--/main slider carousel-->
-                            
-                        </div>
-                    </div>
-                </div>
+    <!-- Portfolio Modal 1 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-1">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" src="static/img/portfolio/cabin.png" alt="">
+              <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Close Project</a>
             </div>
+          </div>
         </div>
-    </div>
-    
-    <div class="portfolio-modal modal fade" id="portfolioModalGBM" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <a class="close-modal close-button d-none d-md-block portfolio-modal-dismiss" data-dismiss="modal" href="#">
-                <i class="fa fa-3x fa-times"></i>
-            </a>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Computational epigenetics in glioblastoma</h2>
-                            <hr class="star-primary">
-                                <ul class="list-inline item-details">
-                                <li>Date:
-                                    <strong>2016-present</strong>
-                                </li>
-                                <li>Location:
-                                    <strong><a href="http://www.qmul.ac.uk/blizard/">Blizard Building, Queen Mary University of London</a>
-                                    </strong>
-                                </li>
-                                <li>PI:
-                                    <strong><a href="http://www.qmul.ac.uk/blizard/staff/centre-for-genomics-and-child-health/staff/silvia-marino.html">Prof Silvia Marino</a>
-                                    </strong>
-                                </li>
-                                <li>Funding:
-                                    <strong><a href="https://www.braintumourresearch.org">Brain Tumour Research</a>
-                                    </strong>
-                                </li>
-                                <li>Collaborators:
-                                    <strong>Dr Loredana Guglielmi - Dr Claire Vinel - Dr Veronica Freire</strong>
-                                </li>
-                            </ul>
-
-                            <p>They may be far rarer than more common types of cancer, but brain tumours are the biggest cancer killer of children and adults under the age of 40. They are hard to treat, and treatment often results in debilitating side effects. Glioblastoma is the most aggressive type of brain tumour. Tragically, a diagnosis is accompanied with a very poor prognosis. The median life expectancy is only 12-18 months after diagnosis. While many patients are treated with surgical resection, this only slows the disease. The tumour very often reforms some time later. 2nd and 3rd surgeries are less common. There are few effective drugs.</p>
-                            <p>It is known that a small subpopulation of the cells in a glioblastoma tumour mass have the ability to reform a tumour if transferred to a new location. These are known as <b>glioma stem cells</b>, because they act in many ways like the body's healthy stem cells, regenerating structures comprising many different cell subtypes. This is believed to be the main mechanism behind relapse: failing to destroy even a few of these cells with surgery or radiation means that the tumour can simply reform after a short delay.</p>
-                            <p>We are currently engaged in a research project that focuses on identifying the nature and mechanisms behind epigenetic dysregulation in these glioma stem cells. Next generation sequencing (NGS) and microarray techologies are key to probing the genetic and epigenetic state in healthy and diseased tissue, with the aim of identifying novel pathways and druggable targets. I am responsible for managing the wealth of data and carrying out bioinformatic analyses. We currently use the following data sources:</p>
-                            <ul class="list-inline">
-                                <li>RNA sequencing</li>
-                                <li>miRNA sequencing</li>
-                                <li>Whole genome sequencing</li>
-                                <li>ChIP sequencing</li>
-                                <li>DNA methylation microarray</li>
-                            </ul>
-                            <p>Integrating multiple data sources is an important approach in studies with limited participant numbers such as ours. We do not have access to large numbers of biological replicates, therefore any single analytical procedure (e.g. differential expression analysis) is potentially prone to false positives. Combining complimentary sources of data gives greater statistical confidence in the outcomes.</p>
-                            <p>In addition, integrating data sources can provide detailed insight into the mechanisms underpinning the observed epigenetic alterations. For example, DNA methylation combined with RNA-Seq data can provide evidence for downregulation of a gene mediated by hypermethylation of a promoter region.</p>
-                          
-                            <!-- main slider carousel -->
-                            <div class="row carousel-row">
-                                <div class="col-md-12" id="carousel-bounding-box" id="intSlider">
-                                    <div id="gbmCarousel" class="carousel slide">
-                                        <!-- carousel navigation thumbnails -->
-                                        <ul class="carousel-indicators carousel-list-inline">
-                                            <li class="list-inline-item active">
-                                                <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#gbmCarousel">
-                                                    <img src="static/img/portfolio/gbm/019_zoom.png" class="img-responsive img-carousel-thumb">
-                                                </a>
-                                            </li>
-                                            <li class="list-inline-item active">
-                                                <a id="carousel-selector-1" class="selected" data-slide-to="1" data-target="#gbmCarousel">
-                                                    <img src="static/img/portfolio/gbm/gbm_clustermap.png" class="img-responsive img-carousel-thumb">
-                                                </a>
-                                            </li>
-                                        </ul>
-                                                               
-                                        <!-- main slider carousel items -->
-                                        <div class="carousel-inner">
-                                            <div class="active item carousel-item" data-slide-number="0">
-                                                <img src="static/img/portfolio/gbm/019_zoom.png" class="img-responsive img-centered">
-                                                <figcaption class="figure-caption">
-                                                        <p><strong>Differential methylation analysis.</strong></p>
-                                                        <p>Just as it is typical to ask which genes are expressed differently between two or more experimental groups using RNA-Seq data, a similar approach tests for differential methylation between groups. An important difference is that the methylation states (represented by the M values in the lower plot) of proximal CpG sites are typically correlated. We therefore test for <i>differentially methylated regions</i> of adjacent CpG sites, illustrated by the rectangles in the figure. To this end, I have created a bespoke algorithm to compare two groups (with or without biological replicates) and assess the statistical significance of any observed differences.</p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="1">
-                                                <img src="static/img/portfolio/gbm/gbm_clustermap.png" class="img-responsive img-centered">
-                                                <figcaption class="figure-caption">
-                                                        <p><strong>Characterising samples by hierarchical clustering of gene expression profiles.</strong></p>
-                                                        <p>Using RNA sequencing data, I generate gene expression profiles for each sequenced sample, encoded in a vector containing around 30,000 abundance values, one for each gene. Hierarchical clustering is a simple but effective technique to compare multiple samples. For example, we might wish to search for evidence of subgroups amongst our samples, or compare them to some external reference data. To run this method, we must decide on the best way mathematically to define the <i>distance</i> between a pair of samples, based on their expression profiles. Here, I've used a <i>correlation distance</i> (similar to the R&#178; value). The actual value of this is shown in the heatmap: red values have high correlation, blue values have lower correlation.</p>
-                                                        <p>In this plot, the dendrograms at the top and left are (identical) representations of the clustering output. Let's focus on the top one. Put simply, samples that are connected by a shorter path - counting only the vertical lines - are more similar. The lines gradually connect all the samples from bottom to top. We can choose to 'cut' this plot at some height. Samples connected together below the cut are in the same cluster. In this example, we can see that there are two obvious clusters (imagine cutting just below the topmost dendrogram split), and that these then break down into further subclusters.</p>
-                                                </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                
-                                </div>
-                            </div>
-                            <!--/main slider carousel-->
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    
-    <div class="portfolio-modal modal fade" id="portfolioModalBacteria" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <a class="close-modal close-button d-none d-md-block portfolio-modal-dismiss" data-dismiss="modal" href="#">
-                <i class="fa fa-3x fa-times"></i>
-            </a>
-            <div class="container">                
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Bacterial motility</h2>
-                            <hr class="star-primary">
-                                                        <ul class="list-inline item-details">
-                                <li>Date:
-                                    <strong>2009-2013</strong>
-                                </li>
-                                <li>Location:
-                                    <strong><a href="https://www.maths.ox.ac.uk/groups/mathematical-biology">Wolfson Centre for Mathematical Biology</a>
-                                    </strong>
-                                </li>
-                                <li>Supervisors:
-                                    <strong>Prof Philip Maini - <a href="http://www.iamruthbaker.com/">Dr Ruth Baker</a> - <a href="http://alex-fletcher.staff.shef.ac.uk/">Dr Alex Fletcher</a></strong>
-                                </li>
-                                <li>Collaborators:
-                                    <strong><a href="http://kityates.com/">Dr Kit Yates</a> - Dr David Wilkinson - Dr Trevor Wood</strong>
-                                </li>
-                            </ul>
-
-                            <p>I worked on bacterial motility for my DPhil. It was my first proper introduction to research in the field of mathematical biology, so I'll always think very fondly of it. My <a href="http://discovery.ucl.ac.uk/1468657/1/thesis.pdf">thesis</a> is (somewhat vaguely) entitled <strong>"Mathematical modelling and analysis of aspects of planktonic bacterial motility".</strong></p>
-                            <p>The main focus is the fascinating means by which lone bacteria propel themselves through liquid media. Much of my work centred around a new, high-throughput microscopic tracking dataset that had recently been developed by Dr David Wilkinson. Coupled with a very effective piece of tracking software by Dr Trevor Wood, we had a fantastic new dataset to probe the trajectories traced out by freely swimming bacteria such as <i>Rhodobacter sphaeroides</i>. I also had the pleasure of working with my colleague and friend Dr Kit Yates on some of the analysis.</p>
-                            <p>I developed a novel approach to analysing the tracks obtained and applied various mathematical modelling techniques to tackle challenging problems including: "what is the effect of the microscope camera sampling rate on the observed tracks?" and "does <i>R. sphaeroides</i> reorientate lazily, by harnessing Brownian motion?".</p>
-                          
-                            <!-- main slider carousel -->
-                            <div class="row carousel-row">
-                                <div class="col-md-12" id="carousel-bounding-box" id="bacSlider">
-                                    <div id="bacCarousel" class="carousel slide">
-                                        <!-- carousel navigation thumbnails -->
-                                        <ul class="carousel-indicators carousel-list-inline">
-                                                <li class="list-inline-item active">
-                                                        <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#bacCarousel">
-                                                                <img src="static/img/portfolio/bm/multiple_scales.png" class="img-responsive img-carousel-thumb">
-                                                        </a>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                        <a id="carousel-selector-1" data-slide-to="1" data-target="#bacCarousel">
-                                                                <img src="static/img/portfolio/bm/rhody_electron_microscope.png" class="img-responsive img-carousel-thumb">
-                                                        </a>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                        <a id="carousel-selector-2" data-slide-to="2" data-target="#bacCarousel">
-                                                                <img src="static/img/portfolio/bm/flagella_arrangement.png" class="img-responsive img-carousel-thumb">
-                                                        </a>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                        <a id="carousel-selector-3" data-slide-to="3" data-target="#bacCarousel">
-                                                                <img src="static/img/portfolio/bm/modes_of_motion.png" class="img-responsive img-carousel-thumb">
-                                                        </a>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                        <a id="carousel-selector-4" data-slide-to="4" data-target="#bacCarousel">
-                                                                <img src="static/img/portfolio/bm/our_tracks.png" class="img-responsive img-carousel-thumb">
-                                                        </a>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                        <a id="carousel-selector-5" data-slide-to="5" data-target="#bacCarousel">
-                                                                <img src="static/img/portfolio/bm/angle_change_true_vs_meas.png" class="img-responsive img-carousel-thumb">
-                                                        </a>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                        <a id="carousel-selector-6" data-slide-to="6" data-target="#bacCarousel">
-                                                                <img src="static/img/portfolio/bm/ws8n_bulk_good_tracks_hmm_speed.png" class="img-responsive img-carousel-thumb">
-                                                        </a>
-                                                </li>
-                                        </ul>
-                                                               
-                                        <!-- main slider carousel items -->
-                                        <div class="carousel-inner">
-                                            <div class="active item carousel-item" data-slide-number="0">
-                                                <img src="static/img/portfolio/bm/multiple_scales.png" class="img-responsive img-centered">
-                                                <figcaption class="figure-caption">
-                                                        <p><strong>The multiple length scales of bacterial motility.</strong></p>
-                                                        <p>The phenomenon of bacterial motility covers at six orders of magnitude, from biochemical interactions occurring at the nanometre scale through to swarm plate assays that are visible to the naked eye.</p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="1">
-                                              <img src="static/img/portfolio/bm/rhody_electron_microscope.png" class="img-responsive img-centered">
-                                              <figcaption class="figure-caption">
-                                                        <p><strong>Electron microscope image of a single <i>Rhodobacter sphaeroides</i> bacterium.</strong></p>
-                                                        <p>The monotrichous subpolar flagellum is clearly visible coiled alongside the cell body. This is believed to be the conformation adopted by the flagellum when it is not rotating.</p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="2">
-                                              <img src="static/img/portfolio/bm/flagella_arrangement.png" class="img-responsive img-centered">
-                                              <figcaption class="figure-caption">
-                                                        <p><strong>The multiple arrangements of bacterial flagella observed in nature.</strong></p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="3">
-                                              <img src="static/img/portfolio/bm/modes_of_motion.png" class="img-responsive img-centered">
-                                              <figcaption class="figure-caption">
-                                                        <p><strong>Three modes of bacterial motility observed in nature.</strong></p>
-                                                        <p>(a) Run-and-tumble motion, observed in peritrichous bacteria such as <i>Escherichia coli</i>. (b) Run-and-stop motion, observed in monotrichous bacteria such as <i>Rhodobacter sphaeroides</i>. (c) Run-and-reverse motion, observed in bacteria such as <i>Pseudomonas aeruginosa</i>.</p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="4">
-                                              <img src="static/img/portfolio/bm/our_tracks.png" class="img-responsive img-centered">
-                                              <figcaption class="figure-caption">
-                                                        <p><strong>Representative sample of our bacterial tracking data.</strong></p>
-                                                        <p>Several reorientation events are clearly visible. Note that some tracks are more 'jagged' than others. This is used as a filtering criterion to pre-process the data.</p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="5">
-                                              <img src="static/img/portfolio/bm/angle_change_true_vs_meas.png" class="img-responsive img-centered">
-                                              <figcaption class="figure-caption">
-                                                        <p><strong>True and observed angle changes in a tracking experiment.</strong></p>
-                                                        <p>The dashed line shows the true path traced by the cell. The process of imaging the bacterium introduces a temporal interval, resulting in <i>measured</i> angle changes that differ from the ground truth. I modelled this process to gain insight into the phenomenon.</p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="6">
-                                              <img src="static/img/portfolio/bm/ws8n_bulk_good_tracks_hmm_speed.png" class="img-responsive img-centered">
-                                              <figcaption class="figure-caption">
-                                                        <p><strong>Annotated bacterial tracks, processed using a hidden Markov model to infer reorientation phases.</strong></p>
-                                                        <p>The shading of the track represents the inferred state: green for running and red for tumbling. We are thus able to measure 'stopwise angle changes', indicated by the black arrows.</p>
-                                                </figcaption>
-                                            </div>
-                                        </div>
-                                    </div>
-                
-                                </div>
-                            </div>
-                            <!--/main slider carousel-->
-                            
-                        </div>
-                    </div>
-                </div>
+    <!-- Portfolio Modal 2 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-2">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" src="static/img/portfolio/cake.png" alt="">
+              <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Close Project</a>
             </div>
+          </div>
         </div>
-    </div>
-    
-        <div class="portfolio-modal modal fade" id="portfolioModalCrimePrediction" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <a class="close-modal close-button d-none d-md-block portfolio-modal-dismiss" data-dismiss="modal" href="#">
-                <i class="fa fa-3x fa-times"></i>
-            </a>
-            <div class="container">                
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Spatiotemporal crime prediction</h2>
-                            <hr class="star-primary">
-                            <ul class="list-inline item-details">
-                                <li>Date:
-                                    <strong>2014-2016</strong>
-                                </li>
-                                <li>Location:
-                                    <strong><a href="http://www.cege.ucl.ac.uk">Department of Civil, Environmental and Geomatic Engineering</a>
-                                    </strong>
-                                </li>
-                                <li>Co-Is:
-                                    <strong><a href="http://www.ucl.ac.uk/spacetimelab">Prof Tao Cheng</a> - Prof Kate Bowers - Prof Paul Longley - Prof John Shawe-Taylor</strong>
-                                </li>
-                                <li>Collaborators:
-                                    <strong><a href="https://www.ucl.ac.uk/scs/people/profiles/toby-davies">Dr Toby Davies</a> - <a href="https://www.geog.leeds.ac.uk/people/m.adepeju">Dr Monsuru Adepeju</a></strong>
-                                </li>
-                            </ul>
-                            <p>My first postdoc was spent at <a href="www.ucl.ac.uk">UCL</a> in the verbosely-titled <a href="http://www.cege.ucl.ac.uk">Department for Civil, Environmental and Geomatic Engineering</a>. My research focused on modelling and predicting the spatiotemporal patterning of crime. The work was funded by EPSRC under the <a href="www.ucl.ac.uk/cpc/">Crime, Policing & Citizenship (CPC)</a> project, which aimed to take an integrative approach to those three elements by combining a variety of (sometimes Big) data sources.</p>
-                            <p>The vast majority of crime prediction routines available at the time of writing are based on simple spatial geometric units, such as grid squares on a map. However, the spatial structure of an urban environment is very complex, particularly in an older city such as London, where street connectivity is far from the regular grid-like pattern of modern North American conurbations. Since criminals themselves are generally restricted to using the street network (if we include features such as alleyways and parks), any model that assumes that crimes diffuse within a 2D plane is unjustified. Furthermore, a predictive method that informs police officers to 'travel to this grid square' is open to misinterpretation (at best) and being ignored completely (more likely). Together with my friend and colleague Dr Toby Davies, I implemented a kernel-based crime prediction approach that uses the street network itself as the spatial basis. Crime risk travels along streets and predictions are made at a road segment level. We showed that this approach outperforms grid-based approaches.</p>
-                            <p>I applied the self-exciting point process (SEPP) model to model and predict crime patterns. The SEPP has origins in seismology, where it was applied to predict earthquake aftershock events. The model assumes that one event can lead to more events (self-excitation), which is a good approximation of the crime scientific theory of boosting (also known as event dependence). It models crimes as point events that arise due to a slowly-varying background risk level. Whenever a crime does occur, it can spawn more crimes within the temporal and spatial vicinity. To generate usable predictions from the SEPP, we need to parametrise it using historical crime records. This training process is error-prone; I published a paper describing one particular way in which it can fail (and how we can sometimes rescue it).</p>
-                            <p>As part of the project's closing workshop, we created a demo suite of software to showcase our research. I combined our crime prediction algorithms with a cool <a href="https://www.mapbox.com/">Mapbox</a>-powered interface. I'll host it here when I get a chance.</p>
-                            <div class="row carousel-row">
-                                <!-- main slider carousel -->
-                                <div class="col-md-12" id="carousel-bounding-box" id="cpcSlider">
-                                    <div id="cpcCarousel" class="carousel slide">
-                                        <!-- carousel navigation thumbnails -->
-                                        <ul class="carousel-indicators carousel-list-inline">
-                                            <li class="list-inline-item active">
-                                                    <a id="carousel-selector-0" class="selected" data-slide-to="0" data-target="#cpcCarousel">
-                                                    <img src="static/img/portfolio/cpc/camden_burglary_network_train.jpeg" class="img-responsive img-carousel-thumb">
-                                                    </a>
-                                            </li>                                        
-                                            <li class="list-inline-item">
-                                                    <a id="carousel-selector-1" data-slide-to="1" data-target="#cpcCarousel">
-                                                            <img src="static/img/portfolio/cpc/burglaries_heatmap_london.jpeg" class="img-responsive img-carousel-thumb">
-                                                    </a>
-                                            </li>
-                                            <li class="list-inline-item">
-                                                    <a id="carousel-selector-2" data-slide-to="2" data-target="#cpcCarousel">
-                                                    <img src="static/img/portfolio/cpc/burglary_in_a_dwelling.png" class="img-responsive img-carousel-thumb">
-                                                    </a>
-                                            </li>
-                                            <li class="list-inline-item">
-                                                    <a id="carousel-selector-3" data-slide-to="3" data-target="#cpcCarousel">
-                                                    <img src="static/img/portfolio/cpc/camden_bromley_hackney_burglary_temporal_trend.png" class="img-responsive img-carousel-thumb">
-                                                    </a>
-                                            </li>                                                                                                      
-                                            <li class="list-inline-item">
-                                                    <a id="carousel-selector-4" data-slide-to="4" data-target="#cpcCarousel">
-                                                    <img src="static/img/portfolio/cpc/heatmaps_1.png" class="img-responsive img-carousel-thumb">
-                                                    </a>
-                                            </li>
-                                            <li class="list-inline-item">
-                                                    <a id="carousel-selector-5" data-slide-to="5" data-target="#cpcCarousel">
-                                                    <img src="static/img/portfolio/cpc/heatmaps_2.png" class="img-responsive img-carousel-thumb">
-                                                    </a>
-                                            </li>
-                                        </ul>
-                                        <!-- main slider carousel items -->
-                                        <div class="carousel-inner">
-                                            <div class="active item carousel-item" data-slide-number="0">
-                                                <img src="static/img/portfolio/cpc/camden_burglary_network_train.jpeg" class="img-responsive img-centered">
-                                                <figcaption class="figure-caption">
-                                                        <p><strong>Propagating crime risk along the street network.</strong></p>
-                                                        <p>Blue circles indicate historic crimes from circa 2014; larger circles occurred more recently. The shaded dots indicate the level of crime risk, where darker red indicates higher risk. This portion of the map is taken from the southern tip of the London Borough of Camden, where UCL is based.</p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="1">
-                                                <img src="static/img/portfolio/cpc/burglaries_heatmap_london.jpeg" class="img-responsive img-centered">
-                                                <figcaption class="figure-caption">
-                                                        <p><strong>Mapping crime intensity in London.</strong></p>
-                                                        <p>Darker red indicates higher crime intensity. The risk is modelled as a continuous function in 2D space. A space-time kernel density estimate (KDE) was used to estimate the risk values from historic crime data.</p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="2">
-                                                <img src="static/img/portfolio/cpc/burglary_in_a_dwelling.png" class="img-responsive img-centered">
-                                                <figcaption class="figure-caption">
-                                                        <p><strong>Optimal bandwidth values for network distance and time in the boroughs of London.</strong></p>
-                                                        <p>In order to use a kernel-based prediction method in network space and time, we must first estimate the optimal bandwidth values in these two dimensions. This figure illustrates the variation between boroughs for 'burglary in a dwelling' crimes. Blue circles show the distance crimes propagate along a street (to scale) and the red shading indicates the time period after a crime that a neighbourhood remains at risk (dark red is around 3 months, lightest red is around 1 week).</p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="3">
-                                                <img src="static/img/portfolio/cpc/camden_bromley_hackney_burglary_temporal_trend.png" class="img-responsive img-centered">
-                                                <figcaption class="figure-caption">
-                                                        <p><strong>Temporal trends in 'burglary in a dwelling' crimes in three London boroughs.</strong></p>
-                                                        <p>The black line indicates the daily crime count. The red line is smoothed with a mean filter window of one week.</p>
-                                                </figcaption>                                                
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="4">
-                                                <img src="static/img/portfolio/cpc/heatmaps_1.png" class="img-responsive img-centered">
-                                                <figcaption class="figure-caption">
-                                                        <p><strong>Comparing grid- and street network-based predictions.</strong></p>
-                                                        <p>This map shows a portion of the London borough of Camden. The grid squares show the kind of spatial units used in current prediction software. Grid squares highlighted in blue are the most risky (for some threshold value). Street segments highlighted in blue represent the same for the network-based method. Shading shows the network-based risk level.</p>
-                                                </figcaption>
-                                            </div>
-                                            <div class="item carousel-item" data-slide-number="5">
-                                                <img src="static/img/portfolio/cpc/heatmaps_2.png" class="img-responsive img-centered">
-                                                <figcaption class="figure-caption">
-                                                        <p><strong>Comparing grid- and street network-based predictions.</strong></p>
-                                                        <p>This map shows a portion of the London borough of Camden. The grid squares show the kind of spatial units used in current prediction software. Grid squares highlighted in blue are the most risky (for some threshold value). Street segments highlighted in blue represent the same for the network-based method. Shading shows the grid-based risk level.</p>
-                                                </figcaption>
-                                            </div>                                                    
-                                        </div>                                        
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    
-    <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="static/img/portfolio/cake.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="static/img/portfolio/circus.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="static/img/portfolio/game.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="static/img/portfolio/safe.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
-                            <hr class="star-primary">
-                            <img src="static/img/portfolio/submarine.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                            <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
-                                </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
-                            </ul>
-                            <button id="btnSubmit" type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <!-- jQuery -->
-    <!--<script src="static/vendor/jquery/jquery.min.js"></script>-->
-    <script src="static/js/jquery-3.2.1.min.js"></script>
+    <!-- Portfolio Modal 3 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-3">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" src="static/img/portfolio/circus.png" alt="">
+              <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Close Project</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Portfolio Modal 4 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-4">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" src="static/img/portfolio/game.png" alt="">
+              <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Close Project</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Portfolio Modal 5 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-5">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" src="static/img/portfolio/safe.png" alt="">
+              <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Close Project</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Portfolio Modal 6 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-6">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" src="static/img/portfolio/submarine.png" alt="">
+              <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Close Project</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Plugin JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="static/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
 
     <!-- Contact Form JavaScript -->
     <script src="static/js/jqBootstrapValidation.js"></script>
     <script src="static/js/contact_me.js"></script>
 
-    <!-- Theme JavaScript -->
+    <!-- Custom scripts for this template -->
     <script src="static/js/freelancer.min.js"></script>
-    
-    <script>
-        
-        // normalise the carousel image sizes in advance
-        var max_height = 500;
-        
-        function resizeCarouselImages(id) {
-                var w, h;
-                var items = $(id + ' .item');
-                items.each(function() {
-                        var img = this.getElementsByTagName('img')[0];
-                        w = img.naturalWidth;
-                        h = img.naturalHeight;
-                       if (h > max_height) {
-                                // resize by updating the width
-                                var new_w = max_height * w / h;
-                                $(img).width(new_w);
-                        }
-                });
-        }
-        
-        $(window).on('load', function() {
-                // Resizing takes place using natural height and width of hidden images
-                // That way, when the carousel loads all the images have the right dimensions
-                resizeCarouselImages('#cpcCarousel');
-                resizeCarouselImages('#bacCarousel');
-        });
-        
-        $(document).ajaxComplete(function(event, request, settings) {
-                console.log("ajaxComplete");
-                $('#publications-loading-indicator').hide();
-        });
-        
-        function authorsList(pub) {
-                var sep = ', ';
-                var auths = [];
-                $.each(pub.authors, function (key, val) {
-                    if (val.bold) {
-                        auths.push('<b>' + val.full_name + '</b>');
-                    } else {
-                        auths.push(val.full_name);
-                    }
-                });
-                return auths.join(sep) + '.';
-        }
-            
-        
-        function preparePublications(data) {
-            var obj = JSON.parse(data);
-            var el;
-            var content;
-            $.each(obj, function (key, val) {
-                if (val.url) {
-                    content = '<a href="' + val.url + '">' + val.title + '</a>';
-                } else {
-                        content = val.title;
-                }
-                content += ' ' + authorsList(val) + ' ' + val.year + '. ' + '<i>' + val.journal + '</i>';
-                if (val.volume) {
-                    content += ' ' + val.volume;
-                }
-                if (val.edition) {
-                    content += '(' + val.edition + ')';
-                }
-                if (val.page_start) {
-                    content += ' ' + val.page_start;
-                }
-                if (val.page_end) {
-                    content += '-' + val.page_end;
-                }
-                content += '.'
-                el = $('<p>').html(content);
-                $('#publications-content').append(el);
-            });
-        }
-        
-        function loadPublications() {
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                                preparePublications(this.responseText);
-                                $('#publications-loading-indicator').hide();
-                        }
-                };
-                xhttp.open("GET", "/bibliography/publications", true);
-                xhttp.send();
-        }
-        
-        $(document).ready(function() { loadPublications(); });
-          
-    </script>
 
-</body>
+  </body>
 
 </html>
