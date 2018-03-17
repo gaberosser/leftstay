@@ -4,6 +4,23 @@ I'll assume that we are running two separate servers:
 - `allentown` is running a Docker postgresql container. It has a database called `leftstay` and the username is `docker`.
 - `effington` is running the web server (in Docker) and sundry Docker containers
 
+## Restarting the whole shebang
+
+If things go wrong (and they often do), we can restart all the containers on a server as follows
+
+```
+# first, CD into the directory containing the required .yml file
+gabriel@gabriel-desktop:~$ cd leftstay/
+gabriel@gabriel-desktop:~/leftstay$ eval $(docker-machine env effington)
+gabriel@gabriel-desktop:~/leftstay$ docker-compose -f docker-production.yml restart
+Restarting leftstay_nginx_1 ... done
+Restarting leftstay_flower_1 ... done
+Restarting dj01 ... done
+Restarting leftstay_worker_1 ... done
+Restarting celery_beat ... done
+Restarting leftstay_rabbit_1 ... done
+```
+
 ## Accessing the postgresql database using `psql`
 
 The postgresql client `psql` is not (necessarily) installed on the server running the postgresql container. Even if it were, the container is not exposed to the general system. So we cannot just SSH into the server and run `psql`.
@@ -25,3 +42,16 @@ leftstay=#
 ```
 
 And we're in!
+
+## Emptying the rabbitMQ queue
+
+Sometimes the queue can get backed up. Eventually this seems to lead to a failure. I need to find out a better way to monitor this, and ideally to fix it automatically.
+
+Manually, we can purge the queue directly from the container. Below I assume we are using a queue named `default`.
+
+```
+gabriel@gabriel-desktop:~$ eval $(docker-machine env effington)
+gabriel@gabriel-desktop:~$ docker exec -i -t 6fb86c51e7a8 bash # hash here is the rabbit container ID
+root@rabbit:/# rabbitmqctl purge_queue default
+Purging queue 'default' in vhost '/' ...
+```
