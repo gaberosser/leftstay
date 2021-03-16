@@ -4,6 +4,18 @@ I'll assume that we are running two separate servers:
 - `allentown` is running a Docker postgresql container. It has a database called `leftstay` and the username is `docker`.
 - `effington` is running the web server (in Docker) and sundry Docker containers
 
+## Setting up docker-machine
+
+```
+docker-machine create --driver arubacloud --ac_username "AWI-93709" --ac_password "<aruba_password>" --ac_endpoint "dc1" --ac_action "Attach" --ac_ip "<vps IP>" --ac_ssh_key "/home/gabriel/.ssh/id_rsa" <name_of machine>
+```
+
+Regenerate certificates
+
+```
+docker-machine regenerate-certs shirley
+```
+
 ## Restarting the whole shebang
 
 If things go wrong (and they often do), we can restart all the containers on a server as follows
